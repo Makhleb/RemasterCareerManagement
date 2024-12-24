@@ -11,4 +11,5 @@ public class ActivityDTO {
     private Date endDate; // 종료년월
     private String activityCenterName; // 활동기관명
     private String activityContent; // 주요활동 내용
+    private Boolean isFinished;
 }
