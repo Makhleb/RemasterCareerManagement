@@ -3,6 +3,7 @@
     margin: 0 auto;
     box-sizing: border-box;
 }
+
 /* 여기부터 헤더 큰틀 */
 header {
     display: flex;
@@ -10,18 +11,20 @@ header {
     border-bottom: 1px #d9d9d9 solid;
 }
 
-.header-left{
+.header-left {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 30px;
     padding: 15px;
 }
-.header-left > div{
+
+.header-left > div {
     font-size: 14px;
     font-weight: bold;
-    color : #575a5e;
+    color: #575a5e;
 }
+
 #header-logo {
     padding: 10px;
     border: none;
@@ -33,11 +36,11 @@ header {
     margin-right: 20px;
 }
 
-.header-menu{
+.header-menu {
     padding: 5px;
 }
 
-.header-right{
+.header-right {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -47,10 +50,11 @@ header {
 
 /* 여기까지 헤더 큰틀 끝 */
 /* 드롭다운 시작 */
-#header-left-menu-recruitment{
+#header-left-menu-recruitment {
     position: relative;
 }
-#dropdown{
+
+#dropdown {
     position: absolute;
     transition: max-height 0.3s ease-out;
     top: 100%;
@@ -60,15 +64,18 @@ header {
     background-color: #f9f9f9;
     transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
 }
-.none{
+
+.none {
     opacity: 0;
     max-height: 0;
     pointer-events: none;
 }
-.block{
+
+.block {
     opacity: 1;
     max-height: 300px;
 }
+
 .dropdown-menu {
     font-size: 13px;
     white-space: nowrap;
@@ -76,13 +83,15 @@ header {
     background-color: #f9f9f9;
     border: 1px solid #ccc;
 }
+
 /* 드롭다운 끝 */
 /* 헤더 우측 디테일 시작 */
-#header-right-search{
+#header-right-search {
     font-weight: bold;
     font-size: 18px;
 }
-#header-right-cr{
+
+#header-right-cr {
     display: flex;
     border-radius: 7px;
     gap: 10px;
@@ -92,14 +101,16 @@ header {
     color: #0066FF;
     padding: 10px;
 }
-#header-right-company-services{
+
+#header-right-company-services {
     padding: 10px;
     border-radius: 7px;
     font-size: 14px;
     font-weight: bold;
     border: #d9d9d9 solid 1px;
-    color : #575a5e;
+    color: #575a5e;
 }
+
 /* 헤더 우측 디테일 끝 */
 /* 서브 드롭 다운 시작 */
 .sub-dropdown {
@@ -125,6 +136,7 @@ header {
     white-space: nowrap; /* 텍스트를 한 줄로 유지 */
     border-bottom: 1px solid #eee; /* 하단 경계선 */
 }
+
 /* 모달 css */
 .modal {
     display: none; /* 기본 상태는 숨김 */
@@ -159,6 +171,7 @@ header {
     font-weight: bold;
     color: #333;
 }
+
 #modal-search {
     width: 100%;
     padding: 12px; /* 입력 필드 여백 */
