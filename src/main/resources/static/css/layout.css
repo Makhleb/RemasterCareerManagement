@@ -1,0 +1,195 @@
+/* left : 100% 랑 white-space : nowrap */
+* {
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+/* 여기부터 헤더 큰틀 */
+header {
+    display: flex;
+    width: 100vw;
+    border-bottom: 1px #d9d9d9 solid;
+}
+
+.header-left{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    padding: 15px;
+}
+.header-left > div{
+    font-size: 14px;
+    font-weight: bold;
+    color : #575a5e;
+}
+#header-logo {
+    padding: 10px;
+    border: none;
+    background-color: #eee;
+    border-radius: 10px;
+    color: black;
+    font-size: 18px;
+    display: flex;
+    margin-right: 20px;
+}
+
+.header-menu{
+    padding: 5px;
+}
+
+.header-right{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+}
+
+/* 여기까지 헤더 큰틀 끝 */
+/* 드롭다운 시작 */
+#header-left-menu-recruitment{
+    position: relative;
+}
+#dropdown{
+    position: absolute;
+    transition: max-height 0.3s ease-out;
+    top: 100%;
+    left: 0;
+    z-index: 10;
+    max-height: 0;
+    background-color: #f9f9f9;
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+}
+.none{
+    opacity: 0;
+    max-height: 0;
+    pointer-events: none;
+}
+.block{
+    opacity: 1;
+    max-height: 300px;
+}
+.dropdown-menu {
+    font-size: 13px;
+    white-space: nowrap;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+}
+/* 드롭다운 끝 */
+/* 헤더 우측 디테일 시작 */
+#header-right-search{
+    font-weight: bold;
+    font-size: 18px;
+}
+#header-right-cr{
+    display: flex;
+    border-radius: 7px;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    border: #d9d9d9 solid 1px;
+    color: #0066FF;
+    padding: 10px;
+}
+#header-right-company-services{
+    padding: 10px;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: bold;
+    border: #d9d9d9 solid 1px;
+    color : #575a5e;
+}
+/* 헤더 우측 디테일 끝 */
+/* 서브 드롭 다운 시작 */
+.sub-dropdown {
+    position: absolute;
+    top: 0;
+    left: 100%; /* 부모 크기가 100%니깐 그 크기만큼 왼쪽에서 멀어져라..-> 부모 오른쪽에 나타남 */
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    z-index: 10;
+
+    /* gpt */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* 열 자동 생성 */
+    grid-auto-rows: auto; /* 행 높이를 자동 조정 */
+    gap: 10px; /* 아이템 간격 */
+    max-width: 700px; /* 최대 너비 설정 */
+    padding: 10px; /* 내부 여백 */
+}
+
+.sub-dropdown-menu {
+    font-size: 12px;
+    padding: 8px;
+    white-space: nowrap; /* 텍스트를 한 줄로 유지 */
+    border-bottom: 1px solid #eee; /* 하단 경계선 */
+}
+/* 모달 css */
+.modal {
+    display: none; /* 기본 상태는 숨김 */
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    padding: 5px 30px 30px 30px;
+    border-radius: 8px;
+    width: 500px;
+    text-align: center;
+    gap: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.close-btn {
+    cursor: pointer;
+    font-size: 30px;
+    position: relative;
+    left: 45%;
+    background-color: white;
+    border: none;
+    font-weight: bold;
+    color: #333;
+}
+#modal-search {
+    width: 100%;
+    padding: 12px; /* 입력 필드 여백 */
+    font-size: 14px; /* 폰트 크기 */
+    font-family: Arial, sans-serif; /* 폰트 변경 */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.modal-content > div {
+    font-size: 18px; /* 검색창 내용 텍스트 크기 */
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    font-family: "Roboto", sans-serif; /* 폰트 스타일 변경 */
+}
+
+/* footer */
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    width: 100%;
+    background-color: #eee;
+}
+
+
+
+
+
+
+
