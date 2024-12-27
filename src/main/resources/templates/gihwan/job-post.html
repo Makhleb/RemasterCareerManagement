@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>공고 등록</title>
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/job-post.css">
+</head>
+<body>
+<th:block th:include="sangin/layout.html::header"></th:block>
+<div class="container">
+    <aside>
+        <a href="#" class="aside-title">기업 마이페이지 홈</a>
+        <hr>
+        <ul>
+            <li>
+                <a href="#">기업 프로필</a>
+                <ul>
+                    <li><a href="#">프로필 수정</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">공고 관리</a>
+                <ul>
+                    <li><a href="#">공고 등록</a></li>
+                    <li><a href="#">공고 조회</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">기술스택 매칭</a>
+            </li>
+        </ul>
+    </aside>
+    <div class="main-content">
+
+    </div>
+
+</div>
+<th:block th:include="sangin/layout.html::footer"></th:block>
+<script src="/js/layout.js"></script>
+</body>
+</html>
