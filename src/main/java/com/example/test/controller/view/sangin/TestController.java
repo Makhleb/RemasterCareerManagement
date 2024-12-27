@@ -1,4 +1,4 @@
-package com.example.test.controller.sangin;
+package com.example.test.controller.view.sangin;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
