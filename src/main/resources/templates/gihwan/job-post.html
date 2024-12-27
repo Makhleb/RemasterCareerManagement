@@ -33,9 +33,40 @@
         </ul>
     </aside>
     <div class="main-content">
+        <div class="main-title">공고 등록</div>
+        <hr>
+        <div class="input-container">
+            <div class="input-box">
+                <label>
+                    <div>* 제목</div>
+                    <input id="post-title" placeholder="제목을 입력하세요">
+                </label>
 
+                <input id="manager-name" placeholder="담당자명">
+                <input id="manager-phone" placeholder="담당자 전화번호">
+                <br>
+                <input id="manager-email" placeholder="담당자 이메일">
+                <br>
+
+                <input id="start-date" type="date">
+                <input id="end-date" type="date">
+                <br>
+
+                <select id="work-type">
+                    <option value="">선택하세요</option>
+                </select>
+                <select id="job-rank">
+                    <option value="">선택하세요</option>
+                </select>
+                <select id="job-type">
+                    <option value="">선택하세요</option>
+                </select>
+            </div>
+            <div class="btn-box">
+
+            </div>
+        </div>
     </div>
-
 </div>
 <th:block th:include="sangin/layout.html::footer"></th:block>
 <script src="/js/layout.js"></script>

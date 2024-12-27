@@ -1,3 +1,7 @@
+*{
+    color: #333;
+}
+
 .container {
     width: 1400px;
     font-size: 16px;
@@ -9,10 +13,10 @@ aside {
     background-color: #f0f0f0;
     height: 100%;
     width: 100%;
-    padding-top: 25px;
 }
 aside .aside-title {
     padding-left: 30px;
+    padding-top: 50px;
 }
 
 aside ul {
@@ -22,7 +26,6 @@ aside ul {
 aside a {
     display: block;
     text-decoration: none;
-    color: #333;
     font-weight: bold;
     transition: color 0.3s ease;
     padding: 25px 0;
@@ -34,4 +37,23 @@ aside a:hover {
 
 aside li ul {
     padding-left: 20px;
+}
+
+.main-content{
+    width: 100%;
+    padding-top: 40px;
+}
+.main-title {
+    font-size: 30px;
+    font-weight: bold;
+    padding: 8px 25px;
+}
+.input-container{
+    padding-top: 50px;
+    padding-left: 100px;
+    padding-right: 100px;
+}
+
+#post-title{
+    width: 100%;
 }
