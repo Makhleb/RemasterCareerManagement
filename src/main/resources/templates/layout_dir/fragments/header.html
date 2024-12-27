@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+<header th:fragment="header">
+    <div class="header-left">
+        <img id="header-logo" class="header-menu" th:src="@{/images/logo.png}" alt="로고">
+        <div id="header-left-menu-recruitment" class="header-menu">
+            ≣ 채용
+            <div id="dropdown" class="none">
+                <div class="dropdown-menu">
+                    개발
+                    <div class="sub-dropdown none">
+                        <div class="sub-dropdown-menu">프론트엔드</div>
+                        <div class="sub-dropdown-menu">백엔드</div>
+                        <div class="sub-dropdown-menu">풀스택</div>
+                        <div class="sub-dropdown-menu">모바일 개발</div>
+                        <div class="sub-dropdown-menu">게임 개발</div>
+                        <div class="sub-dropdown-menu">임베디드 개발</div>
+                        <div class="sub-dropdown-menu">AI 개발</div>
+                        <div class="sub-dropdown-menu">데이터 엔지니어링</div>
+                        <div class="sub-dropdown-menu">클라우드 개발</div>
+                        <div class="sub-dropdown-menu">데브옵스</div>
+                        <div class="sub-dropdown-menu">블록체인 개발</div>
+                        <div class="sub-dropdown-menu">IoT 개발</div>
+                        <div class="sub-dropdown-menu">API 개발</div>
+                        <div class="sub-dropdown-menu">시스템 아키텍처</div>
+                        <div class="sub-dropdown-menu">보안 개발</div>
+                        <div class="sub-dropdown-menu">테스트 자동화</div>
+                        <div class="sub-dropdown-menu">스크립트 개발</div>
+                        <div class="sub-dropdown-menu">컴파일러 개발</div>
+                        <div class="sub-dropdown-menu">머신러닝 모델링</div>
+                        <div class="sub-dropdown-menu">데이터베이스 개발</div>
+                    </div>
+                </div>
+
+                <div class="dropdown-menu">
+                    경영·비즈니스
+                    <div class="sub-dropdown none">
+                        <div class="sub-dropdown-menu">기획</div>
+                        <div class="sub-dropdown-menu">전략</div>
+                        <div class="sub-dropdown-menu">운영</div>
+                    </div>
+                </div>
+                <div class="dropdown-menu">
+                    마케팅·광고
+                    <div class="sub-dropdown none">
+                        <div class="sub-dropdown-menu">디지털 마케팅</div>
+                        <div class="sub-dropdown-menu">브랜드 관리</div>
+                        <div class="sub-dropdown-menu">콘텐츠 제작</div>
+                        <div class="sub-dropdown-menu">SEO</div>
+                        <div class="sub-dropdown-menu">광고 기획</div>
+                    </div>
+                </div>
+                <div class="dropdown-menu">
+                    디자인
+                    <div class="sub-dropdown none">
+                        <div class="sub-dropdown-menu">UI/UX 디자인</div>
+                        <div class="sub-dropdown-menu">그래픽 디자인</div>
+                        <div class="sub-dropdown-menu">웹 디자인</div>
+                        <div class="sub-dropdown-menu">3D 모델링</div>
+                        <div class="sub-dropdown-menu">제품 디자인</div>
+                    </div>
+                </div>
+                <div class="dropdown-menu">
+                    영업
+                    <div class="sub-dropdown none">
+                        <div class="sub-dropdown-menu">B2B 영업</div>
+                        <div class="sub-dropdown-menu">B2C 영업</div>
+                        <div class="sub-dropdown-menu">영업 전략</div>
+                        <div class="sub-dropdown-menu">고객 관리</div>
+                        <div class="sub-dropdown-menu">신규 거래처 발굴</div>
+                    </div>
+                </div>
+                <div class="dropdown-menu">
+                    고객서비스·리테일
+                    <div class="sub-dropdown none">
+                        <div class="sub-dropdown-menu">고객 상담</div>
+                        <div class="sub-dropdown-menu">매장 운영</div>
+                        <div class="sub-dropdown-menu">리테일 마케팅</div>
+                        <div class="sub-dropdown-menu">서비스 개선</div>
+                        <div class="sub-dropdown-menu">고객 불만 처리</div>
+                    </div>
+                </div>
+                <div class="dropdown-menu">
+                    엔지니어링·설계
+                    <div class="sub-dropdown none">
+                        <div class="sub-dropdown-menu">기계 설계</div>
+                        <div class="sub-dropdown-menu">전기 설계</div>
+                        <div class="sub-dropdown-menu">CAD 설계</div>
+                        <div class="sub-dropdown-menu">건축 설계</div>
+                        <div class="sub-dropdown-menu">제품 엔지니어링</div>
+                    </div>
+                </div>
+                <div class="dropdown-menu">
+                    제조·생산
+                    <div class="sub-dropdown none">
+                        <div class="sub-dropdown-menu">공정 관리</div>
+                        <div class="sub-dropdown-menu">생산 계획</div>
+                        <div class="sub-dropdown-menu">품질 관리</div>
+                        <div class="sub-dropdown-menu">기술 지원</div>
+                        <div class="sub-dropdown-menu">설비 운영</div>
+                    </div>
+                </div>
+                <div class="dropdown-menu">
+                    의료·제약·바이오
+                    <div class="sub-dropdown none">
+                        <div class="sub-dropdown-menu">임상 시험</div>
+                        <div class="sub-dropdown-menu">의료 연구</div>
+                        <div class="sub-dropdown-menu">제약 개발</div>
+                        <div class="sub-dropdown-menu">바이오 공정</div>
+                        <div class="sub-dropdown-menu">의료 장비 관리</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="header-left-menu-resume" class="header-menu">이력서</div>
+        <div id="header-left-menu-favorites" class="header-menu">관심공고</div>
+        <div id="header-left-menu-comunity" class="header-menu">커뮤니티</div>
+        <div id="header-left-menu-more" class="header-menu">더보기</div>
+    </div>
+    <div class="header-right">
+        <div id="header-right-search">🔍</div>
+        <div id="header-right-cr">
+            <div id="header-right-signup">회원가입</div>
+            <div id="header-right-login">로그인</div>
+        </div>
+        <div id="header-right-company-services">기업서비스</div>
+    </div>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span id="close-btn" class="close-btn">x</span>
+            <div>검색창 내용</div>
+            <div>
+                <input type="text" placeholder="검색어를 입력하세요" id="modal-search" />
+                <button id="modal_search">검색</button>
+            </div>
+        </div>
+    </div>
+
+
+</header>
+</body>
+</html>
