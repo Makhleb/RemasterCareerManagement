@@ -61,6 +61,21 @@
                     <select id="job-type">
                         <option value="">선택하세요</option>
                     </select>
+
+                    <div class="form margin">
+                        <p>보유 기술 스택</p>
+                        <div>
+                            <th:block th:each="skill :${skillGubnList}">
+                                <button onclick="popSkill($(this))" class="add-stack" th:value="${skill}"
+                                        th:text="'+ ' + ${skill}">
+                                </button>
+                            </th:block>
+                            <!--                <div class="stack-item">JAVA</div>-->
+                            <!--                <div class="stack-item">ReactJS</div>-->
+                            <!--                <div class="stack-item">Python</div>-->
+                            <!--                <button class="add-stack">+JAVA</button>-->
+                        </div>
+                    </div>
                 </div>
                 <div class="btn-box">
                     <button class="clickMe">비비비비비비</button>
@@ -74,5 +89,21 @@
     $(".clickMe").on("click", function () {
         alert("버튼이 클릭되었습니다!");
     });
+
+    /**
+     * 기술스택 토글
+     * todo 테스트데이터 빼고 api서 가져옵시다.
+     */
+    function popSkill(ele) {
+        const skillClass = ['add-stack', 'minus-stack'];
+        const eleClass = ele.attr('class');
+
+        const addCheck = eleClass === skillClass[0]; // add-stack true
+
+        ele.removeClass(eleClass);
+        ele.addClass(addCheck ? skillClass[1] : skillClass[0]);
+
+        ele.text(addCheck ? ele.text().replace('+', '-') : ele.text().replace('-', '+'));
+    }
 </script>
 </html>

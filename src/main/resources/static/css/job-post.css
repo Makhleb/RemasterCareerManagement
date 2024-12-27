@@ -62,3 +62,26 @@ aside li ul {
 #post-title{
     width: 100%;
 }
+
+.minus-stack {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    color: white;
+    background-color: #8B1FFF;
+    border: 1px solid #CECECE;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    margin: 3px;
+    width: auto;
+}
+
+.add-stack {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    background-color: #f0f0f0;
+    border: 1px solid #CECECE;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    margin: 3px;
+    width: auto;
+}
