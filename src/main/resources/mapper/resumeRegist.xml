@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test.dao.gyeonguk.ResumeDao">
+
+    <!-- 이력서 등록 -->
+    <insert id="insertResume" parameterType="com.example.test.dto.ResumeDTO">
+        INSERT INTO tblResume
+        (title, address_detail, address, zonecode, user_id, headshot, wish_area, wish_salary, wish_time, offer_yn, create_date, modify_date, delete_yn, work_code)
+        VALUES
+        (#{title}, #{addressDetail}, #{address}, #{zonecode}, #{userId}, #{headshot}, #{wishArea}, #{wishSalary}, #{wishTime}, #{offerYn}, NOW(), NOW(), 'N', #{workCode});
+    </insert>
+
+    <!-- 유저 정보 조회 -->
+    <select id="findUserById" parameterType="String" resultType="com.example.test.dto.ResumeDTO">
+        SELECT *
+        FROM tblUser
+        WHERE user_id = #{userId};
+    </select>
+
+</mapper>

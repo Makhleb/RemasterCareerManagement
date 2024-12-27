@@ -1,7 +1,7 @@
 package com.example.test.controller.api.gyeonguk;
 
 import com.example.test.dto.ResumeDTO;
-import com.example.test.service.ResumeService;
+import com.example.test.service.gyeonguk.ResumeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
