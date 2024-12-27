@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>이력서 등록</title>
+    <link rel="stylesheet" th:href="@{/css/resume-regist.css}">
+    <link rel="stylesheet" href="/css/layout.css">
+</head>
+<body>
+
+<!-- Header -->
+<th:block th:include="sangin/layout.html::header"></th:block>
+
+<h1>이력서 등록</h1>
+
+<!-- 제목 및 증명사진 -->
+<section class="title-photo-section">
+    <div class="title-section">
+        <h2>이력서 제목</h2>
+        <label for="title">이력서 제목</label>
+        <input type="text" id="title" name="title" placeholder="이력서 제목을 입력하세요">
+    </div>
+    <div class="photo-section">
+        <h2>증명사진</h2>
+        <label for="headshot">증명사진</label>
+        <input type="file" id="headshot" name="headshot" accept="image/*">
+        <div class="photo-preview">
+            <img src="/images/default-profile.png" alt="증명사진 미리보기" class="profile-image">
+        </div>
+    </div>
+</section>
+
+<!-- 인적사항 -->
+<section>
+    <h2>인적사항</h2>
+    <div>
+        <label for="userName">이름</label>
+        <input type="text" id="userName" name="userName" readonly>
+
+        <label for="userEmail">이메일</label>
+        <input type="email" id="userEmail" name="userEmail" readonly>
+
+        <label for="userPhone">연락처</label>
+        <input type="text" id="userPhone" name="userPhone" readonly>
+
+        <label for="userGender">성별</label>
+        <input type="text" id="userGender" name="userGender" readonly>
+
+        <label for="wishArea">희망 근무 지역</label>
+        <input type="text" id="wishArea" name="wishArea" placeholder="희망 근무 지역을 입력하세요">
+
+        <label for="wishSalary">희망 연봉</label>
+        <input type="number" id="wishSalary" name="wishSalary" placeholder="희망 연봉을 입력하세요">
+
+        <label for="wishTime">희망 근무 시간</label>
+        <input type="text" id="wishTime" name="wishTime" placeholder="희망 근무 시간을 입력하세요">
+    </div>
+</section>
+
+<!-- 경력 -->
+<section>
+    <h2>경력</h2>
+    <div>
+        <label for="activityType">활동 구분</label>
+        <select id="activityType" name="activityType">
+            <option value="JOB_ACT">직무관련활동</option>
+            <option value="JOB_CAREER">직무</option>
+            <option value="SOCIAL_ACT">봉사활동</option>
+        </select>
+
+        <label for="activityCenterName">기관명</label>
+        <input type="text" id="activityCenterName" name="activityCenterName">
+
+        <label for="startDate">시작일</label>
+        <input type="date" id="startDate" name="startDate">
+
+        <label for="endDate">종료일</label>
+        <input type="date" id="endDate" name="endDate">
+    </div>
+</section>
+
+<!-- 학력 -->
+<section>
+    <h2>학력</h2>
+    <div>
+        <label for="educationCode">학력 구분</label>
+        <select id="educationCode" name="educationCode">
+            <option value="MIDDLE_SCHOOL">중졸</option>
+            <option value="HIGH_SCHOOL">고졸</option>
+            <option value="ASSOCIATE">전문대</option>
+            <option value="BACHELOR">4년제</option>
+            <option value="MASTER">석사</option>
+            <option value="PHD">박사</option>
+        </select>
+
+        <label for="schoolName">학교명</label>
+        <input type="text" id="schoolName" name="schoolName">
+
+        <label for="enterDate">입학일</label>
+        <input type="date" id="enterDate" name="enterDate">
+
+        <label for="graduateDate">졸업일</label>
+        <input type="date" id="graduateDate" name="graduateDate">
+    </div>
+</section>
+
+<!-- 자격증 -->
+<section>
+    <h2>자격증</h2>
+    <div>
+        <label for="licenseName">자격증명</label>
+        <input type="text" id="licenseName" name="licenseName">
+
+        <label for="licenseCenterName">발급 기관</label>
+        <input type="text" id="licenseCenterName" name="licenseCenterName">
+
+        <label for="passDate">취득일</label>
+        <input type="date" id="passDate" name="passDate">
+    </div>
+</section>
+
+<!-- 스킬 -->
+<section>
+    <h2>스킬</h2>
+    <div class="skill-suggestions">
+        <span class="skill" data-skill="AWS">AWS +</span>
+        <span class="skill" data-skill="CSS">CSS +</span>
+        <span class="skill" data-skill="HTML">HTML +</span>
+        <span class="skill" data-skill="JAVA">JAVA +</span>
+        <span class="skill" data-skill="JAVASCRIPT">JAVASCRIPT +</span>
+        <span class="skill" data-skill="MYSQL">MYSQL +</span>
+        <span class="skill" data-skill="NODEJS">NODEJS +</span>
+        <span class="skill" data-skill="PYTHON">PYTHON +</span>
+        <span class="skill" data-skill="REACT">REACT +</span>
+        <span class="skill" data-skill="SPRING">SPRING +</span>
+    </div>
+    <div class="selected-skills">
+        <!-- 선택된 스킬이 여기에 표시됩니다 -->
+    </div>
+</section>
+
+<!-- 병역사항 -->
+<section>
+    <h2>병역사항</h2>
+    <div>
+        <label for="military-type">복무 유형</label>
+        <select id="military-type" name="militaryType">
+            <option value="DEFENSE_INDUSTRY">방위산업체</option>
+            <option value="DISCHARGED">전역</option>
+            <option value="EXEMPT">면제</option>
+            <option value="PUBLIC_SERVICE">공익</option>
+        </select>
+
+        <label for="enlistDate">입대일</label>
+        <input type="date" id="enlistDate" name="enlistDate">
+
+        <label for="releaseDate">전역일</label>
+        <input type="date" id="releaseDate" name="releaseDate">
+    </div>
+</section>
+
+<!-- 포트폴리오 -->
+<section>
+    <h2>포트폴리오</h2>
+    <div>
+        <label for="gubn">구분</label>
+        <select id="gubn" name="gubn">
+            <option value="F">파일</option>
+            <option value="L">링크</option>
+        </select>
+
+        <label for="portfolioFilename">파일명</label>
+        <input type="text" id="portfolioFilename" name="portfolioFilename">
+    </div>
+</section>
+
+<!-- 자기소개서 -->
+<section>
+    <h2>자기소개서</h2>
+    <div>
+        <label for="content">내용</label>
+        <textarea id="content" name="content"></textarea>
+    </div>
+</section>
+
+<!-- 저장 버튼 -->
+<div style="text-align: center; margin-top: 20px;">
+    <button type="submit">저장</button>
+</div>
+
+<!-- Footer -->
+<th:block th:include="sangin/layout.html::footer"></th:block>
+<script src="/js/layout.js"></script>
+</body>
+</html>

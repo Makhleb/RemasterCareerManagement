@@ -11,4 +11,5 @@ public class EducationDTO {
     private String specialty; // 전공
     private Date enterDate; // 입학년월
     private Date graduateDate; // 졸업연월
+
 }
