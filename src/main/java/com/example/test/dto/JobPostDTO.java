@@ -18,7 +18,7 @@ public class JobPostDTO {
     private String managerName; // 담당자명
     private String managerPhone; // 담당자 전화번호
     private String managerEmail; // 담당자 이메일
-    private String deleteYn; // 삭제여부
+    private String postViewYn; // 삭제여부
     private String postThumbnail; // 대표 이미지 썸네일
     private String postAddress; // 근무지주소
     private String postAddressDetail; // 근무지상세주소
@@ -27,5 +27,4 @@ public class JobPostDTO {
     private String jobRankCode; // 직급/직책 코드
     private String workTypeCode; // 근무형태 코드
     private String educationCode; // 학력 코드
-
 }

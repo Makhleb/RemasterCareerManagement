@@ -1,5 +1,45 @@
 *{
+    --base: #B7673C;
+    --point: #FF8000;
+    --nav: #3A5154;
+    --side: #B9B0B2;
+    --line: #929AA2;
+    --text: #1D2625;
     color: #333;
+}
+
+button, .inupt-name, input, textarea, select {
+    font-size: 16px;
+}
+.btn-box button{
+    width: 150px;
+    padding: 10px;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+input, textarea, select {
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border: 1px solid var(--text);
+    box-shadow: 0 0 4px rgba(29, 38, 37, 0.3);
+}
+.input-name{
+    padding-bottom: 5px;
+}
+
+textarea{
+    resize: none;
+    width: 100%;
 }
 
 .flex-container{
@@ -15,7 +55,7 @@
 }
 
 aside {
-    background-color: #f0f0f0;
+    background-color: var(--side);
     height: 100%;
     width: 100%;
 }
@@ -37,7 +77,7 @@ aside a {
 }
 
 aside a:hover {
-    color: skyblue;
+    color: var(--point);
 }
 
 aside li ul {
@@ -54,12 +94,54 @@ aside li ul {
     padding: 8px 25px;
 }
 .input-container{
-    padding-top: 50px;
-    padding-left: 100px;
-    padding-right: 100px;
+    padding: 50px 100px;
+}
+.input-box{
+    gap: 25px;
+}
+#post-title{
+    width: 100%;
+}
+.half-width{
+    width: 500px;
 }
 
-#post-title{
+.submit-btn{
+    background-color: var(--base);
+}
+.gray-btn{
+    background-color: var(--line);
+}
+
+.column-flex{
+    display: flex;
+    flex-direction: column;
+}
+
+.row-flex{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+.row-flex label{
+    width: 150px
+}
+
+.row-flex label input,select{
+    width: 100%;
+}
+
+.manager-row-grid{
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    gap: 10px;
+}
+.post-row-grid{
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 10px;
+}
+.post-row-grid :is(input, button){
     width: 100%;
 }
 
@@ -67,9 +149,9 @@ aside li ul {
     padding: 0.5rem 1rem;
     font-size: 1rem;
     color: white;
-    background-color: #8B1FFF;
+    background-color: var(--point);
     border: 1px solid #CECECE;
-    border-radius: 0.5rem;
+    border-radius: 10px;
     cursor: pointer;
     margin: 3px;
     width: auto;
@@ -80,8 +162,39 @@ aside li ul {
     font-size: 1rem;
     background-color: #f0f0f0;
     border: 1px solid #CECECE;
-    border-radius: 0.5rem;
+    border-radius: 10px;
     cursor: pointer;
     margin: 3px;
     width: auto;
+}
+
+.btn-box {
+    align-self: end;
+}
+
+.add-benefit{
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    background-color: #f0f0f0;
+    border: 1px solid #CECECE;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 3px;
+    width: auto;
+}
+
+.base-btn{
+    padding: 10px;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#image-preview {
+    width: 400px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 10px;
 }
