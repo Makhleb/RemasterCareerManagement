@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test.dao.CompanyDao">
+    <select id="findById" resultType="com.example.test.dto.CompanyDTO">
+        SELECT 
+            companyId,
+            companyPw,
+            companyName,
+            companyNumber,
+            companyAddress,
+            companyZonecode,
+            companyAddressDetail,
+            companyContact,
+            companyWebsite,
+            companyEmail,
+            companyBirth,
+            companyEmployee,
+            companyCreateDate,
+            companyModifyDate,
+            companyRole,
+            companyImage,
+            companyIsActive,
+            companyProfit
+        FROM tblCompany
+        WHERE companyId = #{companyId}
+    </select>
+</mapper> 
