@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/mypage/company")
 public class JobPostController {
     @GetMapping("/job-post")
-    public String jobPost(Model model) {
-        String[] gubnList = new String[] {"abc", "def", "ghi"};
-        model.addAttribute("skillGubnList", gubnList);
+    public String jobPost() {
         return "/gihwan/job-post";
     }
 }

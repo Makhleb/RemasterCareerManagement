@@ -109,14 +109,7 @@
 
                     <div>
                         <div class="input-name">보유 기술 스택</div>
-                        <div>
-                            <th:block th:each="skill :${skillGubnList}">
-                                <button onclick="popSkill($(this))" class="add-stack" th:value="${skill}"
-                                        th:text="'+ ' + ${skill}">
-                                </button>
-                            </th:block>
-                            <!--                <button class="add-stack">+JAVA</button>-->
-                        </div>
+                        <div id="skill-list"></div>
                     </div>
                     <label>
                         <div class="input-name">* 모집부분 및 상세내용</div>
@@ -164,10 +157,8 @@
 </div>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
-    /*
-    axios로 해야할거
-    근무형태, 직급 직책, 직무, 학력
-    기술스택 가져오기
+    /**
+     * 윈도우 페이지 로드시 옵션 추가
      */
     window.onload = function () {
         axios.get(
@@ -176,10 +167,38 @@
             '&groupCodes=JOB_RANK' +
             '&groupCodes=SKILL' +
             '&groupCodes=WORK' +
-            '&groupCodes=WORK_TYPE')
+            '&groupCodes=WORK_TYPE'
+        )
             .then(function (response) {
                 console.log(response);
-                //todo 그럼 여기서 옵션이랑 버튼 추가합시다.
+                let res = response.data;
+
+                const selectMapping = {
+                    'WORK_TYPE': '#work-type',
+                    'JOB_RANK': '#job-rank',
+                    'WORK': '#job-type',
+                    'EDUCATION': '#job-educate'
+                }
+
+                res.forEach(function (item) {
+                    let selectId = selectMapping[item.groupCode];
+                    if (selectId) {
+                        $(selectId).append(
+                            $('<option>',{
+                                value: item.code,
+                                text: item.name
+                            })
+                        )
+                    } else if (item.groupCode === 'SKILL') {
+                        let button = $('<button>', {
+                            class: 'add-stack',
+                            text: '+ ' + item.name,
+                            value: item.code,
+                            onclick: 'popSkill($(this))'
+                        });
+                        $('#skill-list').append(button)
+                    }
+                })
             })
             .catch(function (error) {
                 console.log(error);
@@ -261,6 +280,8 @@
         }
 
         console.log(postInfo);
+
+
     }
 
     /**
