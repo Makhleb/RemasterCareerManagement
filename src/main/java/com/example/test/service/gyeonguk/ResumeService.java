@@ -1,9 +1,9 @@
 package com.example.test.service.gyeonguk;
 
-import org.springframework.stereotype.Service;
-import com.example.test.dto.ResumeDTO;
+import com.example.test.dto.*;
 import com.example.test.dao.gyeonguk.ResumeDao;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 /**
  * Created on 2024-12-27 by 이경욱
@@ -16,21 +16,75 @@ public class ResumeService {
     private final ResumeDao resumeDao;
 
     /**
-     * 이력서를 등록하는 메서드
-     * @param resumeDTO 등록할 이력서 데이터
-     * @return 등록 성공 여부 (boolean)
+     * 이력서 제목 및 인적사항 저장
+     *
+     * @param resumeDTO 이력서 제목 및 인적사항 DTO
      */
-    public boolean registerResume(ResumeDTO resumeDTO) {
-        resumeDao.insertResume(resumeDTO);
-        return true;
+    public void savePersonalInfo(ResumeDTO resumeDTO) {
+        resumeDao.insertPersonalInfo(resumeDTO);
     }
 
     /**
-     * 유저 정보를 조회하는 메서드
-     * @param userId 유저 ID
-     * @return 유저 정보
+     * 활동 정보 저장
+     *
+     * @param activityDTO 활동 데이터 DTO
+     */
+    public void saveActivityInfo(ActivityDTO activityDTO) {
+        resumeDao.insertActivityInfo(activityDTO);
+    }
+
+    /**
+     * 학력 저장
+     *
+     * @param educationDTO 학력 정보 DTO
+     */
+    public void saveEducationInfo(EducationDTO educationDTO) {
+        resumeDao.insertEducationInfo(educationDTO);
+    }
+
+    /**
+     * 자격증 저장
+     *
+     * @param licenseDTO 자격증 정보 DTO
+     */
+    public void saveLicenseInfo(LicenseDTO licenseDTO) {
+        resumeDao.insertLicenseInfo(licenseDTO);
+    }
+
+    /**
+     * 병역 사항 저장
+     *
+     * @param militaryDTO 병역 사항 DTO
+     */
+    public void saveMilitaryInfo(MilitaryDTO militaryDTO) {
+        resumeDao.insertMilitaryInfo(militaryDTO);
+    }
+
+    /**
+     * 포트폴리오 저장
+     *
+     * @param portfolioDTO 포트폴리오 정보 DTO
+     */
+    public void savePortfolioInfo(PotfolioDTO portfolioDTO) {
+        resumeDao.insertPortfolioInfo(portfolioDTO);
+    }
+
+    /**
+     * 자기소개서 저장
+     *
+     * @param introDTO 자기소개서 정보 DTO
+     */
+    public void saveIntro(IntroduceDTO introDTO) {
+        resumeDao.insertIntro(introDTO);
+    }
+
+    /**
+     * 유저 정보를 조회
+     *
+     * @param userId 조회할 유저 ID
+     * @return 유저 정보 DTO
      */
     public ResumeDTO getUserInfo(String userId) {
-        return resumeDao.findUserById(userId);
+        return resumeDao.selectUserInfo(userId);
     }
 }

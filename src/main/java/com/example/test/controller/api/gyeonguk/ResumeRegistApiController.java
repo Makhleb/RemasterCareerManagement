@@ -1,13 +1,13 @@
 package com.example.test.controller.api.gyeonguk;
 
-import com.example.test.dto.ResumeDTO;
+import com.example.test.dto.*;
 import com.example.test.service.gyeonguk.ResumeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 /**
  * Created on 2024-12-27 by 이경욱
- * 이력서 등록을 위한 REST 컨트롤러
+ * Description: 이력서 등록 및 섹션별 저장을 위한 REST 컨트롤러
  */
 @RestController
 @RequestMapping("/api/users/resume")
@@ -17,25 +17,88 @@ public class ResumeRegistApiController {
     private final ResumeService resumeService;
 
     /**
-     * 유저 정보를 기반으로 이력서를 등록합니다.
-     * @param resumeDTO 이력서 등록에 필요한 데이터
-     * @return 등록 결과 메시지
+     * 이력서 제목 및 인적사항 저장
+     *
+     * @param resumeDTO 이력서 데이터 DTO
+     * @return 저장 결과 메시지
      */
-    @PostMapping("/register")
-    public String registerResume(@RequestBody ResumeDTO resumeDTO) {
-        // 서비스 레이어를 호출하여 이력서 등록 처리
-        resumeService.registerResume(resumeDTO);
-        return "이력서가 성공적으로 등록되었습니다.";
+    @PostMapping("/personal")
+    public String savePersonalInfo(@RequestBody ResumeDTO resumeDTO) {
+        resumeDTO.setUserId("test1");
+        System.out.println(resumeDTO + ".............");
+        resumeService.savePersonalInfo(resumeDTO);
+        return "개인정보가 저장되었습니다.";
     }
 
     /**
-     * 유저 정보를 조회합니다.
-     * @param userId 조회할 유저의 ID
-     * @return 유저 정보 DTO
+     * 활동 정보 저장
+     *
+     * @param activityDTO 활동 데이터 DTO
+     * @return 저장 결과 메시지
      */
-    @GetMapping("/user/{userId}")
-    public ResumeDTO getUserInfo(@PathVariable String userId) {
-        // 서비스 레이어를 호출하여 유저 정보 조회
-        return resumeService.getUserInfo(userId);
+    @PostMapping("/activity")
+    public String saveActivityInfo(@RequestBody ActivityDTO activityDTO) {
+        resumeService.saveActivityInfo(activityDTO);
+        return "활동 정보가 저장되었습니다.";
+    }
+
+    /**
+     * 학력 저장
+     *
+     * @param educationDTO 학력 데이터 DTO
+     * @return 저장 결과 메시지
+     */
+    @PostMapping("/education")
+    public String saveEducationInfo(@RequestBody EducationDTO educationDTO) {
+        resumeService.saveEducationInfo(educationDTO);
+        return "학력이 저장되었습니다.";
+    }
+
+    /**
+     * 자격증 저장
+     *
+     * @param licenseDTO 자격증 데이터 DTO
+     * @return 저장 결과 메시지
+     */
+    @PostMapping("/license")
+    public String saveLicenseInfo(@RequestBody LicenseDTO licenseDTO) {
+        resumeService.saveLicenseInfo(licenseDTO);
+        return "자격증이 저장되었습니다.";
+    }
+
+    /**
+     * 병역사항 저장
+     *
+     * @param militaryDTO 병역 데이터 DTO
+     * @return 저장 결과 메시지
+     */
+    @PostMapping("/military")
+    public String saveMilitaryInfo(@RequestBody MilitaryDTO militaryDTO) {
+        resumeService.saveMilitaryInfo(militaryDTO);
+        return "병역사항이 저장되었습니다.";
+    }
+
+    /**
+     * 포트폴리오 저장
+     *
+     * @param portfolioDTO 포트폴리오 데이터 DTO
+     * @return 저장 결과 메시지
+     */
+    @PostMapping("/portfolio")
+    public String savePortfolioInfo(@RequestBody PotfolioDTO portfolioDTO) {
+        resumeService.savePortfolioInfo(portfolioDTO);
+        return "포트폴리오가 저장되었습니다.";
+    }
+
+    /**
+     * 자기소개서 저장
+     *
+     * @param introDTO 자기소개서 데이터 DTO
+     * @return 저장 결과 메시지
+     */
+    @PostMapping("/intro")
+    public String saveIntro(@RequestBody IntroduceDTO introDTO) {
+        resumeService.saveIntro(introDTO);
+        return "자기소개서가 저장되었습니다.";
     }
 }
