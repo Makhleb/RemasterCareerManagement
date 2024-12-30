@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 public class CompanyCreateDTO {
@@ -24,7 +26,7 @@ public class CompanyCreateDTO {
     private String companyName;
 
     @NotBlank(message = "사업자등록번호는 필수입니다")
-    @Pattern(regexp = "^\\d{3}-\\d{2}-\\d{5}$", message = "올바른 사업자등록번호 형식이 아닙니다")
+    @Pattern(regexp = "^\\d{10}$", message = "올바른 사업자등록번호 형식이 아닙니다")
     private String companyNumber;
 
     @NotBlank(message = "회사 주소는 필수입니다")
@@ -46,7 +48,7 @@ public class CompanyCreateDTO {
 
     // 선택 필드들
     private String companyWebsite;
-    private String companyBirth;
+    private Date companyBirth;
     private Integer companyEmployee;
     private Long companyProfit;
 } 

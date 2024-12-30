@@ -40,31 +40,34 @@ axios.interceptors.request.use(
 // 응답 인터셉터 - 에러 처리
 axios.interceptors.response.use(
     (response) => {
+        console.log('api.js -> response',response);
         return response.data;  // 전체 ApiResponse 반환
     },
     (error) => {
-        if (error.response) {
+        if (error) {
+            console.log(error);
             const errorData = error.response.data;
             
-            switch (error.response.status) {
+            switch (error.status) {
                 case 401:
                     localStorage.removeItem('token');
                     alert('로그인이 필요합니다.');
                     window.location.href = '/login';
                     break;
                 case 403:
-                    alert(errorData.body.message || '접근 권한이 없습니다.');
+                    alert(errorData.body || '접근 권한이 없습니다.');
                     history.back();
                     break;
                 case 404:  // 리소스 없음
-                    alert(errorData.body.message || '요청하신 정보를 찾을 수 없습니다.');
+                    alert(errorData.body || '요청하신 정보를 찾을 수 없습니다.');
                     break;
                 case 500:  // 서버 에러
                     alert('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
                     break;
                 default:
-                    alert(errorData.body.message || '오류가 발생했습니다.');
+                    alert(errorData.body || '오류가 발생했습니다.');
             }
+            // errorData를 반환하여 catch 블록에서 에러 데이터를 처리할 수 있도록 함
             return Promise.reject(errorData);
         }
         return Promise.reject(error);
