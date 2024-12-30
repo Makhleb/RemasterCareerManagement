@@ -7,8 +7,7 @@
   <title>공고 리스트</title>
   <link rel="stylesheet" th:href="@{/css/post-list.css}">
 </head>
-<body>
-<div layout:fragment="content">
+<body layout:fragment="content">
   <section>
     <div class="section1">
       <div id="region_kind">지역별</div>
@@ -113,76 +112,75 @@
       </div>
     </div>
   </section>
-</div>
+  <script>
+    // 드롭다운
+    const region_bar = document.querySelector("#region_bar")
+    const section2_region_option = document.querySelector(".section2_region_option");
+    const job_bar = document.querySelector("#job_bar")
+    const section2_job_option = document.querySelector(".section2_job_option")
+
+    region_bar.addEventListener("click", () => {
+      if (section2_region_option.classList.contains("section2_none")) {
+        section2_job_option.classList.add("section2_none");
+        section2_region_option.classList.remove("section2_none");
+        section2_region_option.classList.add("section2_block");
+      } else if (section2_region_option.classList.contains("section2_block")) {
+        section2_job_option.classList.add("section2_none");
+        section2_region_option.classList.add("section2_none");
+        section2_region_option.classList.remove("section2_block");
+      }
+    });
+
+    job_bar.addEventListener("click", () => {
+      if (section2_job_option.classList.contains("section2_none")) {
+        section2_region_option.classList.add("section2_none");
+        section2_job_option.classList.add("section2_block");
+        section2_job_option.classList.remove("section2_none");
+      } else if (section2_job_option.classList.contains("section2_block")) {
+        section2_region_option.classList.add("section2_none");
+        section2_job_option.classList.add("section2_none");
+        section2_job_option.classList.remove("section2_block");
+      }
+    });
+    // sec 검색칸
+    const search_bar = document.querySelector("#search_bar");
+
+    search_bar.addEventListener("click", () => {
+      const input = document.createElement("input");
+      input.type = "text";
+      input.placeholder = "검색어를 입력하세요";
+      input.classList.add("section2_option");
+
+      input.addEventListener("blur", () => {
+        const value = input.value.trim();
+        search_bar.textContent = value || "검색어입력";
+        search_bar.classList.add("nofocus");
+        input.replaceWith(search_bar);
+      });
+
+      search_bar.replaceWith(input);
+      input.focus(); // `input`에 포커스 설정
+    });
+    // 키워드 저장칸에 옮기기용
+    const regions = document.querySelectorAll(".region");
+    const jobs = document.querySelectorAll(".job");
+    const keyword_container = document.querySelector("#keyword_container");
+    regions.forEach(region => {
+      region.addEventListener("click", () => {
+        keyword_container.innerHTML = region.getAttribute("value");
+      });
+    });
+    jobs.forEach(job => {
+      job.addEventListener("click", () => {
+        keyword_container.innerHTML = job.getAttribute("value");
+      });
+    });
+
+    const section2_btn = document.querySelector("#section2_btn");
+    section2_btn.addEventListener("click", () => {
+      alert("우리는 어디로 가고 있나요?");
+    });
+  </script>
 </body>
-<script layout:fragment="script">
-  // 드롭다운
-  const region_bar = document.querySelector("#region_bar")
-  const section2_region_option = document.querySelector(".section2_region_option");
-  const job_bar = document.querySelector("#job_bar")
-  const section2_job_option = document.querySelector(".section2_job_option")
-
-  region_bar.addEventListener("click", () => {
-    if (section2_region_option.classList.contains("section2_none")) {
-      section2_job_option.classList.add("section2_none");
-      section2_region_option.classList.remove("section2_none");
-      section2_region_option.classList.add("section2_block");
-    } else if (section2_region_option.classList.contains("section2_block")) {
-      section2_job_option.classList.add("section2_none");
-      section2_region_option.classList.add("section2_none");
-      section2_region_option.classList.remove("section2_block");
-    }
-  });
-
-  job_bar.addEventListener("click", () => {
-    if (section2_job_option.classList.contains("section2_none")) {
-      section2_region_option.classList.add("section2_none");
-      section2_job_option.classList.add("section2_block");
-      section2_job_option.classList.remove("section2_none");
-    } else if (section2_job_option.classList.contains("section2_block")) {
-      section2_region_option.classList.add("section2_none");
-      section2_job_option.classList.add("section2_none");
-      section2_job_option.classList.remove("section2_block");
-    }
-  });
-  // sec 검색칸
-  const search_bar = document.querySelector("#search_bar");
-
-  search_bar.addEventListener("click", () => {
-    const input = document.createElement("input");
-    input.type = "text";
-    input.placeholder = "검색어를 입력하세요";
-    input.classList.add("section2_option");
-
-    input.addEventListener("blur", () => {
-      const value = input.value.trim();
-      search_bar.textContent = value || "검색어입력";
-      search_bar.classList.add("nofocus");
-      input.replaceWith(search_bar);
-    });
-
-    search_bar.replaceWith(input);
-    input.focus(); // `input`에 포커스 설정
-  });
-  // 키워드 저장칸에 옮기기용
-  const regions = document.querySelectorAll(".region");
-  const jobs = document.querySelectorAll(".job");
-  const keyword_container = document.querySelector("#keyword_container");
-  regions.forEach(region => {
-    region.addEventListener("click", () => {
-      keyword_container.innerHTML = region.getAttribute("value");
-    });
-  });
-  jobs.forEach(job => {
-    job.addEventListener("click", () => {
-      keyword_container.innerHTML = job.getAttribute("value");
-    });
-  });
-
-  const section2_btn = document.querySelector("#section2_btn");
-  section2_btn.addEventListener("click", () => {
-    alert("우리는 어디로 가고 있나요?");
-  });
-</script>
 
 </html>

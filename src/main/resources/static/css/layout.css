@@ -1,18 +1,20 @@
 /* left : 100% 랑 white-space : nowrap */
 /* 여기부터 헤더 큰틀 */
-body,
-html {
+body, html{
     margin: 0;
     padding: 0;
 }
 
 header {
+    width: 100%;
+    border-bottom: 1px #ddd solid;
+}
+#header{
     display: flex;
     width: 1400px;
     margin: 0 auto;
     padding: 0;
     justify-content: space-between;
-    border-bottom: 1px #ddd solid;
 }
 
 .header-left {
@@ -58,7 +60,6 @@ header {
 
 #dropdown {
     position: absolute;
-    transition: max-height 0.3s ease-out;
     top: 100%;
     left: 0;
     z-index: 10;
@@ -231,7 +232,7 @@ footer {
     align-items: center;
     justify-content: center;
     margin: 0 auto;
-    width: 1400px;
+    width: 100%;
     background-color: #eee;
     padding : 20px 0;
 }
