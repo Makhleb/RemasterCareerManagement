@@ -302,7 +302,7 @@
             .then(function (response) {
                 console.log(response);
                 alert("공고 등록이 완료되었습니다.");
-                // location.href = ???;
+                /// location.href = ???;
                 imageUpload(response.data);
             })
             .catch(function (error) {
@@ -313,8 +313,18 @@
     function imageUpload(postNo) {
         const formData = new FormData();
         const file = $('#image-upload')[0].files[0];
+
+        let fileDto = {
+            fileGubn: 'POST_THUMBNAIL',
+            fileRefId: postNo,
+            fileName: file.name,
+            fileExt: file.type,
+            instId: 'companyTestNo'
+        }
+
         formData.append('file', file);
-        axios.post('/api/companies/job-post/image?post-no=' + postNo, formData,{
+        formData.append('fileDto', JSON.stringify(fileDto));
+        axios.post('/api/common/file', formData,{
             headers: {
                 'Content-Type': 'multipart/form-data' // 파일 전송 시 반드시 지정
             }
