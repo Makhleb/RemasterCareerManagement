@@ -8,18 +8,14 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
-<body>
 <!-- 헤더 -->
 <div th:replace="~{/layout_dir/fragments/header :: header}"></div>
-
 <!-- 본문 -->
-<main layout:fragment="content">
+<body layout:fragment="content">
     <!-- 본문이 동적으로 삽입될 영역 -->
-</main>
-
+</body>
 <!-- 푸터 -->
 <div th:replace="~{/layout_dir/fragments/footer :: footer}"></div>
-</body>
 <!-- JavaScript 파일 적용 -->
 <script layout:fragment="script"></script>
 <script th:src="@{/js/layout.js}"></script>
