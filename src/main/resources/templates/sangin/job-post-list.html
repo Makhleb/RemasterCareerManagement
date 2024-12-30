@@ -189,7 +189,8 @@
                 postDiv.classList.add('section5_post');
                 postDiv.innerHTML = `
                 <div id="section5_postThumbnail">
-                    <img src="/images/${item.postThumbnail}" alt="기업로고">
+                    <img th:src="@{/images/" alt="기업로고">
+                    <img th:src="@{/images/fire.png}" alt="불">
 
                 </div>
                 <a id="section5_title" href="/view/users/job-post/detail/${item.jobPostNo}">${item.title}</a>

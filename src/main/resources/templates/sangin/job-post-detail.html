@@ -61,8 +61,8 @@
                 const data = response.data;
 
                 // 데이터를 HTML 요소에 동적으로 추가
-                document.getElemen
-                tById("post_img").innerHTML = `<img th:src="@{/images/${data.postThumbnail}}" alt="반갑습니다!">`;
+                document.getElementById("post_img").innerHTML = `<img th:src="@{/images/${data.postThumbnail}}" alt="반갑습니다!">`;
+                // document.getElementById("post_img").innerHTML = `<img th:src="@{/images/${data.postThumbnail}}" alt="반갑습니다!">`;
                 document.getElementById("com_name").textContent = data.companyId;
                 document.getElementById("post_address").textContent = data.postAddress;
                 document.getElementById("job_history").textContent = data.jobHistory;
