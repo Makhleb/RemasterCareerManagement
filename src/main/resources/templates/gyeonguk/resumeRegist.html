@@ -20,7 +20,13 @@
             <input type="text" id="title" name="title" placeholder="이력서 제목을 입력하세요">
 
             <label for="headshot">증명사진</label>
-            <input type="file" id="headshot" name="headshot" accept="image/*">
+            <div class="photo-section">
+                <div class="photo-preview">
+                    <img src="#" alt="프로필 사진" class="profile-image" id="profileImage">
+                    <button type="button" class="edit-photo-btn" id="editPhotoBtn">✎</button>
+                </div>
+                <input type="file" id="headshot" name="headshot" accept="image/*" style="display: none;">
+            </div>
 
             <label for="userName">이름</label>
             <input type="text" id="userName" name="userName" readonly>
@@ -76,6 +82,9 @@
             <label for="activityCenterName">기관명</label>
             <input type="text" id="activityCenterName" name="activityCenterName">
 
+            <label for="activityContent">주요활동 내용</label>
+            <textarea id="activityContent" name="activityContent"></textarea>
+
             <label for="startDate">시작일</label>
             <input type="date" id="startDate" name="startDate">
 
@@ -101,6 +110,9 @@
 
             <label for="schoolName">학교명</label>
             <input type="text" id="schoolName" name="schoolName">
+
+            <label for="specialty">전공</label>
+            <input type="text" id="specialty" name="specialty">
 
             <label for="enterDate">입학일</label>
             <input type="date" id="enterDate" name="enterDate">
@@ -179,8 +191,8 @@
                 <option value="L">링크</option>
             </select>
 
-            <label for="portfolioFilename">파일명</label>
-            <input type="text" id="portfolioFilename" name="portfolioFilename">
+            <label for="potfolioFilename">파일명</label>
+            <input type="text" id="potfolioFilename" name="potfolioFilename">
         </div>
         <button id="savePortfolio">저장</button>
     </section>
@@ -189,13 +201,21 @@
     <section>
         <h2>자기소개서</h2>
         <div>
+            <label for="introTitle">제목</label>
+            <input type="text" id="introTitle" name="introTitle">
             <label for="content">내용</label>
             <textarea id="content" name="content"></textarea>
         </div>
         <button id="saveIntro">저장</button>
     </section>
 
+    <!-- 작성완료 버튼 -->
+    <button id="completeResumeRegist">작성완료</button>
+
+
     <script>
+        let resumeNo = null; // 이력서 번호를 저장할 변수
+
         function sendData(url, data) {
             axios.post(url, data, {
                 headers: {
@@ -203,13 +223,20 @@
                 }
             })
                 .then(response => {
-                    alert('저장되었습니다: ' + response.data);
+                    if (url === '/api/users/resume/personal') {
+                        console.log(response);
+                        resumeNo = response.data; // 백엔드에서 resumeNo를 반환하도록 수정 필요
+                        console.log('Resume No:', resumeNo);
+                    }
+                    alert('저장되었습니다');
                 })
                 .catch(error => {
-                    console.error('저장 중 오류가 발생했습니다:', error);
+                    console.error('저장 중 오류가 발생했습니다:', error.response?.data || error.message);
+                    alert('저장 중 오류가 발생했습니다: ' + (error.response?.data || error.message));
                 });
         }
 
+        // 개인 정보 저장
         document.getElementById('savePersonalInfo').addEventListener('click', function () {
             const data = {
                 title: document.getElementById('title').value,
@@ -225,69 +252,151 @@
                 wishTime: document.getElementById('wishTime').value,
                 workCode: document.getElementById('workCode').value
             };
-            console.log(data)
+            console.log('개인 정보 데이터 전송:', data)
             sendData('/api/users/resume/personal', data);
         });
 
+        // 스킬 저장 이벤트 리스너
+        document.getElementById('saveSkill').addEventListener('click', function () {
+            if (!resumeNo) {
+                alert('먼저 개인 정보를 저장해주세요.');
+                return;
+            }
+
+            const selectedSkills = Array.from(document.querySelectorAll('.selected-skills .selected-skill'))
+                .map(skill => skill.dataset.skill);
+
+            if (selectedSkills.length === 0) {
+                alert('적어도 하나 이상의 스킬을 선택해주세요.');
+                return;
+            }
+
+            const data = selectedSkills.map(skill => ({
+                resumeNo: resumeNo,
+                skillCode: skill
+            }));
+
+            console.log('스킬 데이터 전송:', data); // 데이터 확인을 위한 로그
+            sendData('/api/users/resume/skills', data);
+        });
+
+
+        // 나머지 저장 버튼 이벤트 리스너들...
         document.getElementById('saveCareer').addEventListener('click', function () {
             const data = {
-                careerType: document.getElementById('activityType').value,
-                companyName: document.getElementById('activityCenterName').value,
+                resumeNo: resumeNo,
+                activityType: document.getElementById('activityType').value,
+                activityCenterName: document.getElementById('activityCenterName').value,
+                activityContent : document.getElementById('activityContent').value,
                 startDate: document.getElementById('startDate').value,
                 endDate: document.getElementById('endDate').value
             };
-            sendData('/api/users/resume/career', data);
+            sendData('/api/users/resume/activity', data);
         });
 
         document.getElementById('saveEducation').addEventListener('click', function () {
             const data = {
-                educationLevel: document.getElementById('educationCode').value,
+                resumeNo: resumeNo,
+                educationCode: document.getElementById('educationCode').value,
+                specialty: document.getElementById('specialty').value,
                 schoolName: document.getElementById('schoolName').value,
-                admissionDate: document.getElementById('enterDate').value,
-                graduationDate: document.getElementById('graduateDate').value
+                enterDate: document.getElementById('enterDate').value,
+                graduateDate: document.getElementById('graduateDate').value
             };
             sendData('/api/users/resume/education', data);
         });
 
         document.getElementById('saveLicense').addEventListener('click', function () {
             const data = {
+                resumeNo: resumeNo,
                 licenseName: document.getElementById('licenseName').value,
-                issuingOrganization: document.getElementById('licenseCenterName').value,
-                acquisitionDate: document.getElementById('passDate').value
+                licenseCenterName: document.getElementById('licenseCenterName').value,
+                passDate: document.getElementById('passDate').value
             };
             sendData('/api/users/resume/license', data);
         });
 
-        document.getElementById('saveSkill').addEventListener('click', function () {
-            const selectedSkills = Array.from(document.querySelectorAll('.selected-skills .skill'))
-                .map(skill => skill.dataset.skill);
-
-            const data = { skills: selectedSkills };
-            sendData('/api/users/resume/skills', data);
-        });
-
         document.getElementById('saveMilitary').addEventListener('click', function () {
             const data = {
-                militaryServiceType: document.getElementById('militaryType').value,
-                enlistmentDate: document.getElementById('enlistDate').value,
-                dischargeDate: document.getElementById('releaseDate').value
+                resumeNo: resumeNo,
+                militaryType: document.getElementById('militaryType').value,
+                enlistDate: document.getElementById('enlistDate').value,
+                releaseDate: document.getElementById('releaseDate').value
             };
             sendData('/api/users/resume/military', data);
         });
 
         document.getElementById('savePortfolio').addEventListener('click', function () {
             const data = {
-                portfolioType: document.getElementById('gubn').value,
-                portfolioFileName: document.getElementById('portfolioFilename').value
+                resumeNo: resumeNo,
+                gubn: document.getElementById('gubn').value,
+                potfolioFilename: document.getElementById('potfolioFilename').value
             };
             sendData('/api/users/resume/portfolio', data);
         });
 
         document.getElementById('saveIntro').addEventListener('click', function () {
             const data = {
-                selfIntroduction: document.getElementById('content').value
+                resumeNo: resumeNo,
+                order: 1,
+                introTitle: document.getElementById('introTitle').value,
+                content: document.getElementById('content').value
             };
             sendData('/api/users/resume/intro', data);
+        });
+
+        // 스킬 선택 기능 추가
+        document.addEventListener('DOMContentLoaded', function () {
+            const skillSuggestions = document.querySelector('.skill-suggestions');
+            const selectedSkillsContainer = document.querySelector('.selected-skills');
+
+            // 스킬 클릭 시 선택된 스킬 영역에 추가
+            skillSuggestions.addEventListener('click', function (event) {
+                if (event.target.classList.contains('skill')) {
+                    const skillName = event.target.dataset.skill;
+
+                    // 중복 체크
+                    if (!Array.from(selectedSkillsContainer.children).some(child => child.dataset.skill === skillName)) {
+                        const skillElement = document.createElement('span');
+                        skillElement.classList.add('selected-skill');
+                        skillElement.dataset.skill = skillName;
+                        skillElement.textContent = skillName + ' ×'; // 제거를 위한 '×' 추가
+
+                        // 클릭 시 스킬 제거
+                        skillElement.addEventListener('click', function () {
+                            selectedSkillsContainer.removeChild(skillElement);
+                        });
+
+                        selectedSkillsContainer.appendChild(skillElement);
+                    } else {
+                        alert('이미 선택된 스킬입니다.');
+                    }
+                }
+            });
+
+            // 프로필 사진 편집 버튼 기능 (선택 사항)
+            const editPhotoBtn = document.getElementById('editPhotoBtn');
+            const headshotInput = document.getElementById('headshot');
+            const profileImage = document.getElementById('profileImage');
+
+            editPhotoBtn.addEventListener('click', function () {
+                headshotInput.click();
+            });
+
+            headshotInput.addEventListener('change', function () {
+                const file = headshotInput.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        profileImage.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+
+        document.getElementById("completeResumeRegist").addEventListener('click', function (){
+            location.href="/";
         });
     </script>
 

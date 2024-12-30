@@ -7,7 +7,7 @@
 
 
         <!-- 이력서 제목 및 인적사항 저장 -->
-        <insert id="insertPersonalInfo" parameterType="com.example.test.dto.ResumeDTO">
+        <insert id="insertPersonalInfo" parameterType="com.example.test.dto.ResumeDTO" useGeneratedKeys="true" keyProperty="resumeNo">
             INSERT INTO tblResume (
             userId,
             title,
@@ -71,6 +71,7 @@
             )
         </insert>
 
+
         <!-- 자격증 저장 -->
         <insert id="insertLicenseInfo" parameterType="com.example.test.dto.LicenseDTO">
             INSERT INTO tblLicense (
@@ -85,6 +86,16 @@
             #{passDate}
             )
         </insert>
+
+        <!-- 여러 스킬을 한 번에 저장 -->
+        <insert id="insertSkills" parameterType="java.util.List">
+         INSERT INTO tblResumeSkill (resumeNo, skillCode)
+            VALUES
+        <foreach collection="skills" item="skill" separator=",">
+            (#{skill.resumeNo}, #{skill.skillCode})
+        </foreach>
+        </insert>
+
 
         <!-- 병역 사항 저장 -->
         <insert id="insertMilitaryInfo" parameterType="com.example.test.dto.MilitaryDTO">
@@ -103,14 +114,14 @@
 
         <!-- 포트폴리오 저장 -->
         <insert id="insertPortfolioInfo" parameterType="com.example.test.dto.PotfolioDTO">
-            INSERT INTO tblPortfolio (
+            INSERT INTO tblPotfolio (
             resumeNo,
             gubn,
-            portfolioFilename
+            potfolioFilename
             ) VALUES (
             #{resumeNo},
             #{gubn},
-            #{portfolioFilename}
+            #{potfolioFilename}
             )
         </insert>
 
@@ -118,10 +129,14 @@
         <insert id="insertIntro" parameterType="com.example.test.dto.IntroduceDTO">
             INSERT INTO tblIntroduce (
             resumeNo,
-            content
+            title,
+            content,
+            `order`
             ) VALUES (
             #{resumeNo},
-            #{content}
+            #{introTitle},
+            #{content},
+            #{order}
             )
         </insert>
 

@@ -2,6 +2,9 @@ package com.example.test.dao.gyeonguk;
 
 import com.example.test.dto.*;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * Created on 2024-12-27 by 이경욱
@@ -37,6 +40,14 @@ public interface ResumeDao {
      * @param licenseDTO 자격증 정보 DTO
      */
     void insertLicenseInfo(LicenseDTO licenseDTO);
+
+    /**
+     * 이력서스킬 저장
+     *
+     * @param resumeSkillDTOList 이력서스킬 정보 DTO
+     */
+    void insertSkills(@Param("skills")List<ResumeSkillDTO> resumeSkillDTOList); // 추가된 메소드
+
 
     /**
      * 병역 사항 저장

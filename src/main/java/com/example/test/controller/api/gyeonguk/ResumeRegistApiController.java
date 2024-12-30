@@ -3,7 +3,10 @@ package com.example.test.controller.api.gyeonguk;
 import com.example.test.dto.*;
 import com.example.test.service.gyeonguk.ResumeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Created on 2024-12-27 by 이경욱
@@ -23,11 +26,10 @@ public class ResumeRegistApiController {
      * @return 저장 결과 메시지
      */
     @PostMapping("/personal")
-    public String savePersonalInfo(@RequestBody ResumeDTO resumeDTO) {
+    public int savePersonalInfo(@RequestBody ResumeDTO resumeDTO) {
         resumeDTO.setUserId("test1");
-        System.out.println(resumeDTO + ".............");
-        resumeService.savePersonalInfo(resumeDTO);
-        return "개인정보가 저장되었습니다.";
+        int resumeNo=resumeService.savePersonalInfo(resumeDTO);
+        return resumeNo;
     }
 
     /**
@@ -50,6 +52,7 @@ public class ResumeRegistApiController {
      */
     @PostMapping("/education")
     public String saveEducationInfo(@RequestBody EducationDTO educationDTO) {
+        System.out.println(educationDTO + ".............");
         resumeService.saveEducationInfo(educationDTO);
         return "학력이 저장되었습니다.";
     }
@@ -65,6 +68,19 @@ public class ResumeRegistApiController {
         resumeService.saveLicenseInfo(licenseDTO);
         return "자격증이 저장되었습니다.";
     }
+    /**
+     * 스킬 저장
+     *
+     * @param resumeSkillDTOList 스킬 데이터 DTO
+     * @return 저장 결과 메시지
+     */
+    @PostMapping("/skills")
+    public ResponseEntity<String> saveSkills(@RequestBody List<ResumeSkillDTO> resumeSkillDTOList ) {
+        resumeService.saveSkills(resumeSkillDTOList);
+        return ResponseEntity.ok("스킬이 저장되었습니다.");
+    }
+
+
 
     /**
      * 병역사항 저장

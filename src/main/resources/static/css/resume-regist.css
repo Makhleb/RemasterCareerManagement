@@ -172,6 +172,13 @@ select:focus {
     border-radius: 20px;
     padding: 8px 12px;
     font-size: 0.8rem;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.selected-skill:hover {
+    background-color: #d84315;
+    color: white;
 }
 
 /* Save Button */

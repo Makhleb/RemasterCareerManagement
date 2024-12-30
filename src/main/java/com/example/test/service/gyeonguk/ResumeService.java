@@ -5,6 +5,8 @@ import com.example.test.dao.gyeonguk.ResumeDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created on 2024-12-27 by 이경욱
  * Description: 이력서 관련 비즈니스 로직을 처리하는 서비스 클래스
@@ -20,8 +22,9 @@ public class ResumeService {
      *
      * @param resumeDTO 이력서 제목 및 인적사항 DTO
      */
-    public void savePersonalInfo(ResumeDTO resumeDTO) {
+    public int savePersonalInfo(ResumeDTO resumeDTO) {
         resumeDao.insertPersonalInfo(resumeDTO);
+        return resumeDTO.getResumeNo();
     }
 
     /**
@@ -59,6 +62,17 @@ public class ResumeService {
     public void saveMilitaryInfo(MilitaryDTO militaryDTO) {
         resumeDao.insertMilitaryInfo(militaryDTO);
     }
+
+    /**
+     * 이력서 스킬 저장
+     *
+     * @param resumeSkillDTOList 이력서 스킬 DTO
+     */
+    public void saveSkills(List<ResumeSkillDTO> resumeSkillDTOList) {
+        resumeDao.insertSkills(resumeSkillDTOList);
+    }
+
+
 
     /**
      * 포트폴리오 저장
