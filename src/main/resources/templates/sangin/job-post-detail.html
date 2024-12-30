@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout_dir/layout/main_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>공고 상세 보기</title>
+    <link rel="stylesheet" href="/css/job-post-detail.css">
+</head>
+<body layout:fragment="content" th:attr="data-job-post-no=${jobPostNo}">
+<section>
+    <div class="section1">
+        <div id="post_img"></div>
+    </div>
+    <div class="section2">
+        <div class="section2_box1">
+            <div id="com_name"></div>
+            <div class="request">
+                <span id="post_address"></span>
+                <span id="job_history"></span>
+            </div>
+        </div>
+        <div class="section2_box2">
+            <div id="post_name"></div>
+            <span id="section2_regist" class="regist">지원하기</span>
+        </div>
+    </div>
+    <div class="section3">
+        <div id="section3_text">포지션 상세</div>
+        <div id="description"></div>
+    </div>
+    <div class="section4">
+        <div id="section4_text">기술 스택 · 툴</div>
+        <div id="stack_list"></div>
+    </div>
+    <div class="section5">
+        <div id="section5_text">근무지역</div>
+        <div id="map"></div>
+        <div id="region_name"></div>
+    </div>
+    <div class="section6">
+        <span class="regist">지원하기</span>
+    </div>
+    <!-- 모달창 -->
+    <div id="resume-modal" class="modal">
+        <div class="modal-content">
+            <div style="display: flex; gap: 20px; align-items: center; justify-content: center;">
+                <h2>이력서 선택</h2>
+                <div class="close">&times;</div>
+            </div>
+            <ul id="resume-list"></ul>
+            <button id="apply-btn">지원하기</button>
+        </div>
+    </div>
+    <script>
+        const jobPostNo = document.body.dataset.jobPostNo;
+
+        // Axios 요청으로 데이터를 가져와서 페이지를 동적으로 구성
+        axios.get(`/api/users/job-post/detail/${jobPostNo}`)
+            .then(response => {
+                const data = response.data;
+
+                // 데이터를 HTML 요소에 동적으로 추가
+                document.getElemen
+                tById("post_img").innerHTML = `<img th:src="@{/images/${data.postThumbnail}}" alt="반갑습니다!">`;
+                document.getElementById("com_name").textContent = data.companyId;
+                document.getElementById("post_address").textContent = data.postAddress;
+                document.getElementById("job_history").textContent = data.jobHistory;
+                document.getElementById("post_name").textContent = data.title;
+                document.getElementById("description").textContent = data.content;
+                document.getElementById("region_name").textContent = data.postAddressDetail;
+
+                // 기술 스택 목록 추가
+                const stackList = document.getElementById("stack_list");
+                data.skillList.forEach(skill => {
+                    const span = document.createElement("span");
+                    span.textContent = skill.skillCode;
+                    stackList.appendChild(span);
+                });
+            })
+            .catch(error => console.error("Error fetching job post details:", error));
+
+        // 모달 관련 로직
+        const modal = document.getElementById("resume-modal");
+        const closeModal = document.querySelector(".close");
+        const applyBtn = document.getElementById("apply-btn");
+        const resumeList = document.getElementById("resume-list");
+
+        function loadResumes() {
+            resumeList.innerHTML = "";
+            const resumes = [
+                { id: 1, name: "이력서 1" },
+                { id: 2, name: "이력서 2" },
+                { id: 3, name: "이력서 3" }
+            ];
+
+            resumes.forEach(resume => {
+                const li = document.createElement("li");
+                li.textContent = resume.name;
+                li.dataset.id = resume.id;
+                li.addEventListener("click", () => {
+                    document.querySelectorAll("#resume-list li").forEach(item => {
+                        item.style.backgroundColor = "";
+                        item.dataset.selected = "false";
+                    });
+                    li.style.backgroundColor = "#d1f7d1";
+                    li.dataset.selected = "true";
+                });
+                resumeList.appendChild(li);
+            });
+        }
+
+        document.querySelectorAll(".regist").forEach(regist => {
+            regist.addEventListener("click", () => {
+                loadResumes();
+                modal.style.display = "block";
+            });
+        });
+
+        closeModal.addEventListener("click", () => {
+            modal.style.display = "none";
+        });
+
+        applyBtn.addEventListener("click", () => {
+            const selectedResume = document.querySelector("#resume-list li[data-selected='true']");
+            if (selectedResume) {
+                alert(`${selectedResume.textContent} 이력서로 지원했습니다!`);
+                modal.style.display = "none";
+            } else {
+                alert("이력서를 선택해주세요!");
+            }
+        });
+
+        window.addEventListener("click", event => {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+
+    </script>
+</section>
+</body>
+</html>

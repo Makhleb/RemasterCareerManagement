@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test.dao.sangin.JobPostDao_sangin">
+    <select id="getJobPostAll">
+        select * from tblJobPost ORDER BY RAND();
+    </select>
+    <select id="getJobPostMatching">
+        select * from tblJobPost ORDER BY RAND();
+    </select>
+
+    <select id="getJobPost" resultType="com.example.test.vo.JobPostDetailVo">
+        SELECT * FROM tblJobPost WHERE jobPostNo = #{jobPostNo}
+    </select>
+
+    <select id="getJobPostSkill" resultType="com.example.test.dto.JobPostSkillDTO">
+        select * from tblJobPostSkill WHERE jobPostNo = #{jobPostNo}
+    </select>
+
+</mapper>
