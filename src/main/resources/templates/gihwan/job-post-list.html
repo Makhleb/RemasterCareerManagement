@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout_dir/layout/main_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>공고 조회</title>
+    <link rel="stylesheet" href="/css/job-post-list.css">
+</head>
+<body layout:fragment="content">
+<!--    todo 내일 마이페이지에서 공통되는 요소를 레이아웃으로 분리하기 (aside, container같은거) -->
+<div class="flex-container">
+    <div class="container">
+        <aside>
+            <a href="#" class="aside-title">기업 마이페이지 홈</a>
+            <hr>
+            <ul>
+                <li>
+                    <a href="#">기업 프로필</a>
+                    <ul>
+                        <li><a href="#">프로필 수정</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">공고 관리</a>
+                    <ul>
+                        <li><a href="#">공고 등록</a></li>
+                        <li><a href="#">공고 조회</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">기술스택 매칭</a>
+                </li>
+            </ul>
+        </aside>
+        <div class="main-content">
+            <div class="main-title">공고 조회</div>
+            <hr>
+            <div class="column-flex list-padding">
+                <div>
+                    <div class="post-item row-flex">
+                        <img src="/images/testImage.webp" class="photo-item" alt="공고 이미지">
+                        <div class="column-flex post-info">
+                            <div class="title-and-date">
+                                <div class="row-flex" style="align-items: center;">
+                                    <div class="text-button" style="margin-right: 20px">누구누구 개발자 모집</div>
+                                    <button class="post-button inner-button" style="margin-right: 5px">수정</button>
+                                    <button class="post-button inner-button">삭제</button>
+                                </div>
+                                <div class="item-date">
+                                    <span class="start-date">1199.23.12</span>
+                                    <span> ~ </span>
+                                    <span class="end-date">2020.13.24</span>
+                                </div>
+                            </div>
+                            <div class="post-type">
+                                <span class="work-type">근무형태</span>
+                                <span> | </span>
+                                <span class="job-history">경력</span>
+                                <span> | </span>
+                                <span class="job-type">직무</span>
+                            </div>
+                        </div>
+                        <button class="post-button resume">공고에 맞는<br>이력서 추천</button>
+                        <div class="text-button" onclick="viewList()">
+                            <span>지원자 목록</span>
+                            <img src="/images/black_down_arrow.png" alt="아래 화살표">
+                        </div>
+                    </div>
+                    <div class="user-list" style="display: none">
+                        나왔음
+                    </div>
+                </div>
+                <div class="post-item">내용내용</div>
+                <div class="post-item">내용내용</div>
+                <div class="post-item">내용내용</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function viewList() {
+            if($('.user-list').attr('style').includes('display: none')){
+                $('.user-list').show();
+            } else{
+                $('.user-list').hide();
+            }
+
+        }
+    </script>
+</div>
+</body>
+</html>
