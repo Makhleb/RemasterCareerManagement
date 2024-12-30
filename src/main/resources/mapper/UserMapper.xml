@@ -24,11 +24,11 @@
         INSERT INTO tblUser (
             userId, userPw, userName, userPhone, 
             userEmail, userBirth, userGender, userRole,
-            userIsActive, userCreateDate, userModifyDate
+            userIsActive, userCreateDate
         ) VALUES (
             #{userId}, #{userPw}, #{userName}, #{userPhone},
             #{userEmail}, #{userBirth}, #{userGender}, #{userRole},
-            #{userIsActive}, NOW(), NOW()
+            #{userIsActive}, NOW()
         )
     </insert>
 

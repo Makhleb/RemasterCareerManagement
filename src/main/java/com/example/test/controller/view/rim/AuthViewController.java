@@ -2,7 +2,6 @@ package com.example.test.controller.view.rim;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-
 /**
  * Created on 2024-12-30 by 구경림
  */
@@ -24,4 +23,8 @@ public class AuthViewController {
         return "login";
     }
 
+    @GetMapping("/company/signup")
+    public String companySignup() {
+        return "company/signup";
+    }
 }

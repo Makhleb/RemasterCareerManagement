@@ -4,7 +4,7 @@
       layout:decorate="~{/layout_dir/layout/main_layout}">
 <head>
     <meta charset="UTF-8">
-    <title>회원가입</title>
+    <title>기업 회원가입</title>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/api.js"></script>
     <link rel="stylesheet" href="/css/common/variable.css">
@@ -286,89 +286,129 @@
             margin-top: 5px;
         }
 
+        .terms-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 5px 0;
+        }
+
+        .terms-row:first-child {
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .terms-row label {
+            margin: 0;
+            flex: 1;
+        }
+
+        .terms-row button {
+            background: none;
+            border: none;
+            color: #666;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
     </style>
-</head>
+</head>ㅇ
 <body>
-<div layout:fragment="content">
+<th:block layout:fragment="content">
     <div class="signup">
         <div class="signup-container">
             <div class="signup-container-top">
-                <h2>
-                    <i class="fa-solid fa-user-plus" ></i>
-                    구직자 회원가입
-                </h2>
+                <h2><i class="fa-solid fa-building"></i>기업 회원가입</h2>
             </div>
+            
             <div class="signup-container-bottom">
                 <form id="signupForm">
+                    <!-- 기본 정보 -->
                     <div class="form-group">
-                        <label for="userId" class="required">아이디</label>
+                        <label for="companyId" class="required">아이디</label>
                         <div class="id-group">
-                            <input type="text" id="userId" placeholder="영문, 숫자 4~20자">
+                            <input type="text" id="companyId" placeholder="영문, 숫자 4~20자">
                             <button type="button" class="rim-btn check-button" onclick="checkDuplicate()">중복확인</button>
                         </div>
-                        <div class="error-message" id="userIdError"></div>
+                        <div class="error-message" id="companyIdError"></div>
                     </div>
 
+                    <!-- 비밀번호 -->
                     <div class="form-group">
-                        <label for="userPw" class="required">비밀번호</label>
-                        <input type="password" id="userPw" placeholder="영문, 숫자, 특수문자 조합 8자 이상">
-                        <div class="error-message" id="userPwError"></div>
+                        <label for="companyPw" class="required">비밀번호</label>
+                        <input type="password" id="companyPw" placeholder="영문, 숫자, 특수문자 조합 8자 이상">
+                        <div class="error-message" id="companyPwError"></div>
                     </div>
 
+                    <!-- 비밀번호 확인 -->
                     <div class="form-group">
-                        <label for="userPwConfirm" class="required">비밀번호 확인</label>
-                        <input type="password" id="userPwConfirm" placeholder="비밀번호 재입력" >
-                        <div class="error-message" id="userPwConfirmError"></div>
+                        <label for="companyPwConfirm" class="required">비밀번호 확인</label>
+                        <input type="password" id="companyPwConfirm" placeholder="비밀번호 재입력">
+                        <div class="error-message" id="companyPwConfirmError"></div>
                     </div>
 
+                    <!-- 회사명 -->
                     <div class="form-group">
-                        <label for="userName" class="required">이름</label>
-                        <input type="text" id="userName" >
-                        <div class="error-message" id="userNameError"></div>
+                        <label for="companyName" class="required">회사명</label>
+                        <input type="text" id="companyName">
+                        <div class="error-message" id="companyNameError"></div>
                     </div>
 
+                    <!-- 사업자등록번호 -->
                     <div class="form-group">
-                        <label for="userPhone" class="required">휴대폰 번호</label>
-                        <input type="tel" id="userPhone" placeholder="000-0000-0000" >
-                        <div class="error-message" id="userPhoneError"></div>
+                        <label for="companyNumber" class="required">사업자등록번호</label>
+                        <input type="text" id="companyNumber" placeholder="000-00-00000">
+                        <div class="error-message" id="companyNumberError"></div>
                     </div>
 
+                    <!-- 주소 -->
                     <div class="form-group">
-                        <label class="required">이메일</label>
-                        <div class="email-group">
-                            <input type="text" id="emailId" >
-                            <span>@</span>
-                            <input type="text" id="emailDomain" >
+                        <label for="companyAddress" class="required">회사 주소</label>
+                        <div class="address-group">
+                            <input type="text" id="companyZonecode" placeholder="우편번호" readonly>
+                            <button type="button" class="rim-btn" onclick="searchAddress()">주소 검색</button>
                         </div>
-                        <div class="error-message" id="userEmailError"></div>
+                        <input type="text" id="companyAddress" placeholder="기본주소" readonly>
+                        <input type="text" id="companyAddressDetail" placeholder="상세주소">
+                        <div class="error-message" id="companyAddressError"></div>
+                    </div>
+
+                    <!-- 연락처 -->
+                    <div class="form-group">
+                        <label for="companyContact" class="required">대표 연락처</label>
+                        <input type="tel" id="companyContact" placeholder="000-0000-0000">
+                        <div class="error-message" id="companyContactError"></div>
+                    </div>
+
+                    <!-- 이메일 -->
+                    <div class="form-group">
+                        <label for="companyEmail" class="required">이메일</label>
+                        <input type="email" id="companyEmail" placeholder="example@example.com">
+                        <div class="error-message" id="companyEmailError"></div>
+                    </div>
+
+                    <!-- 선택 입력 필드들 -->
+                    <div class="form-group">
+                        <label for="companyWebsite">홈페이지</label>
+                        <input type="url" id="companyWebsite" placeholder="https://">
                     </div>
 
                     <div class="form-group">
-                        <label class="required">생년월일</label>
-                        <div class="birth-group">
-                            <select id="birthYear" >
-                                <option value="">년도</option>
-                            </select>
-                            <select id="birthMonth" >
-                                <option value="">월</option>
-                            </select>
-                            <select id="birthDay" >
-                                <option value="">일</option>
-                            </select>
-                        </div>
-                        <div class="error-message" id="userBirthError"></div>
+                        <label for="companyBirth">창립일</label>
+                        <input type="date" id="companyBirth">
                     </div>
 
                     <div class="form-group">
-                        <label class="required">성별</label>
-                        <select id="userGender">
-                            <option value="">선택</option>
-                            <option value="M">남성</option>
-                            <option value="F">여성</option>
-                        </select>
-                        <div class="error-message" id="userGenderError"></div>
+                        <label for="companyEmployee">직원 수</label>
+                        <input type="number" id="companyEmployee" placeholder="숫자만 입력">
                     </div>
 
+                    <div class="form-group">
+                        <label for="companyProfit">연간 매출액(만원)</label>
+                        <input type="number" id="companyProfit" placeholder="숫자만 입력">
+                    </div>
+
+                    <!-- 약관 동의 -->
                     <div class="form-group">
                         <label class="required">약관 동의</label>
                         <div class="terms-notice">
@@ -394,13 +434,14 @@
                         <div class="error-message" id="termsError"></div>
                     </div>
 
-                    <button type="submit" class="rim-btn submit-button">가입하기</button>
+                    <button type="submit" class="submit-button">회원가입</button>
                 </form>
             </div>
         </div>
-
     </div>
-    
+
+    <!-- 약관 모달 -->
+
     <div id="termsModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -415,9 +456,7 @@
             </div>
         </div>
     </div>
-</div>
 
-<th:block layout:fragment="script">
     <script>
         // 약관 체크박스 초기 비활성화
         document.querySelectorAll('.required-terms').forEach(checkbox => {
@@ -432,6 +471,9 @@
             const modalTitle = document.getElementById('modalTitle');
             const modalContent = document.getElementById('modalContent');
             const checkbox = document.getElementById(`terms${termType}`);
+
+            // 현재 약관 타입 저장
+            currentTermType = termType;
 
             let title = '';
             let content = '';
@@ -473,191 +515,40 @@
             if (currentTermType) {
                 const checkbox = document.getElementById(`terms${currentTermType}`);
                 checkbox.checked = true;
-                
+
                 // 전체 동의 상태 업데이트
                 const allChecked = [...document.querySelectorAll('.required-terms')]
                     .every(box => box.checked);
                 document.getElementById('termsAll').checked = allChecked;
-                
+
                 // 모달 닫기
                 document.getElementById('termsModal').style.display = "none";
             }
         }
 
-        // 유효성 검사 규칙 객체
+        // 유효성 검사 규칙
         const validationRules = {
-            userId: {
+            companyId: {
                 pattern: /^[a-zA-Z0-9]{4,20}$/,
-                message: '아이디는 영문, 숫자 4~20자여야 합니다'
+                message: "아이디는 영문, 숫자 4~20자여야 합니다"
             },
-            userPw: {
+            companyPw: {
                 pattern: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-                message: '비밀번호는 영문, 숫자, 특수문자 조합 8자 이상이어야 합니다'
+                message: "비밀번호는 영문, 숫자, 특수문자 조합 8자 이상이어야 합니다"
             },
-            userPwConfirm: {
-                validate: (value, formData) => value === formData.userPw,
-                message: '비밀번호가 일치하지 않습니다'
+            companyNumber: {
+                pattern: /^\d{3}-\d{2}-\d{5}$/,
+                message: "올바른 사업자등록번호 형식이 아닙니다"
             },
-            userName: {
-                pattern: /^.{2,}$/,
-                message: '이름은 2자 이상이어야 합니다'
+            companyContact: {
+                pattern: /^\d{2,3}-\d{3,4}-\d{4}$/,
+                message: "올바른 전화번호 형식이 아닙니다"
             },
-            userPhone: {
-                pattern: /^\d{3}-\d{3,4}-\d{4}$/,
-                message: '올바른 전화번호 형식이 아닙니다'
-            },
-            userEmail: {
-                validate: (value) => {
-                    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-                    return emailPattern.test(value);
-                },
-                message: '올바른 이메일 형식이 아닙니다'
-            },
-            emailDomain: {
-                pattern: /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/,
-                message: '올바른 도메인 형식이 아닙니다 (예: gmail.com)'
+            companyEmail: {
+                pattern: /^[A-Za-z0-9+_.-]+@(.+)$/,
+                message: "올바른 이메일 형식이 아닙니다"
             }
         };
-
-        // 유효성 검사 함수
-        const validateField = (fieldName, value, formData) => {
-            const rule = validationRules[fieldName];
-            if (!rule) return true;
-
-            if (rule.pattern) {
-                return rule.pattern.test(value);
-            }
-            if (rule.validate) {
-                return rule.validate(value, formData);
-            }
-            return true;
-        };
-
-        // 에러 메시지 표시 함수
-        const showError = (fieldName, message) => {
-            const errorDiv = document.getElementById(`${fieldName}Error`);
-            if (errorDiv) {
-                errorDiv.textContent = message;
-                errorDiv.style.display = 'block';
-            }
-        };
-
-        // 에러 메시지 초기화 함수
-        const clearErrors = () => {
-            document.querySelectorAll('.error-message').forEach(div => {
-                div.style.display = 'none';
-                div.textContent = '';
-            });
-        };
-
-        // 아이디 검증
-        function validateUserId() {
-            const userId = document.getElementById('userId').value;
-            if (!userId) {
-                showError('userId', '필수 입력 항목입니다.');
-                document.getElementById('userId').focus();
-                return false;
-            }
-            
-            if (!document.getElementById('userId').getAttribute('data-validated') === 'true') {
-                showError('userId', '아이디 중복확인이 필요합니다.');
-                document.getElementById('userId').focus();
-                return false;
-            }
-            
-            return true;
-        }
-
-        // 비밀번호 검증
-        function validatePassword() {
-            const userPw = document.getElementById('userPw').value;
-            if (!userPw) {
-                showError('userPw', '필수 입력 항목입니다.');
-                document.getElementById('userPw').focus();
-                return false;
-            }
-
-            if (!validationRules.userPw.pattern.test(userPw)) {
-                showError('userPw', validationRules.userPw.message);
-                document.getElementById('userPw').focus();
-                return false;
-            }
-
-            const userPwConfirm = document.getElementById('userPwConfirm').value;
-            if (!userPwConfirm) {
-                showError('userPwConfirm', '필수 입력 항목입니다.');
-                document.getElementById('userPwConfirm').focus();
-                return false;
-            }
-
-            if (userPw !== userPwConfirm) {
-                showError('userPwConfirm', '비밀번호가 일치하지 않습니다.');
-                document.getElementById('userPwConfirm').focus();
-                return false;
-            }
-
-            return true;
-        }
-
-        // 이름 검증
-        function validateName() {
-            const userName = document.getElementById('userName').value;
-            if (!userName) {
-                showError('userName', '필수 입력 항목입니다.');
-                document.getElementById('userName').focus();
-                return false;
-            }
-
-            if (!validationRules.userName.pattern.test(userName)) {
-                showError('userName', validationRules.userName.message);
-                document.getElementById('userName').focus();
-                return false;
-            }
-
-            return true;
-        }
-
-        // 휴대폰 번호 검증
-        function validatePhone() {
-            const userPhone = document.getElementById('userPhone').value;
-            if (!userPhone) {
-                showError('userPhone', '필수 입력 항목입니다.');
-                document.getElementById('userPhone').focus();
-                return false;
-            }
-
-            if (!validationRules.userPhone.pattern.test(userPhone)) {
-                showError('userPhone', validationRules.userPhone.message);
-                document.getElementById('userPhone').focus();
-                return false;
-            }
-
-            return true;
-        }
-
-        // 나머지 필수 필드 검증
-        function validateRemainingFields() {
-            const fields = ['emailId', 'emailDomain', 'birthYear', 'birthMonth', 'birthDay', 'userGender'];
-            
-            for (const field of fields) {
-                const value = document.getElementById(field)?.value;
-                if (!value) {
-                    const errorField = field === 'emailId' || field === 'emailDomain' ? 'userEmail' : field;
-                    showError(errorField, '필수 입력 항목입니다.');
-                    document.getElementById(field).focus();
-                    return false;
-                }
-
-                // 이메일 도메인 패턴 검사 추가
-                if (field === 'emailDomain' && !validationRules.emailDomain.pattern.test(value)) {
-                    showError('userEmail', validationRules.emailDomain.message);
-                    document.getElementById(field).focus();
-                    return false;
-                }
-            }
-
-            return true;
-        }
 
         // 약관 동의 검증
         function validateTerms() {
@@ -670,37 +561,58 @@
             return true;
         }
 
+        // 에러 메시지 표시 함수
+        function showError(field, message) {
+            const errorDiv = document.getElementById(`${field}Error`);
+            if (errorDiv) {
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        // 에러 메시지 초기화 함수
+        function clearErrors() {
+            document.querySelectorAll('.error-message').forEach(div => {
+                div.style.display = 'none';
+            });
+        }
+
         // 폼 제출 처리
-        const form = document.getElementById('signupForm');
-        form.addEventListener('submit', async (e) => {
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             clearErrors();
 
-            // 순차적 검증
-            if (!validateUserId()) return;
-            if (!validatePassword()) return;
-            if (!validateName()) return;
-            if (!validatePhone()) return;
-            if (!validateRemainingFields()) return;
-            if (!validateTerms()) return;
+            // 약관 동의 확인
+            const requiredTerms = document.querySelectorAll('.required-terms');
+            const allTermsAgreed = Array.from(requiredTerms).every(checkbox => checkbox.checked);
+            if (!allTermsAgreed) {
+                alert('필수 약관에 모두 동의해주세요.');
+                return;
+            }
 
-            // API 호출을 위한 데이터 준비
-                const formData = {
-                    userId: document.getElementById('userId').value,
-                    userPw: document.getElementById('userPw').value,
-                    userPwConfirm: document.getElementById('userPwConfirm').value,
-                    userName: document.getElementById('userName').value,
-                    userPhone: document.getElementById('userPhone').value,
-                    userEmail: `${document.getElementById('emailId').value}@${document.getElementById('emailDomain').value}`,
-                userBirth: `${document.getElementById('birthYear').value}${
-                    document.getElementById('birthMonth').value.padStart(2, '0')}${
-                    document.getElementById('birthDay').value.padStart(2, '0')}`,
-                    userGender: document.getElementById('userGender').value
-                };
+            // 필수 필드 검증
+            const requiredFields = ['companyId', 'companyPw', 'companyPwConfirm', 'companyName', 
+                                  'companyNumber', 'companyAddress', 'companyContact', 'companyEmail'];
+            
+            const formData = {
+                companyId: document.getElementById('companyId').value,
+                companyPw: document.getElementById('companyPw').value,
+                companyPwConfirm: document.getElementById('companyPwConfirm').value,
+                companyName: document.getElementById('companyName').value,
+                companyNumber: document.getElementById('companyNumber').value,
+                companyAddress: document.getElementById('companyAddress').value,
+                companyZonecode: document.getElementById('companyZonecode').value,
+                companyAddressDetail: document.getElementById('companyAddressDetail').value,
+                companyContact: document.getElementById('companyContact').value,
+                companyEmail: document.getElementById('companyEmail').value,
+                companyWebsite: document.getElementById('companyWebsite').value,
+                companyBirth: document.getElementById('companyBirth').value,
+                companyEmployee: document.getElementById('companyEmployee').value,
+                companyProfit: document.getElementById('companyProfit').value
+            };
 
-            // API 호출
             try {
-                const response = await axios.post('/api/auth/signup', formData);
+                const response = await axios.post('/api/auth/company/signup', formData);
                 alert(response.body);
                 location.href = '/login';
             } catch (error) {
@@ -716,7 +628,7 @@
         });
 
         // 전화번호 자동 하이픈 추가
-        document.getElementById('userPhone').addEventListener('input', function(e) {
+        document.getElementById('companyContact').addEventListener('input', function(e) {
             let value = e.target.value.replace(/[^0-9]/g, '');
             if (value.length > 3 && value.length <= 7) {
                 value = value.slice(0,3) + '-' + value.slice(3);
@@ -726,81 +638,51 @@
             e.target.value = value;
         });
 
-        // 생년월일 셀렉트 박스 초기화
-        function initBirthSelect() {
-            const yearSelect = document.getElementById('birthYear');
-            const monthSelect = document.getElementById('birthMonth');
-            const daySelect = document.getElementById('birthDay');
-
-            const currentYear = new Date().getFullYear();
-            for (let year = currentYear; year >= currentYear - 100; year--) {
-                yearSelect.add(new Option(year, year));
+        // 사업자등록번호 자동 하이픈 추가
+        document.getElementById('companyNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^0-9]/g, '');
+            if (value.length > 3 && value.length <= 5) {
+                value = value.slice(0,3) + '-' + value.slice(3);
+            } else if (value.length > 5) {
+                value = value.slice(0,3) + '-' + value.slice(3,5) + '-' + value.slice(5,10);
             }
+            e.target.value = value;
+        });
 
-            for (let month = 1; month <= 12; month++) {
-                monthSelect.add(new Option(month, month.toString().padStart(2, '0')));
-            }
-
-            for (let day = 1; day <= 31; day++) {
-                daySelect.add(new Option(day, day.toString().padStart(2, '0')));
-            }
-        }
-
-        // 페이지 로드 시 초기화
-        initBirthSelect();
-
-        // 아이디 중복확인 함수 추가
+        // 아이디 중복확인
         async function checkDuplicate() {
-            const userId = document.getElementById('userId').value;
-            if (!validationRules.userId.pattern.test(userId)) {
-                showError('userId', validationRules.userId.message);
+            const companyId = document.getElementById('companyId').value;
+            if (!validationRules.companyId.pattern.test(companyId)) {
+                showError('companyId', validationRules.companyId.message);
                 return;
             }
 
             try {
-                const response = await axios.post('/api/auth/check-duplicate', { userId });
+                const response = await axios.post('/api/auth/company/check-duplicate', { companyId });
                 if (response.body.success) {
-                    clearErrors();  // 모든 에러 메시지 초기화
+                    clearErrors();
                     alert('사용 가능한 아이디입니다.');
-                    document.getElementById('userId').setAttribute('data-validated', 'true');
+                    document.getElementById('companyId').setAttribute('data-validated', 'true');
                 } else {
-                    showError('userId', '이미 사용중인 아이디입니다.');
-                    document.getElementById('userId').setAttribute('data-validated', 'false');
+                    showError('companyId', '이미 사용중인 아이디입니다.');
+                    document.getElementById('companyId').setAttribute('data-validated', 'false');
                 }
             } catch (error) {
                 alert('중복 확인 중 오류가 발생했습니다.');
             }
         }
 
-        // userId input에 변경이 있을 때마다 validated 상태를 false로 변경하고 에러 메시지 표시
-        document.getElementById('userId').addEventListener('input', function() {
-            this.setAttribute('data-validated', 'false');
-            if (this.value) {  // 값이 있을 경우에만
-                showError('userId', '아이디 중복확인이 필요합니다.');
-            } else {
-                clearErrors();  // 값이 없으면 에러메시지 제거
-            }
-        });
-
-        // 전체 동의 체크박스 처리 수정
-        document.getElementById('termsAll').addEventListener('change', function() {
-            const checkboxes = document.querySelectorAll('.terms-checkbox');
-            checkboxes.forEach(checkbox => {
-                // 비활성화된 체크박스는 체크하지 않음
-                if (!checkbox.disabled) {
-                    checkbox.checked = this.checked;
+        // 주소 검색
+        function searchAddress() {
+            new daum.Postcode({
+                oncomplete: function(data) {
+                    document.getElementById('companyZonecode').value = data.zonecode;
+                    document.getElementById('companyAddress').value = data.address;
+                    document.getElementById('companyAddressDetail').focus();
                 }
-            });
-        });
+            }).open();
+        }
 
-        // 개별 체크박스 변경 시 전체 동의 체크박스 상태 업데이트
-        document.querySelectorAll('.required-terms').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                const allChecked = [...document.querySelectorAll('.required-terms')]
-                    .every(box => box.checked);
-                document.getElementById('termsAll').checked = allChecked;
-            });
-        });
 
         // 모달 닫기 기능
         document.querySelector('.close').addEventListener('click', function() {
@@ -815,7 +697,7 @@
             }
         });
 
-        // JavaScript에서 이벤트 리스너 추가
+        // 약관 보기 버튼 클릭 이벤트
         document.querySelectorAll('.terms-view').forEach(button => {
             button.addEventListener('click', function() {
                 const termType = this.getAttribute('data-term-type');
@@ -832,7 +714,27 @@
                 }
             });
         });
+
+        // 전체 동의 체크박스 처리
+        document.getElementById('termsAll').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.terms-checkbox');
+            checkboxes.forEach(checkbox => {
+                if (!checkbox.disabled) {
+                    checkbox.checked = this.checked;
+                }
+            });
+        });
+
+        // 개별 체크박스 변경 시 전체 동의 체크박스 상태 업데이트
+        document.querySelectorAll('.required-terms').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const allChecked = [...document.querySelectorAll('.required-terms')]
+                    .every(box => box.checked);
+                document.getElementById('termsAll').checked = allChecked;
+            });
+        });
     </script>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </th:block>
 </body>
-</html>
+</html> 

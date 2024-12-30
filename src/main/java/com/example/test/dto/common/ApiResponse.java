@@ -15,7 +15,7 @@ public class ApiResponse<T> {
     private T body;
     private LocalDateTime timestamp;
 
-    private ApiResponse(ApiStatus status, T body) {
+    public ApiResponse(ApiStatus status, T body) {
         this.status = status;
         this.body = body;
         this.timestamp = LocalDateTime.now();

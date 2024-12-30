@@ -19,7 +19,7 @@
  */
 
 // 기본 설정
-axios.defaults.baseURL = '/api';
+// axios.defaults.baseURL = '/api';
 axios.defaults.timeout = 10000;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
@@ -40,7 +40,7 @@ axios.interceptors.request.use(
 // 응답 인터셉터 - 에러 처리
 axios.interceptors.response.use(
     (response) => {
-        return response.data.body;  // ApiResponse에서 body만 추출
+        return response.data;  // 전체 ApiResponse 반환
     },
     (error) => {
         if (error.response) {
