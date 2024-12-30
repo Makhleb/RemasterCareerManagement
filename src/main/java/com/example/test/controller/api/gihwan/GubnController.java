@@ -12,10 +12,9 @@ import java.util.List;
 /**
  * Created on 2024-12-29 by 최기환
  * gubn 조회용 컨트롤러
- * todo 이건 경로를 어떻게 정할까요?
  */
 @RestController
-@RequestMapping("/api/companies/gubn")
+@RequestMapping("/api/common/gubn")
 public class GubnController {
 
     private final GubnDao gubnDao;

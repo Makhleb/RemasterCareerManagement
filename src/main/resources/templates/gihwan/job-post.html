@@ -146,6 +146,15 @@
                             <img id="image-preview" src="" alt="미리보기" style="display:none;"/>
                         </div>
                     </div>
+                    <div class="board row-flex bottom-radio" style="margin-bottom: 25px">
+                        <div style="align-self: center">다른 사람이 볼 수 있도록 공개할까요?</div>
+                        <div class="row-flex" style="align-items: center">
+                            <input type="radio" id="post-view-on" name="options" value="Y">
+                            <label for="post-view-on" style="padding-right: 2rem; width: auto">네</label>
+                            <input type="radio" id="post-view-off" name="options" value="N">
+                            <label for="post-view-off" style="width: auto">아니요</label>
+                        </div>
+                    </div>
                 </div>
                 <div class="btn-box">
                     <button class="submit-btn" onclick="totalPostInfo()">등록하기</button>
@@ -157,12 +166,13 @@
 </div>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
+    //todo 유효성 검사, 아이디 적용, 등록시 페이지 이동, 수정 페이지로 재활용 하기
     /**
      * 윈도우 페이지 로드시 옵션 추가
      */
     window.onload = function () {
         axios.get(
-            '/api/companies/gubn?' +
+            '/api/common/gubn?' +
             'groupCodes=EDUCATION' +
             '&groupCodes=JOB_RANK' +
             '&groupCodes=SKILL' +
@@ -184,7 +194,7 @@
                     let selectId = selectMapping[item.groupCode];
                     if (selectId) {
                         $(selectId).append(
-                            $('<option>',{
+                            $('<option>', {
                                 value: item.code,
                                 text: item.name
                             })
@@ -204,9 +214,6 @@
                 console.log(error);
             })
     }
-
-    //todo 파일 업로드 구현. 업로드 완료 후 등록과정 거치도록
-    //todo 등록 api 연결
 
     /**
      * 기술스택 토글
@@ -250,38 +257,76 @@
         let file = $('#image-upload')[0].files[0];
 
         let postInfo = {
-            title: $('#post-title').val(),
-            managerName: $('#manager-name').val(),
-            managerPhone: $('#manager-phone').val(),
-            managerEmail: $('#manager-email').val(),
-            postAddress: $('#post-address').val(),
-            postDetailAddress: $('#post-detail-address').val(),
-            postZonecode: $('#post-zonecode').val(),
-            postThumbnail: file ? file.name : '',
-            startDate: $('#start-date').val(),
-            endDate: $('#end-date').val(),
-            workType: $('#work-type').val(),
-            jobRank: $('#job-rank').val(),
-            jobType: $('#job-type').val(),
-            jobHistory: $('#job-history').val(),
-            jobEducate: $('#job-educate').val(),
-            jobSalary: $('#job-salary').val(),
-            content: $('#post-content').val(),
-            method: $('#post-method').val(),
-            addNotice: $('#add-notice').val(),
-            skillList: $('.minus-stack')
+            jobPost: {
+                jobPostNo: 0,
+                title: $('#post-title').val(),
+                managerName: $('#manager-name').val(),
+                managerPhone: $('#manager-phone').val(),
+                managerEmail: $('#manager-email').val(),
+                postAddress: $('#post-address').val(),
+                postAddressDetail: $('#post-detail-address').val(),
+                postZonecode: $('#post-zonecode').val(),
+                postThumbnail: file ? file.name : '',
+                startDate: $('#start-date').val(),
+                endDate: $('#end-date').val(),
+                workTypeCode: $('#work-type').val(),
+                jobRankCode: $('#job-rank').val(),
+                workCode: $('#job-type').val(),
+                jobHistory: $('#job-history').val(),
+                educationCode: $('#job-educate').val(),
+                jobSalary: $('#job-salary').val(),
+                content: $('#post-content').val(),
+                method: $('#post-method').val(),
+                addNotice: $('#add-notice').val(),
+                postViewYn: $("input[name='options']:checked").val()
+            },
+            benefits: $('.benefit-add-wrapper button')
                 .map(function () {
-                    return $(this).val();
+                    return {
+                        jobPostNo: 0,
+                        benefitContent: $(this).val()
+                    };
                 }).get(),
-            benefitList: $('.benefit-add-wrapper button')
+            jobPostSkills: $('.minus-stack')
                 .map(function () {
-                    return $(this).val();
+                    return {
+                        jobPostNo: 0,
+                        skillCode: $(this).val()
+                    };
                 }).get()
         }
 
         console.log(postInfo);
 
+        axios.post('/api/companies/job-post', postInfo)
+            .then(function (response) {
+                console.log(response);
+                alert("공고 등록이 완료되었습니다.");
+                // location.href = ???;
+                imageUpload(response.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+    }
 
+    function imageUpload(postNo) {
+        const formData = new FormData();
+        const file = $('#image-upload')[0].files[0];
+        formData.append('file', file);
+        axios.post('/api/companies/job-post/image?post-no=' + postNo, formData,{
+            headers: {
+                'Content-Type': 'multipart/form-data' // 파일 전송 시 반드시 지정
+            }
+        })
+            .then(response => {
+                response.data;
+                console.log("파일 업로드 완료")
+                alert("이미지 저장 완료");
+            })
+            .catch(error => {
+                console.error('파일 업로드 실패:', error);
+            });
     }
 
     /**

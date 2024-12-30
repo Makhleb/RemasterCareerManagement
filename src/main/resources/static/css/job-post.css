@@ -2,9 +2,9 @@
     --base: #B7673C;
     --point: #FF8000;
     --nav: #3A5154;
-    --side: #B9B0B2;
     --line: #929AA2;
     --text: #1D2625;
+    --side: #e9ecef;
     color: #333;
 }
 
@@ -197,4 +197,43 @@ aside li ul {
     height: 300px;
     object-fit: cover;
     border-radius: 10px;
+}
+
+.bottom-radio {
+    justify-content: space-between;
+    padding: 1rem;
+}
+
+.board {
+    background-color: #F3F3F3;
+    color: #333;
+}
+
+input[type='radio'] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 1rem;
+    height: 1rem;
+    margin: 0.5rem;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    background-color: #fff;
+    position: relative;
+    cursor: pointer;
+    transition: 0.2s ease;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+input[type='radio']:checked {
+    border-color: var(--point);
+    background-color: var(--point);
+    box-shadow: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
