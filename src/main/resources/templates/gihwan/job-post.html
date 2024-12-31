@@ -93,7 +93,7 @@
                     <div class="post-type row-flex">
                         <label>
                             <div class="input-name">경력</div>
-                            <input type="number" id="job-history">
+                            <input type="number" id="job-history" min="0">
                         </label>
                         <label>
                             <div class="input-name">희망 학력</div>
@@ -103,7 +103,7 @@
                         </label>
                         <label>
                             <div class="input-name">연봉</div>
-                            <input type="number" id="job-salary">
+                            <input type="number" id="job-salary" min="0">
                         </label>
                     </div>
 
@@ -162,11 +162,15 @@
                 </div>
             </div>
         </div>
+        <div class="addImages">
+            전그 냥사 진이에 여~
+            <button onclick="jakdongTest()">보기</button>
+        </div>
     </div>
 </div>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
-    //todo 유효성 검사, 아이디 적용, 등록시 페이지 이동, 수정 페이지로 재활용 하기
+    //todo 유효성 검사, (우선)아이디 적용, 등록시 페이지 이동, 수정 페이지로 재활용 하기, 마감일은 시작일보다 무조건 나중에
     /**
      * 윈도우 페이지 로드시 옵션 추가
      */
@@ -302,14 +306,20 @@
             .then(function (response) {
                 console.log(response);
                 alert("공고 등록이 완료되었습니다.");
+                if ($('#image-upload')[0].files[0]) {
+                    imageUpload(response.data);
+                }
                 /// location.href = ???;
-                imageUpload(response.data);
             })
             .catch(function (error) {
                 console.log(error);
             })
     }
 
+    /**
+     * 파일 업로드 및 파일테이블 엔티티 추가
+     * @param postNo 해당 공고 번호
+     */
     function imageUpload(postNo) {
         const formData = new FormData();
         const file = $('#image-upload')[0].files[0];
@@ -322,21 +332,127 @@
             instId: 'companyTestNo'
         }
 
+        console.log(fileDto)
+
         formData.append('file', file);
-        formData.append('fileDto', JSON.stringify(fileDto));
-        axios.post('/api/common/file', formData,{
+        formData.append(
+            'fileDto',
+            new Blob(
+                [JSON.stringify(fileDto)],
+                {type: 'application/json'}
+            )
+        )
+
+        axios.post('/api/common/file', formData, {
             headers: {
-                'Content-Type': 'multipart/form-data' // 파일 전송 시 반드시 지정
+                'Content-Type': 'multipart/form-data'
             }
         })
             .then(response => {
-                response.data;
-                console.log("파일 업로드 완료")
-                alert("이미지 저장 완료");
+                console.log(response.data);
+                if (response.data) {
+                    alert("이미지 저장 완료");
+                }
             })
             .catch(error => {
                 console.error('파일 업로드 실패:', error);
             });
+    }
+
+    function jakdongTest() {
+        let data = [{
+            fileGubn: 'POST_THUMBNAIL',
+            fileRefId: 19,
+            fileName: '8.jpg',
+            fileExt: 'image/jpeg',
+            instId: 'companyTestNo'
+        },{
+            fileGubn: 'POST_THUMBNAIL',
+            fileRefId: 20,
+            fileName: 'choco4.jpg',
+            fileExt: 'image/jpeg',
+            instId: 'companyTestNo'
+        },{
+            fileGubn: 'POST_THUMBNAIL',
+            fileRefId: 21,
+            fileName: '21.jpg',
+            fileExt: 'image/jpeg',
+            instId: 'companyTestNo'
+        },{
+            fileGubn: 'POST_THUMBNAIL',
+            fileRefId: 22,
+            fileName: '22.jpg',
+            fileExt: 'image/jpeg',
+            instId: 'companyTestNo'
+        },{
+            fileGubn: 'POST_THUMBNAIL',
+            fileRefId: 23,
+            fileName: '23.jpg',
+            fileExt: 'image/jpeg',
+            instId: 'companyTestNo'
+        },{
+            fileGubn: 'POST_THUMBNAIL',
+            fileRefId: 27,
+            fileName: '24.jpg',
+            fileExt: 'image/jpeg',
+            instId: 'companyTestNo'
+        },{
+            fileGubn: 'POST_THUMBNAIL',
+            fileRefId: 28,
+            fileName: '25.jpg',
+            fileExt: 'image/jpeg',
+            instId: 'companyTestNo'
+        },{
+            fileGubn: 'POST_THUMBNAIL',
+            fileRefId: 29,
+            fileName: '26.jpg',
+            fileExt: 'image/jpeg',
+            instId: 'companyTestNo'
+        },{
+            fileGubn: 'POST_THUMBNAIL',
+            fileRefId: 30,
+            fileName: '27.jpg',
+            fileExt: 'image/jpeg',
+            instId: 'companyTestNo'
+        },{
+            fileGubn: 'POST_THUMBNAIL',
+            fileRefId: 31,
+            fileName: '28.jpg',
+            fileExt: 'image/jpeg',
+            instId: 'companyTestNo'
+        },{
+            fileGubn: 'POST_THUMBNAIL',
+            fileRefId: 32,
+            fileName: '29.jpg',
+            fileExt: 'image/jpeg',
+            instId: 'companyTestNo'
+        },{
+            fileGubn: 'POST_THUMBNAIL',
+            fileRefId: 33,
+            fileName: '30.jpg',
+            fileExt: 'image/jpeg',
+            instId: 'companyTestNo'
+        }
+        ]
+
+        axios.post('/api/common/file/list', data, {
+            "Content-Type": 'application/json'
+        })
+            .then(function (response) {
+
+                const mapData = new Map(Object.entries(response.data));
+
+                mapData.forEach((value, key) => {
+
+                    let imageData = response.data[key];
+
+                    $('.addImages').append(`<img src="data:image/png;base64,${imageData}" alt="이미이미지">`);
+                })
+            })
+            .catch(function (error) {
+                console.log(error);
+                console.log("오류 발생");
+            })
     }
 
     /**
@@ -361,6 +477,7 @@
 
     /**
      * 이미지 미리보기 함수
+     * todo 그리고 이거 else 나온 다음에 저장하면 저장안되던데 확인 바람
      */
     function previewImage(event) {
         let file = event.target.files[0];

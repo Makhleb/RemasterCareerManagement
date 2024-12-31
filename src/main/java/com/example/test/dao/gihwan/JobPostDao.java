@@ -14,6 +14,6 @@ import java.util.List;
 @Mapper
 public interface JobPostDao {
     void insertJobPost(@Param("JP")JobPostDTO jobPostDTO);
-    int insertJobPostSkill(@Param("postNo") int postNo,@Param("list") List<JobPostSkillDTO> jobPostSkillDTOList);
-    int insertBenefit(@Param("postNo") int postNo, @Param("list") List<BenefitDTO> benefitDTOList);
+    void insertJobPostSkill(@Param("postNo") int postNo,@Param("list") List<JobPostSkillDTO> jobPostSkillDTOList);
+    void insertBenefit(@Param("postNo") int postNo, @Param("list") List<BenefitDTO> benefitDTOList);
 }

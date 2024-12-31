@@ -10,7 +10,7 @@
         instId, instDt, updtId, updtDt)
         VALUES
         (
-        NULL, #{fileGubn}, #{feilRefId},
+        NULL, #{fileGubn}, #{fileRefId},
         #{fileName}, #{fileExt},
         #{instId}, NOW(), #{updtId}, NOW()
         )

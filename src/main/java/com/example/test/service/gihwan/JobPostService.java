@@ -18,18 +18,16 @@ public class JobPostService {
 
     public int postJobPost(JobPostWrapDto jobPostWrapDto) {
         int insertedNo = 0;
-        int skillResult = 0;
-        int benefitResult = 0;
 
         jobPostDao.insertJobPost(jobPostWrapDto.getJobPost());
         insertedNo = jobPostWrapDto.getJobPost().getJobPostNo();
 
         if(!jobPostWrapDto.getJobPostSkills().isEmpty()){
-            skillResult = jobPostDao.insertJobPostSkill(insertedNo, jobPostWrapDto.getJobPostSkills());
+            jobPostDao.insertJobPostSkill(insertedNo, jobPostWrapDto.getJobPostSkills());
         }
         if(!jobPostWrapDto.getBenefits().isEmpty()){
-            benefitResult = jobPostDao.insertBenefit(insertedNo, jobPostWrapDto.getBenefits());
+            jobPostDao.insertBenefit(insertedNo, jobPostWrapDto.getBenefits());
         }
-        return skillResult + benefitResult;
+        return insertedNo;
     }
 }
