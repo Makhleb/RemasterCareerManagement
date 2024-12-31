@@ -139,11 +139,11 @@ section {
 
 
 .uncolorstar {
-    background-image: url('uncolorstar.png');
+    background-image: url('/images/uncolorstar.png');
 }
 
 .colorstar {
-    background-image: url('colorstar.png');
+    background-image: url('/images/colorstar.png');
 }
 
 #request {

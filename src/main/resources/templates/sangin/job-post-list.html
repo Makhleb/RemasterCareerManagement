@@ -197,7 +197,7 @@
                     <div id="section5_footer_left">성과급/상여금</div>
                     <div id="section5_footer_right">
                         <div id="section5_endDate">${item.endDate ? `~${new Date(item.endDate).toLocaleDateString()}` : '마감일 없음'}</div>
-                        <div id="section5_star" class="uncolorstar"></div>
+                        <div id="section5_star" class="${item.isBookmarked ? "colorstar" : "uncolorstar"}"></div>
                     </div>
                 </div>
             `;
