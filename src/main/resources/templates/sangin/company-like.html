@@ -15,109 +15,110 @@
     <div id="section2">
         <div id="section2_box1">
             <a href="/view/users/like/jpl" id="scrap_post">스크랩</a>
-            <div id="post_num">132</div>
+            <div id="post_num"></div>
         </div>
         <div id="section2_box2">
             <div id="bookmark_com">관심기업</div>
-            <div id="com_num">12</div>
+            <div id="com_num"></div>
         </div>
     </div>
     <!-- 기업 상세 정보 반복 -->
     <div id="section3">
-        <div id="com_detail">
-            <div id="detail_upper">
-                <div id="com_logo">
-                    <img th:src="${companyImage}" alt="회사 로고">
-                </div>
-                <div id="heart" class="uncolorheart"></div>
-            </div>
-            <div id="detail_lower">
-                <div id="com_name" th:text="${companyName}">회사명</div>
-                <div id="job_post_list">
-                    <div class="job_post" th:text="${title}">공고명</div>
-                    <div class="job_post" th:text="${title}">공고명</div>
-                    <div class="job_post" th:text="${title}">공고명</div>
-                </div>
-            </div>
-        </div>
-        <div id="com_detail">
-            <div id="detail_upper">
-                <div id="com_logo">
-                    <img th:src="${companyImage}" alt="회사 로고">
-                </div>
-                <div id="heart" class="uncolorheart"></div>
-            </div>
-            <div id="detail_lower">
-                <div id="com_name" th:text="${companyName}">회사명</div>
-                <div id="job_post_list">
-                    <div class="job_post" th:text="${title}">공고명</div>
-                    <div class="job_post" th:text="${title}">공고명</div>
-                    <div class="job_post" th:text="${title}">공고명</div>
-                </div>
-            </div>
-        </div>
-        <div id="com_detail">
-            <div id="detail_upper">
-                <div id="com_logo">
-                    <img th:src="${companyImage}" alt="회사 로고">
-                </div>
-                <div id="heart" class="uncolorheart"></div>
-            </div>
-            <div id="detail_lower">
-                <div id="com_name" th:text="${companyName}">회사명</div>
-                <div id="job_post_list">
-                    <div class="job_post" th:text="${title}">공고명</div>
-                    <div class="job_post" th:text="${title}">공고명</div>
-                    <div class="job_post" th:text="${title}">공고명</div>
-                </div>
-            </div>
-        </div>
-        <div id="com_detail">
-            <div id="detail_upper">
-                <div id="com_logo">
-                    <img th:src="${companyImage}" alt="회사 로고">
-                </div>
-                <div id="heart" class="uncolorheart"></div>
-            </div>
-            <div id="detail_lower">
-                <div id="com_name" th:text="${companyName}">회사명</div>
-                <div id="job_post_list">
-                    <div class="job_post" th:text="${title}">공고명</div>
-                    <div class="job_post" th:text="${title}">공고명</div>
-                    <div class="job_post" th:text="${title}">공고명</div>
-                </div>
-            </div>
-        </div>
+        <!-- 스크립트로 동적으로 추가됩니다 -->
+    </div>
+    <div id="section4">
+
     </div>
 </section>
 <script>
-    const hearts = document.querySelectorAll("#heart");
+    // section2 DOM 요소 가져오기
+    const postNumElement = document.querySelector("#post_num");
+    const comNumElement = document.querySelector("#com_num");
+    const section3 = document.querySelector("#section3");
 
-    hearts.forEach(heart => {
-        heart.addEventListener("click", () => {
-            // 불러올 때 비동기로 불러오고
-            // axios.get()
-            // 데이터 불러오면
-            // 공고 만들어주고 북마크도 만들어주고
-            // 북마크가 트루면 true heart
-            // 북마크가 false면 false heart
-            //
-            if(heart.classList.contains("uncolorheart")){
-                // true heart 면
-                // false heart class 로 전환해줘야함
-                heart.classList.remove("uncolorheart");
-                heart.classList.add("colorheart");
-                alert("북마크 되었습니다");
-            }else if(heart.classList.contains("colorheart")){
-                // false heart 면
-                // true heart 스타일이나 이미지로 교체해줘야함
-                // 이미지 찾아놔야겠다
-                heart.classList.remove("colorheart");
-                heart.classList.add("uncolorheart");
-                alert("북마크가 취소되었습니다");
-            }
+    // 스크랩 및 북마크 개수 가져오기
+    axios.get("/api/users/like/summary")
+        .then(response => {
+            const {jplCount, clCount} = response.data;
+
+            // section2 업데이트
+            postNumElement.textContent = jplCount || 0;
+            comNumElement.textContent = clCount || 0;
         })
-    })
+        .catch(error => {
+            console.error("Error fetching user summary:", error);
+            alert("스크랩 및 북마크 데이터를 불러오는 중 오류가 발생했습니다.");
+        });
+
+    // section3 데이터 가져오기 및 렌더링
+    axios.get("/api/users/like/cl")
+        .then(response => {
+            console.log("Summary API Response:", response.data);
+            const data = response.data;
+
+            section3.innerHTML = "";
+
+            // 데이터를 반복해서 렌더링
+            data.forEach(item => {
+                // 동적으로 com_detail 요소 생성
+                const comDetail = document.createElement("div");
+                comDetail.classList.add("com_detail");
+
+                // jobPosts 순회하며 공고 리스트 미리 생성
+                let jobPostsHTML = "";
+                item.jobPosts.forEach(post => {
+                    jobPostsHTML += `<div class="job_post">${post.title}</div>`;
+                });
+
+                // 기업 상세 정보 HTML 구조
+                comDetail.innerHTML = `
+                    <div id="detail_upper">
+                        <div id="com_logo">
+                                        <!--로고 수정 미완료-->
+                            <img src="/static/images/colorstar.png" alt="회사로고">
+<!--                            <img src="${item.companyImage}" alt="회사로고">-->
+                        </div>
+                        <div id="heart" class="${item.isBookmarked ? "colorheart" : "uncolorheart"}"></div>
+                    </div>
+                    <div id="detail_lower">
+                        <div id="com_name">${item.companyName}</div>
+                        <div id="job_post_list">
+                            ${jobPostsHTML || "<div class='job_post'></div>"}
+                        </div>
+                    </div>
+                `;
+
+                // com_detail을 section3에 추가
+                section3.appendChild(comDetail);
+            });
+
+
+            // 북마크 이벤트 바인딩
+            addBookmarkEventListeners();
+        })
+        .catch(error => {
+            console.error("Error fetching company data:", error);
+            alert("관심 기업 데이터를 불러오는 중 오류가 발생했습니다.");
+        });
+
+    // 북마크 클릭 이벤트 추가
+    function addBookmarkEventListeners() {
+        const hearts = document.querySelectorAll("#heart");
+
+        hearts.forEach(heart => {
+            heart.addEventListener("click", () => {
+                if (heart.classList.contains("uncolorheart")) {
+                    heart.classList.remove("uncolorheart");
+                    heart.classList.add("colorheart");
+                    alert("북마크 되었습니다");
+                } else if (heart.classList.contains("colorheart")) {
+                    heart.classList.remove("colorheart");
+                    heart.classList.add("uncolorheart");
+                    alert("북마크가 취소되었습니다");
+                }
+            });
+        });
+    }
 </script>
 </body>
 </html>

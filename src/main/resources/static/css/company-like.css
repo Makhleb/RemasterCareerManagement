@@ -1,7 +1,6 @@
 body {
     margin: 0;
     /* 기본 여백 제거 */
-    position: relative;
     height: 100%;
     /* 페이지 높이 */
 }
@@ -106,47 +105,49 @@ section {
 
 #com_detail {
     width: 260px;
-    height: 350px;
-    position: relative;
+    max-height: 350px;
+    min-height: 350px;
     display: flex;
     flex-direction: column;
 }
 
 /* upper */
 #detail_upper {
+    position: relative;
     box-sizing: border-box;
-    max-height: 50%;
-    min-height: 50%;
+    max-height: 175px;
+    min-height: 175px;
 }
 
 #com_logo {
+    max-height: 175px;
+    min-height: 175px;
     border: 1px #ddd solid;
     border-radius: 15px 15px 0 0;
-    background-image: url('삼성로고.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    height: 100%;
+    /*background-size: contain;*/
+    /*background-repeat: no-repeat;*/
+    /*background-position: center;*/
 }
 
 #heart {
     position: absolute;
-    top: 0px;
-    left: 195px;
+    /*여기서 나중에 하트 위치를 수정합니다*/
+    top: 0;
+    left: 180px;
     z-index: 1000;
     width: 60px;
     height: 60px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+    /*background-size: contain;*/
+    /*background-repeat: no-repeat;*/
+    /*background-position: center;*/
 }
 
 .uncolorheart {
-    background-image: url('uncolorheart.png');
+    background-color: red;
 }
 
 .colorheart {
-    background-image: url('colorheart.png');
+    background-color: blue;
 }
 
 /* lower */
@@ -176,4 +177,8 @@ section {
     color: gray;
     text-decoration: underline;
     /* 언더라인 별로면 뺄게요~ */
+}
+/*section4*/
+#section4{
+    margin-top: 100px;
 }

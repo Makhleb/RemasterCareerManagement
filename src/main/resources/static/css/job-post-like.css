@@ -3,6 +3,10 @@ body {
     position: relative;
     height: 100%; /* 페이지 높이 */
 }
+a{
+    text-decoration: none;
+    color: inherit;
+}
 
 section {
     width: 1400px;

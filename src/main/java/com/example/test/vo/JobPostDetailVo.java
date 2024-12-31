@@ -42,4 +42,6 @@ public class JobPostDetailVo {
     private List<BenefitDTO> benefitList; // 복리후생 리스트
     private String educationName; // 학력 코드 -> 한글화
     private Boolean isBookmarked; // 북마크용
+    private String workTypeName; //직무 코드 -> 한글화
+    private int likeCount; // 스크랩 수
 }

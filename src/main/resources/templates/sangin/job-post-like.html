@@ -15,45 +15,40 @@
     <div id="section2">
         <div id="section2_box1">
             <div id="scrap_post">스크랩</div>
-            <div id="post_num">132</div>
+            <div id="post_num"></div>
         </div>
         <div id="section2_box2">
             <a href="/view/users/like/cl" id="bookmark_com">관심기업</a>
-            <div id="com_num">12</div>
+            <div id="com_num"></div>
         </div>
     </div>
     <!-- 공고 리스트 -->
     <div id="section3">
-        <div class="job_post">
-            <div id="com_name">[[${companyName}]]</div>
-            <div id="post_box1">
-                <div id="box1_con">
-                    <div id="post_name">[[${title}]]</div>
-                    <div id="star" class="colorstar"></div>
-                </div>
-                <div id="request">
-                    <span>[[${postAddress}]]</span>
-                    <span>[[${jobHistory}]]</span>
-                    <span>[[${workTypeCode}]]</span>
-                    <span>[[${jobSalary}]]</span>
-                </div>
-            </div>
-            <div id="post_box2">
-                <span id="box2_text">현재 지원자</span>
-                <span id="applicant_num">[[${count}]]</span>
-            </div>
-            <div id="post_box3">
-                <span id="regist_btn">입사지원</span>
-                <span id="enddate">~[[${enddate}]]</span>
-            </div>
-        </div>
+        <!--   axios로 추가함     -->
     </div>
 
     <div id="section4">
-<!-- 페이징 네이션 -->
+        <!-- 페이징 네이션 -->
     </div>
 </section>
 <script>
+    // section2 DOM 요소 가져오기
+    const postNumElement = document.querySelector("#post_num");
+    const comNumElement = document.querySelector("#com_num");
+
+    axios.get("/api/users/like/summary")
+        .then(response => {
+            // 이런식으로도 된다함. 이름은 구조 분해 할당이라고 함
+            const {jplCount, clCount} = response.data;
+
+            // section2 업데이트
+            postNumElement.textContent = jplCount || 0;
+            comNumElement.textContent = clCount || 0;
+        })
+        .catch(error => {
+            console.error("Error fetching user summary:", error);
+            alert("스크랩 및 북마크 데이터를 불러오는 중 오류가 발생했습니다.");
+        });
     // section3 DOM 요소 가져오기
     const section3 = document.querySelector("#section3");
 
@@ -76,22 +71,22 @@
                     <div id="com_name">${item.companyName}</div>
                     <div id="post_box1">
                         <div id="box1_con">
-                            <div id="post_name">${item.title}</div>
+                            <div id="post_name"><a href="/view/users/job-post/detail/${item.jobPostNo}">${item.title}</a></div>
                             <div id="star" class="${item.isBookmarked ? "colorstar" : "uncolorstar"}"></div>
                         </div>
                         <div id="request">
                             <span>${item.postAddress}</span>
                             <span>${item.jobHistory}년 이상</span>
-                            <span>${item.workTypeCode}</span>
+                            <span>${item.workTypeName}</span>
                             <span>${item.jobSalary}만</span>
                         </div>
                     </div>
                     <div id="post_box2">
                         <span id="box2_text">현재 지원자</span>
-                        <span id="applicant_num">${item.applicantCount || 0}</span>
+                        <span id="applicant_num">${item.likeCount || 0}</span>
                     </div>
                     <div id="post_box3">
-                        <span id="regist_btn">입ㄴㅇㄹㄴㅇㄹ지원</span>
+                        <span id="regist_btn">입사지원</span>
                         <span id="enddate">${item.endDate ? `~${new Date(item.endDate).toLocaleDateString()}` : '마감일 없음'}</span>
                     </div>
                 `;

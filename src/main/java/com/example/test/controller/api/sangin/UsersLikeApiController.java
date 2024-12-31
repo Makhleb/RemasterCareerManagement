@@ -3,6 +3,8 @@ package com.example.test.controller.api.sangin;
 import com.example.test.dto.CompanyDTO;
 import com.example.test.service.sangin.UsersLikeService_sangin;
 import com.example.test.vo.JobPostDetailVo;
+import com.example.test.vo.LikeCompanyVo;
+import com.example.test.vo.LikeCountVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,7 +26,7 @@ public class UsersLikeApiController {
     public ResponseEntity<Object> jobPostJpl() {
         System.out.println("api/cl...");
         String userId = "test1";
-        List<CompanyDTO> companyList = usersLikeService.companyLike(userId);
+        List<LikeCompanyVo> companyList = usersLikeService.companyLikeWithPosts(userId);
         if (companyList != null && !companyList.isEmpty()) {
             return ResponseEntity.ok(companyList);
         } else {
@@ -42,5 +44,17 @@ public class UsersLikeApiController {
         } else {
             return ResponseEntity.noContent().build();
         }
+    }
+    @GetMapping("/summary")
+    public ResponseEntity<Object> jobPostSummary() {
+        System.out.println("api/jobPostSummary...");
+        String userId = "test1";
+        LikeCountVo likeCountVo = usersLikeService.summary(userId);
+        if(likeCountVo != null) {
+            return ResponseEntity.ok(likeCountVo);
+        }else{
+            return ResponseEntity.noContent().build();
+        }
+
     }
 }
