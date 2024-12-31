@@ -1,0 +1,179 @@
+body {
+    margin: 0;
+    /* 기본 여백 제거 */
+    position: relative;
+    height: 100%;
+    /* 페이지 높이 */
+}
+
+section {
+    width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 섹션1 */
+#section1 {
+    margin-top: 50px;
+    padding: 0px 50px;
+    box-sizing: border-box;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+/* 섹션2 */
+#section2 {
+    padding: 0px 50px;
+    margin-top: 40px;
+    box-sizing: border-box;
+    display: flex;
+    gap: 30px;
+}
+
+#section2_box1 {
+    display: flex;
+    gap: 3px
+}
+
+#scrap_post {
+    color: gray;
+    font-size: 17px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+#post_num {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 12.5px;
+    border: 1px #ddd solid;
+    border-radius: 100%;
+    width: 25px;
+    height: 25px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#section2_box2 {
+    display: flex;
+    gap: 3px
+}
+
+#bookmark_com {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#com_num {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 12.5px;
+    border: 1px #ddd solid;
+    border-radius: 100%;
+    width: 25px;
+    height: 25px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* 섹션3 */
+#section3 {
+    margin-top: 30px;
+    width: 1400px;
+    max-width: 1400px;
+    min-height: 650px;
+    display: grid;
+    grid-template-columns: repeat(4, 260px);
+    grid-gap: 50px;
+    padding: 50px;
+    box-sizing: border-box;
+}
+
+/* #section3{
+    margin-top: 30px;
+    border: 1px black solid;
+    width: 1400px;
+    max-width: 1400px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+    padding: 50px;
+} */
+
+
+#com_detail {
+    width: 260px;
+    height: 350px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+/* upper */
+#detail_upper {
+    box-sizing: border-box;
+    max-height: 50%;
+    min-height: 50%;
+}
+
+#com_logo {
+    border: 1px #ddd solid;
+    border-radius: 15px 15px 0 0;
+    background-image: url('삼성로고.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100%;
+}
+
+#heart {
+    position: absolute;
+    top: 0px;
+    left: 195px;
+    z-index: 1000;
+    width: 60px;
+    height: 60px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.uncolorheart {
+    background-image: url('uncolorheart.png');
+}
+
+.colorheart {
+    background-image: url('colorheart.png');
+}
+
+/* lower */
+#detail_lower {
+    border: 1px #ddd solid;
+    box-sizing: border-box;
+    padding: 20px;
+    max-height: 50%;
+    min-height: 50%;
+    border-radius: 0 0 15px 15px;
+}
+
+#com_name {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+#job_post_list {
+    display: flex;
+    margin-top: 10px;
+    flex-direction: column;
+    gap: 7px;
+}
+
+/* 공고리스트 */
+.job_post {
+    color: gray;
+    text-decoration: underline;
+    /* 언더라인 별로면 뺄게요~ */
+}

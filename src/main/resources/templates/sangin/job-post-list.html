@@ -161,28 +161,27 @@
     // matching 데이터 가져오기
     axios.get('/api/users/job-post/list/matching')
         .then(response => {
-            const data = response.data; // List<JobPostDTO>
+            const data = response.data; // List<JobPostDetailVo> //response 바뀔 예정
             section4Container.innerHTML = '';
             data.slice(0, 4).forEach(item => { //4 는 보여줄 갯수
                 const postDiv = document.createElement('div');
                 postDiv.classList.add('section4_popular');
                 postDiv.innerHTML = `
                     <div id="section4_fake">추천 공고</div>
-                    <div id="section4_postThumbnail"><img th:src="@{/images/colorheart.png}" alt="기업로고"></div>
-<!--                    <div id="section4_postThumbnail"><img src="/static/images/${item.postThumbnail}" alt="기업로고"></div>-->
+                    <div id="section4_postThumbnail"><img src="/images/${item.postThumbnail}" alt="기업로고"></div>
                     <a id="section4_title" href="/view/users/job-post/detail/${item.jobPostNo}">${item.title}</a>
-                    <div id="section4_companyId">${item.companyId}</div>
+                    <div id="section4_companyName">${item.companyName}</div>
                 `;
                 section4Container.appendChild(postDiv);
             });
         })
-        .catch(error => {
+        .catch(error => { // error 바뀔 예정
             console.error(error);
             alert('추천 공고를 불러오지 못했어요');
         });
     axios.get('/api/users/job-post/list/all')
         .then(response => {
-            const data = response.data; // List<JobPostDTO>
+            const data = response.data; // List<JobPostDetailVo>
             section5Container.innerHTML = ''; // 기존 데이터를 초기화
             data.forEach(item => {
                 const postDiv = document.createElement('div');
@@ -190,11 +189,10 @@
                 postDiv.innerHTML = `
                 <div id="section5_postThumbnail">
                     <img src="/images/${item.postThumbnail}" alt="기업로고">
-
                 </div>
                 <a id="section5_title" href="/view/users/job-post/detail/${item.jobPostNo}">${item.title}</a>
                 <div id="section5_postAddress">${item.postAddress}</div>
-                <div id="section5_educationCode">${item.educationCode}</div>
+                <div id="section5_educationName">${item.educationName} 이상</div>
                 <div class="section5_footer">
                     <div id="section5_footer_left">성과급/상여금</div>
                     <div id="section5_footer_right">

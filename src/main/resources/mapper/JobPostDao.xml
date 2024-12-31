@@ -3,19 +3,62 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.test.dao.sangin.JobPostDao_sangin">
-    <select id="getJobPostAll">
-        select * from tblJobPost ORDER BY RAND();
+    <select id="getJobPostAll" resultType="com.example.test.vo.JobPostDetailVo">
+        SELECT
+        jp.*,
+        c.companyName,
+        gb.name AS educationName
+        FROM tblJobPost jp
+        JOIN tblCompany c
+        ON jp.companyId = c.companyId
+        LEFT JOIN tblGubn gb
+        ON jp.educationCode = gb.code
+        WHERE gb.groupCode = 'EDUCATION'
+        AND jp.postViewYn = 'Y'
+        ORDER BY RAND();
     </select>
-    <select id="getJobPostMatching">
-        select * from tblJobPost ORDER BY RAND();
+    <select id="getJobPostMatching" resultType="com.example.test.vo.JobPostDetailVo">
+        SELECT
+        jp.*,
+        c.companyName,
+        gb.name AS educationName
+        FROM tblJobPost jp
+        JOIN tblCompany c
+        ON jp.companyId = c.companyId
+        LEFT JOIN tblGubn gb
+        ON jp.educationCode = gb.code
+        WHERE gb.groupCode = 'EDUCATION'
+        AND jp.postViewYn = 'Y'
+        ORDER BY RAND();
     </select>
 
     <select id="getJobPost" resultType="com.example.test.vo.JobPostDetailVo">
-        SELECT * FROM tblJobPost WHERE jobPostNo = #{jobPostNo}
+        SELECT
+        jp.*,
+        c.companyName,
+        gb.name AS educationName
+        FROM tblJobPost jp
+        JOIN tblCompany c
+        ON jp.companyId = c.companyId
+        LEFT JOIN tblGubn gb
+        ON jp.educationCode = gb.code
+        WHERE gb.groupCode = 'EDUCATION'
+        AND jp.jobPostNo = #{jobPostNo}
     </select>
 
     <select id="getJobPostSkill" resultType="com.example.test.dto.JobPostSkillDTO">
         select * from tblJobPostSkill WHERE jobPostNo = #{jobPostNo}
     </select>
+
+    <select id="getJobPostBenefit" resultType="com.example.test.dto.BenefitDTO">
+        select * from tblBenefit WHERE jobPostNo = #{jobPostNo}
+    </select>
+
+    <select id="getResumeList" resultType="com.example.test.dto.ResumeDTO">
+        select * from tblResume where userId = #{userId}
+    </select>
+    <insert id="registAplcHstr">
+        insert into tblAplcHstr (jobPostNo, resumeNo, aplcHstrDate, passYn) Values (#{jobPostNo},#{resumeNo},now(),'N')
+    </insert>
 
 </mapper>

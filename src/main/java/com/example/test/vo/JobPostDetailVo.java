@@ -1,5 +1,6 @@
 package com.example.test.vo;
 
+import com.example.test.dto.BenefitDTO;
 import com.example.test.dto.JobPostSkillDTO;
 import lombok.Data;
 
@@ -34,5 +35,11 @@ public class JobPostDetailVo {
     private String jobRankCode; // 직급/직책 코드
     private String workTypeCode; // 근무형태 코드
     private String educationCode; // 학력 코드
-    private List<JobPostSkillDTO> skillList;
+
+    // 밑에는 jobPostDto 에서 추가한 것입니다! - 상인
+    private String companyName; // 기업명
+    private List<JobPostSkillDTO> skillList; // 기술 스택 리스트
+    private List<BenefitDTO> benefitList; // 복리후생 리스트
+    private String educationName; // 학력 코드 -> 한글화
+    private Boolean isBookmarked; // 북마크용
 }

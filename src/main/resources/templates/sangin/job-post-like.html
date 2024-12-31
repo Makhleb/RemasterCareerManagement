@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout_dir/layout/main_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>관심기업</title>
+    <link rel="stylesheet" href="/css/job-post-like.css">
+</head>
+<body layout:fragment="content">
+<section>
+    <div id="section1">
+        스크랩/관심기업
+    </div>
+    <div id="section2">
+        <div id="section2_box1">
+            <div id="scrap_post">스크랩</div>
+            <div id="post_num">132</div>
+        </div>
+        <div id="section2_box2">
+            <a href="/view/users/like/cl" id="bookmark_com">관심기업</a>
+            <div id="com_num">12</div>
+        </div>
+    </div>
+    <!-- 공고 리스트 -->
+    <div id="section3">
+        <div class="job_post">
+            <div id="com_name">[[${companyName}]]</div>
+            <div id="post_box1">
+                <div id="box1_con">
+                    <div id="post_name">[[${title}]]</div>
+                    <div id="star" class="colorstar"></div>
+                </div>
+                <div id="request">
+                    <span>[[${postAddress}]]</span>
+                    <span>[[${jobHistory}]]</span>
+                    <span>[[${workTypeCode}]]</span>
+                    <span>[[${jobSalary}]]</span>
+                </div>
+            </div>
+            <div id="post_box2">
+                <span id="box2_text">현재 지원자</span>
+                <span id="applicant_num">[[${count}]]</span>
+            </div>
+            <div id="post_box3">
+                <span id="regist_btn">입사지원</span>
+                <span id="enddate">~[[${enddate}]]</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="section4">
+<!-- 페이징 네이션 -->
+    </div>
+</section>
+<script>
+    // section3 DOM 요소 가져오기
+    const section3 = document.querySelector("#section3");
+
+    // API 호출
+    axios.get("/api/users/like/jpl")
+        .then(response => {
+            const data = response.data; // 서버로부터 데이터를 가져옴
+
+            // section3 초기화 (기존 내용 삭제)
+            section3.innerHTML = "";
+
+            // 데이터를 반복해서 렌더링
+            data.forEach(item => {
+                // 동적으로 job_post 요소 생성
+                const jobPost = document.createElement("div");
+                jobPost.classList.add("job_post");
+
+                // job_post의 내부 HTML 구조 설정
+                jobPost.innerHTML = `
+                    <div id="com_name">${item.companyName}</div>
+                    <div id="post_box1">
+                        <div id="box1_con">
+                            <div id="post_name">${item.title}</div>
+                            <div id="star" class="${item.isBookmarked ? "colorstar" : "uncolorstar"}"></div>
+                        </div>
+                        <div id="request">
+                            <span>${item.postAddress}</span>
+                            <span>${item.jobHistory}년 이상</span>
+                            <span>${item.workTypeCode}</span>
+                            <span>${item.jobSalary}만</span>
+                        </div>
+                    </div>
+                    <div id="post_box2">
+                        <span id="box2_text">현재 지원자</span>
+                        <span id="applicant_num">${item.applicantCount || 0}</span>
+                    </div>
+                    <div id="post_box3">
+                        <span id="regist_btn">입ㄴㅇㄹㄴㅇㄹ지원</span>
+                        <span id="enddate">${item.endDate ? `~${new Date(item.endDate).toLocaleDateString()}` : '마감일 없음'}</span>
+                    </div>
+                `;
+
+                // job_post를 section3에 추가
+                section3.appendChild(jobPost);
+            });
+
+            // 북마크 이벤트 바인딩
+            addBookmarkEventListeners();
+        })
+        .catch(error => {
+            console.error("Error fetching job posts:", error);
+            alert("공고 데이터를 불러오는 중 오류가 발생했습니다.");
+        });
+
+    // 북마크 클릭 이벤트 추가
+    function addBookmarkEventListeners() {
+        const stars = document.querySelectorAll("#star");
+
+        stars.forEach(star => {
+            star.addEventListener("click", () => {
+                if (star.classList.contains("uncolorstar")) {
+                    star.classList.remove("uncolorstar");
+                    star.classList.add("colorstar");
+                    alert("북마크 되었습니다");
+                } else if (star.classList.contains("colorstar")) {
+                    star.classList.remove("colorstar");
+                    star.classList.add("uncolorstar");
+                    alert("북마크가 취소되었습니다");
+                }
+            });
+        });
+    }
+</script>
+
+</body>
+</html>

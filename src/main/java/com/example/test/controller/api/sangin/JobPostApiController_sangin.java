@@ -1,16 +1,12 @@
 package com.example.test.controller.api.sangin;
 
-import com.example.test.dto.JobPostDTO;
-import com.example.test.dto.JobPostSkillDTO;
+import com.example.test.dto.*;
 import com.example.test.service.sangin.JobPostService_sangin;
 import com.example.test.vo.JobPostDetailVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,7 +22,7 @@ public class JobPostApiController_sangin {
     @GetMapping("/list/matching")
     @ResponseBody
     public ResponseEntity<Object> jobPostList2() {
-        List<JobPostDTO> jobPostList = jobPostService.getJobPostMatching();
+        List<JobPostDetailVo> jobPostList = jobPostService.getJobPostMatching();
         if (jobPostList != null && !jobPostList.isEmpty()) {
             return ResponseEntity.ok(jobPostList);
         } else {
@@ -36,7 +32,7 @@ public class JobPostApiController_sangin {
     @GetMapping("/list/all")
     @ResponseBody
     public ResponseEntity<Object> jobPostList1() {
-        List<JobPostDTO> jobPostList = jobPostService.getJobPostAll();
+        List<JobPostDetailVo> jobPostList = jobPostService.getJobPostAll();
         if (jobPostList != null && !jobPostList.isEmpty()) {
             return ResponseEntity.ok(jobPostList);
         } else {
@@ -50,12 +46,36 @@ public class JobPostApiController_sangin {
         System.out.println("api/detail.......");
         JobPostDetailVo jobPost = jobPostService.getJobPost(jobPostNo);
         List<JobPostSkillDTO> skillList = jobPostService.getJobPostSkill(jobPostNo);
+        List<BenefitDTO> benefitList = jobPostService.getJobPostBenefit(jobPostNo);
         jobPost.setSkillList(skillList);
+        jobPost.setBenefitList(benefitList);
         //기술스택도 같이 전달해야하는데 어떻게 전달할까나~~
         //vo를 하나 만들까??
         if (jobPost != null) {
             return ResponseEntity.ok(jobPost);
         } else {
+            return ResponseEntity.noContent().build();
+        }
+    }
+
+    @GetMapping("/resume/list")
+    @ResponseBody
+    public ResponseEntity<Object> ResumeList() {
+        List<ResumeDTO> resumeList = jobPostService.getResumeList("test1");
+        if (resumeList != null && !resumeList.isEmpty()) {
+            return ResponseEntity.ok(resumeList);
+        }else {
+            return ResponseEntity.noContent().build();
+        }
+    }
+    @PostMapping("/resume/regist")
+    @ResponseBody
+    public ResponseEntity<Object> ResumeRegist(@RequestBody AplcHstrDTO aplcHstrDTO) {
+        System.out.println("api/resume/regist......." + aplcHstrDTO);
+        int result = jobPostService.registAplcHstr(aplcHstrDTO);
+        if (result == 1) {
+            return ResponseEntity.ok().build();
+        }else {
             return ResponseEntity.noContent().build();
         }
     }

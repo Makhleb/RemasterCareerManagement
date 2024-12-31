@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test.dao.sangin.UsersLikeDao_sangin">
+    <select id="jobPostLike" resultType="com.example.test.vo.JobPostDetailVo">
+        SELECT jp.*
+        FROM tblJobPost jp
+        INNER JOIN tblJpl l
+        ON jp.jobPostNo = l.jobPostNo
+        WHERE l.userId = #{userId}
+    </select>
+    <select id="companyLike" resultType="com.example.test.dto.CompanyDTO">
+        select cp.*
+        from tblCompany cp
+        inner join tblLike l
+        on cp.companyId = l.companyId
+        where l.userId = #{userId}
+    </select>
+</mapper>

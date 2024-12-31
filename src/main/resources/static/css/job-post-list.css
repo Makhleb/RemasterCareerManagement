@@ -1,3 +1,7 @@
+a{
+    text-decoration: none;
+    color: inherit;
+}
 /* 공통 시작 */
 section {
     display: flex;
@@ -165,6 +169,7 @@ section {
     border-radius: 9px;
     margin-left: 20px;
     border: 1px #ddd solid;
+    font-weight: bold;
 }
 
 #section4_postThumbnail {
@@ -183,7 +188,7 @@ section {
 #section4_title {
     display: flex;
     align-items: center;
-    margin-top: 240px;
+    margin-top: 250px;
     margin-left: 20px;
     margin-right: 20px;
     font-size: 20px;
@@ -193,8 +198,7 @@ section {
 
 }
 
-#section4_companyId {
-    margin-top: 10px;
+#section4_companyName {
     margin-left: 20px;
     margin-right: 20px;
     font-size: 17px;
@@ -220,6 +224,7 @@ section {
 #section5_postThumbnail {
     margin-top: 20px;
     margin-left: 20px;
+    margin-bottom: 10px;
     min-height: 70px;
     min-width: 70px;
     max-width: 70px;
@@ -228,22 +233,24 @@ section {
 }
 
 #section5_title {
-    margin-top: 15px;
     margin-left: 20px;
-    font-size: 18px;
+    font-size: 19px;
     font-weight: bold;
 }
 
 #section5_postAddress {
-    margin-left: 20px;
-    font-size: 15px;
-    color: gray;
-}
-
-#section5_educationCode {
+    margin-top: 3px;
     margin-left: 20px;
     font-size: 14px;
-    color: gray;
+    color: #4a4a4a;
+}
+
+#section5_educationName {
+    margin-top: 3px;
+    margin-left: 20px;
+    font-size: 15px;
+    color: #1a73e8;
+    font-weight: bold;
 }
 
 .section5_footer {
