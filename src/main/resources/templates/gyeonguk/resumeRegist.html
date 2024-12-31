@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en"
+<html lang="ko"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layout_dir/layout/main_layout}">
 <head>
     <meta charset="UTF-8">
     <title>이력서 등록</title>
-    <link rel="stylesheet" th:href="@{/css/resume-regist.css}">
+    <link rel="stylesheet" th:href="@{/css/resume-regist.css}"> <!-- CSS 파일 경로 확인 -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
@@ -65,7 +65,10 @@
                 <option value="SECURITY_DEVELOPER">보안 개발자</option>
             </select>
         </div>
-        <button id="savePersonalInfo">저장</button>
+        <!-- 저장 버튼을 버튼 컨테이너로 감쌉니다 -->
+        <div class="button-container">
+            <button type="button" id="savePersonalInfo">저장</button>
+        </div>
     </section>
 
     <!-- 경력 -->
@@ -91,7 +94,10 @@
             <label for="endDate">종료일</label>
             <input type="date" id="endDate" name="endDate">
         </div>
-        <button id="saveCareer">저장</button>
+        <!-- 저장 버튼을 버튼 컨테이너로 감쌉니다 -->
+        <div class="button-container">
+            <button type="button" id="saveCareer">저장</button>
+        </div>
     </section>
 
     <!-- 학력 -->
@@ -120,7 +126,10 @@
             <label for="graduateDate">졸업일</label>
             <input type="date" id="graduateDate" name="graduateDate">
         </div>
-        <button id="saveEducation">저장</button>
+        <!-- 저장 버튼을 버튼 컨테이너로 감쌉니다 -->
+        <div class="button-container">
+            <button type="button" id="saveEducation">저장</button>
+        </div>
     </section>
 
     <!-- 자격증 -->
@@ -136,7 +145,10 @@
             <label for="passDate">취득일</label>
             <input type="date" id="passDate" name="passDate">
         </div>
-        <button id="saveLicense">저장</button>
+        <!-- 저장 버튼을 버튼 컨테이너로 감쌉니다 -->
+        <div class="button-container">
+            <button type="button" id="saveLicense">저장</button>
+        </div>
     </section>
 
     <!-- 스킬 -->
@@ -157,7 +169,10 @@
         <div class="selected-skills">
             <!-- 선택된 스킬이 여기에 표시됩니다 -->
         </div>
-        <button id="saveSkill">저장</button>
+        <!-- 저장 버튼을 버튼 컨테이너로 감쌉니다 -->
+        <div class="button-container">
+            <button type="button" id="saveSkill">저장</button>
+        </div>
     </section>
 
     <!-- 병역사항 -->
@@ -178,7 +193,10 @@
             <label for="releaseDate">전역일</label>
             <input type="date" id="releaseDate" name="releaseDate">
         </div>
-        <button id="saveMilitary">저장</button>
+        <!-- 저장 버튼을 버튼 컨테이너로 감쌉니다 -->
+        <div class="button-container">
+            <button type="button" id="saveMilitary">저장</button>
+        </div>
     </section>
 
     <!-- 포트폴리오 -->
@@ -194,7 +212,10 @@
             <label for="potfolioFilename">파일명</label>
             <input type="text" id="potfolioFilename" name="potfolioFilename">
         </div>
-        <button id="savePortfolio">저장</button>
+        <!-- 저장 버튼을 버튼 컨테이너로 감쌉니다 -->
+        <div class="button-container">
+            <button type="button" id="savePortfolio">저장</button>
+        </div>
     </section>
 
     <!-- 자기소개서 -->
@@ -206,12 +227,16 @@
             <label for="content">내용</label>
             <textarea id="content" name="content"></textarea>
         </div>
-        <button id="saveIntro">저장</button>
+        <!-- 저장 버튼을 버튼 컨테이너로 감쌉니다 -->
+        <div class="button-container">
+            <button type="button" id="saveIntro">저장</button>
+        </div>
     </section>
 
-    <!-- 작성완료 버튼 -->
-    <button id="completeResumeRegist">작성완료</button>
-
+    <!-- 작성완료 버튼을 자기소개서 섹션 외부에 배치하되, 자기소개서 저장 버튼 바로 밑에 위치하도록 합니다 -->
+    <div class="complete-button-container">
+        <button type="button" id="completeResumeRegist">작성완료</button>
+    </div>
 
     <script>
         let resumeNo = null; // 이력서 번호를 저장할 변수
@@ -287,7 +312,7 @@
                 resumeNo: resumeNo,
                 activityType: document.getElementById('activityType').value,
                 activityCenterName: document.getElementById('activityCenterName').value,
-                activityContent : document.getElementById('activityContent').value,
+                activityContent: document.getElementById('activityContent').value,
                 startDate: document.getElementById('startDate').value,
                 endDate: document.getElementById('endDate').value
             };
@@ -395,6 +420,7 @@
             });
         });
 
+        // 작성완료 버튼 이벤트 리스너
         document.getElementById("completeResumeRegist").addEventListener('click', function (){
             location.href="/";
         });

@@ -21,6 +21,7 @@ section {
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     max-width: 800px;
+    position: relative;
 }
 
 /* Section Titles */
@@ -31,6 +32,21 @@ section h2 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.add-button {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.add-button:hover {
+    background-color: #1976D2;
 }
 
 /* Title and Photo Section */
@@ -87,7 +103,7 @@ section h2 {
     background-color: #1976D2;
 }
 
-/* Buttons */
+/* 기본 버튼 스타일 */
 button {
     background-color: #4CAF50;
     color: white;
@@ -144,9 +160,9 @@ select:focus {
 
 .skill {
     padding: 8px 12px;
-    background-color: #e0f7fa;
-    border: 1px solid #00acc1;
-    color: #006064;
+    background-color: #f0f0f0;
+    border: 1px solid #929AA2;
+    color: #B7673C;
     border-radius: 20px;
     font-size: 0.8rem;
     cursor: pointer;
@@ -154,7 +170,7 @@ select:focus {
 }
 
 .skill:hover {
-    background-color: #00acc1;
+    background-color: #B9B0B2;
     color: white;
 }
 
@@ -181,21 +197,36 @@ select:focus {
     color: white;
 }
 
-/* Save Button */
-button[type="submit"] {
-    background-color: #2196F3;
+/* 버튼 컨테이너 스타일 */
+.button-container {
+    display: flex;
+    justify-content: flex-end; /* 버튼을 오른쪽으로 정렬 */
+    margin-top: 10px; /* 상단 여백 */
+    gap: 10px; /* 버튼 간 간격 */
+}
+
+/* 작성완료 버튼 컨테이너 스타일 */
+.complete-button-container {
+    display: flex;
+    justify-content: flex-end; /* 버튼을 오른쪽으로 정렬 */
+    margin-top: 10px; /* 상단 여백 */
+    gap: 10px; /* 버튼 간 간격 */
+}
+
+/* 버튼 컨테이너 내 버튼 스타일 */
+.button-container button,
+.complete-button-container button {
+    background-color: #B7673C; /* 원하는 색상으로 변경 가능 */
     color: white;
     border: none;
     padding: 8px 15px;
     border-radius: 5px;
     font-size: 0.9rem;
-    font-weight: normal;
     cursor: pointer;
     transition: background-color 0.3s;
-    margin: 20px auto;
-    display: block;
 }
 
-button[type="submit"]:hover {
-    background-color: #1976D2;
+.button-container button:hover,
+.complete-button-container button:hover {
+    background-color: #B7673C;
 }
