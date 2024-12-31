@@ -71,10 +71,26 @@ public interface ResumeDao {
     void insertIntro(IntroduceDTO introDTO);
 
     /**
-     * 유저 정보 조회
+     * 특정 사용자 ID로 모든 이력서를 조회합니다.
      *
-     * @param userId 조회할 유저 ID
-     * @return 유저 정보 DTO
+     * @param userId 사용자 ID
+     * @return 이력서 리스트
      */
-    ResumeDTO selectUserInfo(String userId);
+    List<ResumeDTO> selectResumesByUserId(String userId);
+
+    /**
+     * 기존 대표 이력서를 초기화합니다.
+     *
+     * @param userId 사용자 ID
+     */
+    void clearRepresentativeResume(@Param("userId") String userId);
+
+    /**
+     * 특정 이력서를 대표이력서로 설정합니다.
+     *
+     * @param resumeNo 이력서 ID
+     * @param userId   사용자 ID
+     */
+    void updateRepresentativeResume(@Param("resumeNo") int resumeNo, @Param("userId") String userId);
+
 }

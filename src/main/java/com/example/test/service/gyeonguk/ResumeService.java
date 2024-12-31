@@ -92,13 +92,5 @@ public class ResumeService {
         resumeDao.insertIntro(introDTO);
     }
 
-    /**
-     * 유저 정보를 조회
-     *
-     * @param userId 조회할 유저 ID
-     * @return 유저 정보 DTO
-     */
-    public ResumeDTO getUserInfo(String userId) {
-        return resumeDao.selectUserInfo(userId);
-    }
+
 }

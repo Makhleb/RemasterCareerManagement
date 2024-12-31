@@ -1,5 +1,6 @@
 package com.example.test.controller.api.gyeonguk;
 
+import com.example.test.dao.gyeonguk.ResumeDao;
 import com.example.test.dto.*;
 import com.example.test.service.gyeonguk.ResumeService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import java.util.List;
 public class ResumeRegistApiController {
 
     private final ResumeService resumeService;
+    private final ResumeDao resumeDao;
 
     /**
      * 이력서 제목 및 인적사항 저장
@@ -117,4 +119,31 @@ public class ResumeRegistApiController {
         resumeService.saveIntro(introDTO);
         return "자기소개서가 저장되었습니다.";
     }
+
+    /**
+     * 특정 사용자의 이력서를 조회합니다.
+     *
+     * @param userId 사용자 ID
+     * @return 이력서 리스트
+     */
+    @GetMapping("/list/{userId}")
+    public List<ResumeDTO> getResumesByUserId(@PathVariable String userId) {
+        return resumeDao.selectResumesByUserId(userId);
+    }
+
+
+    /**
+     * 특정 이력서를 대표이력서로 설정합니다.
+     *
+     * @param resumeDTO 이력서
+     * @return 성공 메시지
+     */
+    @PutMapping("/representative")
+    public String setRepresentativeResume(@RequestBody ResumeDTO resumeDTO) {
+        System.out.println(resumeDTO+"................");
+        resumeDao.clearRepresentativeResume(resumeDTO.getUserId());
+        resumeDao.updateRepresentativeResume(resumeDTO.getResumeNo(), resumeDTO.getUserId());
+        return "대표 이력서가 설정되었습니다.";
+    }
+
 }

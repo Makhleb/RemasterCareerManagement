@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <title>이력서 등록</title>
     <link rel="stylesheet" th:href="@{/css/resume-regist.css}"> <!-- CSS 파일 경로 확인 -->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
 <div layout:fragment="content">
@@ -422,7 +421,7 @@
 
         // 작성완료 버튼 이벤트 리스너
         document.getElementById("completeResumeRegist").addEventListener('click', function (){
-            location.href="/";
+            location.href="/resume/list";
         });
     </script>
 
