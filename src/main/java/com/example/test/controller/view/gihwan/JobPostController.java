@@ -16,4 +16,9 @@ public class JobPostController {
     public String jobPost() {
         return "/gihwan/job-post";
     }
+
+    @GetMapping("/post-list")
+    public String postList(){
+        return "/gihwan/job-post-list";
+    }
 }
