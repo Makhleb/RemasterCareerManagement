@@ -9,14 +9,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created on 2024-12-30 by 최기환
@@ -33,6 +32,12 @@ public class FileApiController {
 
     public FileApiController(FileDao fileDao) {
         this.fileDao = fileDao;
+    }
+
+
+    @PostMapping("/file-info")
+    public boolean registFileInfo(@RequestBody FileDto fileDto){
+        return fileDao.insertFile(fileDto) != 0;
     }
 
     @PostMapping
@@ -69,18 +74,21 @@ public class FileApiController {
         Map<String, String> files = new HashMap<>();
 
         for (FileDto fileDto : fileDtos) {
-            Path filePath = Paths.get(uploadPath)
+            Path dirPath = Paths.get(uploadPath)
                     .resolve(fileDto.getFileGubn())
                     .resolve(fileDto.getFileRefId())
-                    .resolve(fileDto.getFileName())
                     .normalize();
 
-
-            File file = filePath.toFile();
-            byte[] fileBytes = Files.readAllBytes(file.toPath());
-            String encodedFile = Base64.getEncoder().encodeToString(fileBytes);
-
-            files.put(fileDto.getFileRefId(), encodedFile);
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(dirPath, "*")) {
+                Path filePath = stream.iterator().next();
+                byte[] fileBytes = Files.readAllBytes(filePath);
+                String encodedFile = Base64.getEncoder().encodeToString(fileBytes);
+                files.put(fileDto.getFileRefId(), encodedFile);
+            } catch (NoSuchElementException e) {
+                throw new FileNotFoundException("(오류)파일을 찾을 수 없음:" + dirPath);
+            } catch (Exception e) {
+                throw new IOException("(오류)디렉토리 내 파일 읽기중 오류 발생: " + dirPath, e);
+            }
         }
 
         return files;
