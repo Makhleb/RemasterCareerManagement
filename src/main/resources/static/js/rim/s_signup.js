@@ -273,8 +273,9 @@
             try {
                 const response = await API.auth.checkDuplicate(userId);
                 console.log('중복확인 응답:', response);
+                console.log('중복확인 응답(response.data.data):', response.data.data);
 
-                if (response.data.status === 'SUCCESS') {
+                if (response.data.data) {
                     const isAvailable = response.data.data.success;  // data 필드 사용
                     if (isAvailable) {
                         clearErrors();
@@ -393,7 +394,7 @@
             } catch (error) {
                 console.error('회원가입 에러:', error);
 
-                if (error.code === 'VALIDATION_ERROR') {
+                if (error.response.data.code === 'VALIDATION_ERROR') {
                     // 유효성 검사 에러 처리
                     Object.entries(error.data || {}).forEach(([field, message]) => {
                         showError(field, message);
