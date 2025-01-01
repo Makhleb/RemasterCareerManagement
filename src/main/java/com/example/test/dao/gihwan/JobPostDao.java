@@ -16,4 +16,6 @@ public interface JobPostDao {
     void insertJobPost(@Param("JP")JobPostDTO jobPostDTO);
     void insertJobPostSkill(@Param("postNo") int postNo,@Param("list") List<JobPostSkillDTO> jobPostSkillDTOList);
     void insertBenefit(@Param("postNo") int postNo, @Param("list") List<BenefitDTO> benefitDTOList);
+
+    List<JobPostDTO> selectAll(String companyId);
 }

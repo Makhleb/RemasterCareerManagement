@@ -162,10 +162,6 @@
                 </div>
             </div>
         </div>
-        <div class="addImages">
-            전그 냥사 진이에 여~
-            <button onclick="jakdongTest()">보기</button>
-        </div>
     </div>
 </div>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -357,102 +353,6 @@
             .catch(error => {
                 console.error('파일 업로드 실패:', error);
             });
-    }
-
-    function jakdongTest() {
-        let data = [{
-            fileGubn: 'POST_THUMBNAIL',
-            fileRefId: 19,
-            fileName: '8.jpg',
-            fileExt: 'image/jpeg',
-            instId: 'companyTestNo'
-        },{
-            fileGubn: 'POST_THUMBNAIL',
-            fileRefId: 20,
-            fileName: 'choco4.jpg',
-            fileExt: 'image/jpeg',
-            instId: 'companyTestNo'
-        },{
-            fileGubn: 'POST_THUMBNAIL',
-            fileRefId: 21,
-            fileName: '21.jpg',
-            fileExt: 'image/jpeg',
-            instId: 'companyTestNo'
-        },{
-            fileGubn: 'POST_THUMBNAIL',
-            fileRefId: 22,
-            fileName: '22.jpg',
-            fileExt: 'image/jpeg',
-            instId: 'companyTestNo'
-        },{
-            fileGubn: 'POST_THUMBNAIL',
-            fileRefId: 23,
-            fileName: '23.jpg',
-            fileExt: 'image/jpeg',
-            instId: 'companyTestNo'
-        },{
-            fileGubn: 'POST_THUMBNAIL',
-            fileRefId: 27,
-            fileName: '24.jpg',
-            fileExt: 'image/jpeg',
-            instId: 'companyTestNo'
-        },{
-            fileGubn: 'POST_THUMBNAIL',
-            fileRefId: 28,
-            fileName: '25.jpg',
-            fileExt: 'image/jpeg',
-            instId: 'companyTestNo'
-        },{
-            fileGubn: 'POST_THUMBNAIL',
-            fileRefId: 29,
-            fileName: '26.jpg',
-            fileExt: 'image/jpeg',
-            instId: 'companyTestNo'
-        },{
-            fileGubn: 'POST_THUMBNAIL',
-            fileRefId: 30,
-            fileName: '27.jpg',
-            fileExt: 'image/jpeg',
-            instId: 'companyTestNo'
-        },{
-            fileGubn: 'POST_THUMBNAIL',
-            fileRefId: 31,
-            fileName: '28.jpg',
-            fileExt: 'image/jpeg',
-            instId: 'companyTestNo'
-        },{
-            fileGubn: 'POST_THUMBNAIL',
-            fileRefId: 32,
-            fileName: '29.jpg',
-            fileExt: 'image/jpeg',
-            instId: 'companyTestNo'
-        },{
-            fileGubn: 'POST_THUMBNAIL',
-            fileRefId: 33,
-            fileName: '30.jpg',
-            fileExt: 'image/jpeg',
-            instId: 'companyTestNo'
-        }
-        ]
-
-        axios.post('/api/common/file/list', data, {
-            "Content-Type": 'application/json'
-        })
-            .then(function (response) {
-
-                const mapData = new Map(Object.entries(response.data));
-
-                mapData.forEach((value, key) => {
-
-                    let imageData = response.data[key];
-
-                    $('.addImages').append(`<img src="data:image/png;base64,${imageData}" alt="이미이미지">`);
-                })
-            })
-            .catch(function (error) {
-                console.log(error);
-                console.log("오류 발생");
-            })
     }
 
     /**

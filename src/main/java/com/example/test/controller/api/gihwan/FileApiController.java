@@ -2,9 +2,8 @@ package com.example.test.controller.api.gihwan;
 
 import com.example.test.dao.gihwan.FileDao;
 import com.example.test.dto.FileDto;
+import com.example.test.service.common.FileService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,17 +25,19 @@ public class FileApiController {
 
     @Value("${file.upload.path}")
     private String uploadPath;
+    private final FileService fileService;
 
 
     private final FileDao fileDao;
 
-    public FileApiController(FileDao fileDao) {
+    public FileApiController(FileDao fileDao, FileService fileService) {
         this.fileDao = fileDao;
+        this.fileService = fileService;
     }
 
 
     @PostMapping("/file-info")
-    public boolean registFileInfo(@RequestBody FileDto fileDto){
+    public boolean registFileInfo(@RequestBody FileDto fileDto) {
         return fileDao.insertFile(fileDto) != 0;
     }
 

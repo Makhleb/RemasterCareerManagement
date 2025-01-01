@@ -1,5 +1,6 @@
 package com.example.test.controller.api.gihwan;
 
+import com.example.test.dto.JobPostDTO;
 import com.example.test.dto.wrapper.JobPostWrapDto;
 import com.example.test.service.gihwan.JobPostService;
 import org.springframework.web.bind.annotation.*;
@@ -7,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created on 2024-12-27 by 최기환
@@ -26,4 +28,11 @@ public class JobPostApiController {
         jobPostWrapDto.getJobPost().setCompanyId("testcompany1");
         return jobPostService.postJobPost(jobPostWrapDto);
     }
+
+    @GetMapping
+    public List<JobPostDTO> getJobPosts() {
+        String companyId = "testcompany1";
+        return jobPostService.selectAllJobPost(companyId);
+    }
+
 }

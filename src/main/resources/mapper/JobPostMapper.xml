@@ -34,4 +34,17 @@
             (#{postNo}, #{B.benefitContent})
         </foreach>
     </insert>
+
+    <select id="selectAll">
+        SELECT
+        jobPostNo,
+        title,
+        startDate,
+        endDate,
+        workTypeCode,
+        jobHistory,
+        workCode
+        FROM tblJobPost
+        WHERE companyId = #{companyId};
+    </select>
 </mapper>
