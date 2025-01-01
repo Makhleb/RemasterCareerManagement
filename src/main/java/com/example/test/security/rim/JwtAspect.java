@@ -1,6 +1,6 @@
 package com.example.test.security.rim;
 
-import com.example.test.exception.UnauthorizedException;
+import com.example.test.exception.AuthException;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.JoinPoint;
@@ -27,56 +27,36 @@ import jakarta.servlet.http.Cookie;
 public class JwtAspect {
     
     private final JwtUtil jwtUtil;
+    private final SecurityUtil securityUtil;
 
-    @Before("@annotation(com.example.test.security.rim.RequireToken)")
-    public void validateToken(JoinPoint joinPoint) {
-        try {
-            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
-                .currentRequestAttributes()).getRequest();
-
-            Cookie[] cookies = request.getCookies();
-            log.info("JWT 토큰 쿠키 확인 중");
-            
-            String token = null;
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if ("JWT_TOKEN".equals(cookie.getName())) {
-                        token = cookie.getValue();
-                        log.info("쿠키에서 JWT 토큰을 찾았습니다");
-                        break;
-                    }
+    @Before("@annotation(requireToken)")
+    public void checkToken(JoinPoint joinPoint, RequireToken requireToken) {
+        // 1. 역할 체크
+        String[] requiredRoles = requireToken.roles();
+        if (requiredRoles.length > 0) {
+            boolean hasAnyRole = false;
+            for (String role : requiredRoles) {
+                if (securityUtil.hasRole(role)) {
+                    hasAnyRole = true;
+                    break;
                 }
             }
-            
-            if (token == null) {
-                log.warn("쿠키에서 JWT 토큰을 찾을 수 없습니다");
-                throw new UnauthorizedException("인증 토큰이 필요합니다");
+            if (!hasAnyRole) {
+                throw AuthException.forbidden();
             }
-
-            if (!jwtUtil.validateToken(token)) {
-                log.warn("유효하지 않은 JWT 토큰");
-                throw new UnauthorizedException("유효하지 않은 토큰입니다");
-            }
-
-            String userId = jwtUtil.getUserIdFromToken(token);
-            String role = jwtUtil.getRoleFromToken(token);
-            log.info("사용자 토큰 검증 완료: 사용자 ID = {}, 권한 = {}", userId, role);
-            
-            UsernamePasswordAuthenticationToken authentication = 
-                new UsernamePasswordAuthenticationToken(
-                    userId, 
-                    null,
-                    Collections.singleton(new SimpleGrantedAuthority(role))
-                );
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            log.debug("토큰 검증 성공 - 사용자: {}, 권한: {}", userId, role);
-        } catch (ExpiredJwtException e) {
-            throw new UnauthorizedException("토큰이 만료되었습니다");
-        } catch (Exception e) {
-            log.error("JWT 토큰 검증 오류", e);
-            throw e;
         }
+
+        // 2. 리소스 소유자 체크 (필요한 경우)
+        if (requireToken.checkOwner()) {
+            String resourceId = extractResourceId(joinPoint);
+            if (!securityUtil.isResourceOwner(resourceId)) {
+                throw AuthException.forbidden();
+            }
+        }
+    }
+
+    private String extractResourceId(JoinPoint joinPoint) {
+        // 메서드 파라미터에서 리소스 ID 추출 로직
+        return null;
     }
 } 

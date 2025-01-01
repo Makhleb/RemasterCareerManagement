@@ -16,12 +16,14 @@ public class CustomUserDetails implements UserDetails {
     private String password;
     private String role;    // ROLE_USER, ROLE_COMPANY, ROLE_ADMIN
     private boolean isActive;
+    private String name;    // 사용자 이름 또는 기업명 추가
     
-    public CustomUserDetails(String username, String password, String role, boolean isActive) {
+    public CustomUserDetails(String username, String password, String role, boolean isActive, String name) {
         this.username = username;
         this.password = password;
         this.role = role;
         this.isActive = isActive;
+        this.name = name;
     }
 
     @Override

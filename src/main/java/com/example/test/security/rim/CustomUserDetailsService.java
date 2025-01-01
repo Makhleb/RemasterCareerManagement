@@ -9,10 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
-import java.util.Collections;
 import java.util.Optional;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 /**
  * Created on 2024-12-30 by 구경림
  */
@@ -25,33 +22,32 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // 먼저 일반 회원 조회
+        // 일반 회원 조회
         Optional<UserDTO> userOpt = userDao.findById(username);
         if (userOpt.isPresent()) {
             UserDTO user = userOpt.get();
-            return new User(
+            return new CustomUserDetails(
                 user.getUserId(),
                 user.getUserPw(),
-                Collections.singleton(new SimpleGrantedAuthority(user.getUserRole()))
+                "ROLE_USER",
+                true,
+                user.getUserName()
             );
         }
 
-        // 일반 회원이 아니면 기업 회원 조회
+        // 기업 회원 조회
         Optional<CompanyDTO> companyOpt = companyDao.findById(username);
         if (companyOpt.isPresent()) {
             CompanyDTO company = companyOpt.get();
-            return new User(
+            return new CustomUserDetails(
                 company.getCompanyId(),
                 company.getCompanyPw(),
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_COMPANY"))
+                "ROLE_COMPANY",
+                true,
+                company.getCompanyName()
             );
         }
 
-        // 비회원은 GUEST 권한으로 인증 객체 생성
-        return new User(
-                "guest",
-                "",
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_GUEST"))
-        );
+        throw new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username);
     }
 } 

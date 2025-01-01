@@ -10,6 +10,14 @@ window.API = {
         companyLogin: async (data) => {
             return await axios.post('/api/auth/company/login', data);
         },
+        // 로그아웃
+        logout: async () => {
+            return await axios.post('/api/auth/logout');
+        },
+        // 현재 사용자 정보 조회
+        me: async () => {
+            return await axios.get('/api/auth/me');
+        },
         // 회원가입
         signup: async (data) => {
             return await axios.post('/api/auth/signup', data);
@@ -21,6 +29,10 @@ window.API = {
         // 아이디 중복 체크
         checkDuplicate: async (userId) => {
             return await axios.post('/api/auth/check-duplicate', { userId });
+        },
+        // 기업 아이디 중복 체크
+        checkCompanyDuplicate: async (companyId) => {
+            return await axios.post('/api/auth/company/check-duplicate', { companyId });
         }
     }
 };
@@ -29,71 +41,93 @@ window.API = {
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 axios.defaults.withCredentials = true;  // CSRF 토큰 및 세션 쿠키 전송을 위해 필요
 
-// 요청 인터셉터 (디버깅용)
+// 요청/응답 로깅 스타일 설정
+const logStyles = {
+    request: 'color: #4CAF50; font-weight: bold;',  // 초록색
+    response: 'color: #2196F3; font-weight: bold;', // 파란색
+    error: 'color: #f44336; font-weight: bold;',    // 빨간색
+    groupTitle: 'font-size: 12px; font-weight: bold; color: #666;'
+};
+
+// 요청 인터셉터
 axios.interceptors.request.use(
     (config) => {
-        // 디버깅을 위한 요청 정보 로깅
-        console.group('API Request');
-        console.log('URL:', config.url);
-        console.log('Method:', config.method?.toUpperCase());
+        console.groupCollapsed('%c→ Request: ' + config.method.toUpperCase() + ' ' + config.url, logStyles.request);
+        console.log('Time:', new Date().toLocaleTimeString());
         console.log('Headers:', config.headers);
         if (config.data) {
-            console.log('Request Data:', JSON.stringify(config.data, null, 2));
+            console.log('Payload:', config.data);
         }
         console.groupEnd();
         return config;
     },
     (error) => {
-        console.error('api.js -> request error:', error);
+        console.error('Request Error:', error);
         return Promise.reject(error);
     }
 );
 
+// 응답 인터셉터
 axios.interceptors.response.use(
-    response => response,
+    response => {
+        console.groupCollapsed(
+            '%c← Response: ' + response.status + ' ' + response.config.method.toUpperCase() + ' ' + response.config.url,
+            response.status < 400 ? logStyles.response : logStyles.error
+        );
+        console.log('Time:', new Date().toLocaleTimeString());
+        console.log('Status:', response.status);
+        console.log('Data:', response.data);
+        console.groupEnd();
+        return response;
+    },
     error => {
-        const errorData = error.response?.data;
-        const status = error.response?.status;
-        const currentPath = window.location.pathname;
-
-        console.log('api.js -> errorData:', errorData);
-        console.log('api.js -> status:', status);
-        console.log('api.js -> currentPath:', currentPath);
-
-        switch (status) {
-            case 401:  // 인증 실패
-                const isLoggedIn = document.cookie.includes('Authorization');
-                if (isLoggedIn) {
-                    axios.post('/api/auth/logout')
-                        .then(() => {
-                            window.location.href = '/login';
-                        })
-                        .catch(() => {
-                            alert('로그아웃 실패! 다시 시도해주세요.');
-                        });
-                } else {
-                    alert('로그인이 필요합니다.');
-                    window.location.href = '/login';
-                }
-                break;
-
-            case 403:  // 권한 없음
-                alert(errorData?.body || '접근 권한이 없습니다.');
-                history.back();
-                break;
-
-            case 404:  // 리소스 없음
-                alert(errorData?.body || '요청하신 정보를 찾을 수 없습니다.');
-                break;
-
-            case 500:  // 서버 에러
-                alert('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
-                break;
-
-            default:
-                alert(errorData?.body || '오류가 발생했습니다.');
+        console.groupCollapsed(
+            '%c× Error: ' + (error.response?.status || 'NETWORK') + ' ' + error.config?.method.toUpperCase() + ' ' + error.config?.url,
+            logStyles.error
+        );
+        console.log('Time:', new Date().toLocaleTimeString());
+        console.log('Status:', error.response?.status);
+        console.log('Error:', error.response?.data || error.message);
+        if (error.response?.data?.stack) {
+            console.log('Stack:', error.response.data.stack);
         }
-        return Promise.reject(errorData || error);
+        console.groupEnd();
+
+        const errorResponse = error.response?.data;
+        
+        // 인증 관련 에러 (401)
+        
+            switch (errorResponse?.code) {
+                case 'AUTH_LOGIN_FAILED':
+                    // 로그인 실패는 각 컴포넌트에서 처리
+                    break;
+                    
+                case 'AUTH_INVALID_TOKEN':
+                    console.log('AUTH_INVALID_TOKEN');
+                    break;
+                case 'AUTH_TOKEN_EXPIRED':
+                    // 토큰 만료/유효하지 않은 경우
+                    auth._userInfo = null;  // 사용자 정보 초기화
+                    if (!auth.isPublicPage()) {  // 공개 페이지가 아닌 경우만
+                        alert('로그인이 만료되었습니다. 다시 로그인해주세요.');
+                        location.href = '/login';
+                    }
+                    break;
+
+                case 'AUTH_UNAUTHORIZED':
+                    console.log('AUTH_UNAUTHORIZED : 권한 없음');
+                    // 권한 없음 - /api/auth/me 등에서 발생
+                    // if (!auth.isPublicPage()) {  // 공개 페이지가 아닌 경우만
+                    //     location.href = '/login';
+                    // }
+                    break;
+
+                default:
+                    // 기타 401 에러
+                    console.error('인증 에러:', errorResponse);
+                    break;
+            }
+        return Promise.reject(errorResponse || error);
     }
 );
 

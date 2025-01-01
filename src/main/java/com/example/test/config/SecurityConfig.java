@@ -1,5 +1,7 @@
 package com.example.test.config;
 
+import com.example.test.security.rim.JwtAuthenticationFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,6 +15,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import java.util.Arrays;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * Created on 2024-12-26 by 최기환
@@ -22,7 +25,10 @@ import java.util.Arrays;
 @Configuration
 @EnableAspectJAutoProxy
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -52,7 +58,7 @@ public class SecurityConfig {
             .configurationSource(corsConfigurationSource())
         );
 
-        // 인증/인가 설정
+        // 인증/인가 설정 - 현재 개발 모드 일 때는 모든 요청을 허용
         if (isDevelopmentMode()) {
             http.authorizeHttpRequests(auth -> auth
                 .anyRequest().permitAll()
@@ -80,6 +86,8 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             );
         }
+
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

@@ -12,4 +12,5 @@ import java.lang.annotation.Target;
 public @interface RequireToken {
     String[] roles() default {};
     boolean refresh() default false;
+    boolean checkOwner() default false;
 } 

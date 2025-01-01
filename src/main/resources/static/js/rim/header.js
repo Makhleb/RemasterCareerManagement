@@ -1,57 +1,51 @@
-
-    document.addEventListener('DOMContentLoaded', async function() {
-        try {
-            // /api/auth/me로 현재 로그인 상태 확인
-            const user = await auth.getCurrentUser();
-            console.log('header.js -> user -> ', user);
-            if (user) {
-                // 로그인 상태
-                showUserInfo(user);
-            } else {
-                // 비로그인 상태
-                showGuestInfo();
-            }
-        } catch (error) {
-            console.error('사용자 정보 로드 실패:', error);
-            showGuestInfo();
-        }
-    });
-
-    function showUserInfo(user) {
-        const userInfoDiv = document.querySelector('.user-info');
-        const headerRightSignup = document.querySelector('.header-right-signup');
-        const headerRightLogin = document.querySelector('.header-right-login');
-        const userNameDiv = document.querySelector('.user-name');
-        const myPageLink = document.querySelector('.my-page');
-
-        userNameDiv.textContent = `${user.name}님`;
+document.addEventListener('DOMContentLoaded', async function() {
+    try {
+        const user = await auth.getCurrentUser();
+        const headerRight = document.querySelector('.header-right');
         
-        // 기업회원과 일반회원 구분하여 마이페이지 링크 설정
-        if (user.type === 'company') {
-            myPageLink.onclick = () => location.href = '/company/mypage';
+        if (user && user.type !== 'guest') {
+            // 로그인 상태
+            headerRight.innerHTML = `
+                <div id="header-right-search">🔍</div>
+                <div id="header-right-cr">
+                    <div id="header-right-user">${user.name || '사용자'}님</div>
+                    <div id="header-right-logout">로그아웃</div>
+                </div>
+                <div id="header-right-mypage">${user.type === 'company' ? '기업 마이페이지' : '마이페이지'}</div>
+            `;
+
+            // 로그아웃 이벤트 리스너
+            document.querySelector('#header-right-logout').addEventListener('click', async () => {
+                await auth.logout();
+            });
+
+            // 마이페이지 이벤트 리스너
+            document.querySelector('#header-right-mypage').addEventListener('click', () => {
+                location.href = user.type === 'company' ? '/company/mypage' : '/user/mypage';
+            });
         } else {
-            myPageLink.onclick = () => location.href = '/user/mypage';
+            // 비로그인 상태
+            headerRight.innerHTML = `
+                <div id="header-right-search">🔍</div>
+                <div id="header-right-cr">
+                    <div id="header-right-signup">회원가입</div>
+                    <div id="header-right-login">로그인</div>
+                </div>
+                <div id="header-right-company-services">기업서비스</div>
+            `;
+
+            // 로그인/회원가입 이벤트 리스너
+            document.querySelector('#header-right-login').addEventListener('click', () => {
+                location.href = '/login';
+            });
+            document.querySelector('#header-right-signup').addEventListener('click', () => {
+                location.href = '/signup';
+            });
+            document.querySelector('#header-right-company-services').addEventListener('click', () => {
+                location.href = '/company/signup';
+            });
         }
-
-        userInfoDiv.style.display = 'flex';
-        headerRightSignup.style.display = 'none';
-        headerRightLogin.style.display = 'none';
+    } catch (error) {
+        console.error('사용자 정보 로드 실패:', error);
     }
-
-    function showGuestInfo() {
-        const userInfoDiv = document.querySelector('.user-info');
-        const guestInfoDiv = document.querySelector('.guest-info');
-        
-        // UI 전환
-        userInfoDiv.style.display = 'none';
-        guestInfoDiv.style.display = 'flex';
-    }
-
-    // 로그아웃 처리
-    document.querySelector('.logout-btn').addEventListener('click', async function() {
-        try {
-            await auth.logout();
-        } catch (error) {
-            console.error('로그아웃 실패:', error);
-        }
-    });
+});

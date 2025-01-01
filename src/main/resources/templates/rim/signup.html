@@ -428,6 +428,7 @@
 
         // 약관 내용 표시 함수
         function showTerms(termType) {
+            currentTermType = termType;
             const modal = document.getElementById('termsModal');
             const modalTitle = document.getElementById('modalTitle');
             const modalContent = document.getElementById('modalContent');
@@ -471,6 +472,8 @@
         
         // 약관 동의 처리 함수 . 현재 선택된 약관에 대해 체크박스를 체크하고 모달을 닫는다
         function agreeToTerms() {
+            console.log('agreeToTerms 호출');
+            console.log('currentTermType:', currentTermType);
             if (currentTermType) {
                 const checkbox = document.getElementById(`terms${currentTermType}`);
                 checkbox.checked = true;
@@ -679,93 +682,7 @@
             return true;
         }
 
-        // 폼 제출 처리
-        const form = document.getElementById('signupForm');
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            clearErrors();
-
-            // 순차적 검증
-            if (!validateUserId()) return;
-            if (!validatePassword()) return;
-            if (!validateName()) return;
-            if (!validatePhone()) return;
-            if (!validateRemainingFields()) return;
-            if (!validateTerms()) return;
-
-            // API 호출을 위한 데이터 준비
-                const formData = {
-                    userId: document.getElementById('userId').value,
-                    userPw: document.getElementById('userPw').value,
-                    userPwConfirm: document.getElementById('userPwConfirm').value,
-                    userName: document.getElementById('userName').value,
-                    userPhone: document.getElementById('userPhone').value,
-                    userEmail: `${document.getElementById('emailId').value}@${document.getElementById('emailDomain').value}`,
-                userBirth: `${document.getElementById('birthYear').value}${
-                    document.getElementById('birthMonth').value.padStart(2, '0')}${
-                    document.getElementById('birthDay').value.padStart(2, '0')}`,
-                    userGender: document.getElementById('userGender').value
-                };
-
-            // API 호출
-            try {
-                const response = await axios.post('/api/auth/signup', formData);
-                alert(response.data.body);  // 성공 메시지
-                location.href = '/login';
-            } catch (error) {
-                console.log(error);
-                if (error.response?.status === 400) {
-                    const errorResponse = error.response.data;
-                    if (typeof errorResponse.body === 'string') {
-                        // 단일 에러 메시지 (예: "이미 사용중인 이메일입니다")
-                        alert(errorResponse.body);
-                    } else {
-                        // ValidationError의 경우 (필드별 에러)
-                        Object.entries(errorResponse.body).forEach(([field, message]) => {
-                            showError(field, message);
-                        });
-                    }
-                } else {
-                    alert(error.response?.data?.body || '회원가입 중 오류가 발생했습니다');
-                }
-            }
-        });
-
-        // 전화번호 자동 하이픈 추가
-        document.getElementById('userPhone').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/[^0-9]/g, '');
-            if (value.length > 3 && value.length <= 7) {
-                value = value.slice(0,3) + '-' + value.slice(3);
-            } else if (value.length > 7) {
-                value = value.slice(0,3) + '-' + value.slice(3,7) + '-' + value.slice(7,11);
-            }
-            e.target.value = value;
-        });
-
-        // 생년월일 셀렉트 박스 초기화
-        function initBirthSelect() {
-            const yearSelect = document.getElementById('birthYear');
-            const monthSelect = document.getElementById('birthMonth');
-            const daySelect = document.getElementById('birthDay');
-
-            const currentYear = new Date().getFullYear();
-            for (let year = currentYear; year >= currentYear - 100; year--) {
-                yearSelect.add(new Option(year, year));
-            }
-
-            for (let month = 1; month <= 12; month++) {
-                monthSelect.add(new Option(month, month.toString().padStart(2, '0')));
-            }
-
-            for (let day = 1; day <= 31; day++) {
-                daySelect.add(new Option(day, day.toString().padStart(2, '0')));
-            }
-        }
-
-        // 페이지 로드 시 초기화
-        initBirthSelect();
-
-        // 아이디 중복확인 함수 수정
+        // 아이디 중복확인 함수
         async function checkDuplicate() {
             const userId = document.getElementById('userId').value;
             if (!validationRules.userId.pattern.test(userId)) {
@@ -775,20 +692,24 @@
             }
 
             try {
-                const response = await axios.post('/api/auth/check-duplicate', { userId });
-                console.log('signup.html -> response',response);
-                console.log('signup.html -> response.body',response.body);
-                if (response.body.success) {  // status 대신 state 확인
-                    clearErrors();
-                    alert('사용 가능한 아이디입니다.');
-                    document.getElementById('userId').setAttribute('data-validated', 'true');
-                } else {
-                    showError('userId', '이미 사용중인 아이디입니다.');
-                    document.getElementById('userId').setAttribute('data-validated', 'false');
-                    document.getElementById('userId').focus();
+                const response = await API.auth.checkDuplicate(userId);
+                console.log('중복확인 응답:', response);
+
+                if (response.data.status === 'SUCCESS') {
+                    const isAvailable = response.data.data.success;  // data 필드 사용
+                    if (isAvailable) {
+                        clearErrors();
+                        alert('사용 가능한 아이디입니다.');
+                        document.getElementById('userId').setAttribute('data-validated', 'true');
+                    } else {
+                        showError('userId', '이미 사용중인 아이디입니다.');
+                        document.getElementById('userId').setAttribute('data-validated', 'false');
+                        document.getElementById('userId').focus();
+                    }
                 }
             } catch (error) {
-                alert(error?.body || '중복 확인 중 오류가 발생했습니다.');
+                console.error('중복확인 에러:', error);
+                showError('userId', error.message || '중복 확인 중 오류가 발생했습니다.');
                 document.getElementById('userId').focus();
             }
         }
@@ -853,6 +774,91 @@
                 }
             });
         });
+
+        // 폼 제출 처리
+        const form = document.getElementById('signupForm');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearErrors();
+
+            // 순차적 검증
+            if (!validateUserId()) return;
+            if (!validatePassword()) return;
+            if (!validateName()) return;
+            if (!validatePhone()) return;
+            if (!validateRemainingFields()) return;
+            if (!validateTerms()) return;
+
+            // API 호출을 위한 데이터 준비
+            const formData = {
+                userId: document.getElementById('userId').value,
+                userPw: document.getElementById('userPw').value,
+                userPwConfirm: document.getElementById('userPwConfirm').value,
+                userName: document.getElementById('userName').value,
+                userPhone: document.getElementById('userPhone').value,
+                userEmail: `${document.getElementById('emailId').value}@${document.getElementById('emailDomain').value}`,
+                userBirth: `${document.getElementById('birthYear').value}${
+                    document.getElementById('birthMonth').value.padStart(2, '0')}${
+                    document.getElementById('birthDay').value.padStart(2, '0')}`,
+                userGender: document.getElementById('userGender').value
+            };
+
+            try {
+                const response = await API.auth.signup(formData);
+                console.log('회원가입 응답:', response);
+
+                if (response.status === 200) {
+                    alert('회원가입이 완료되었습니다.');
+                    location.href = '/login';
+                }
+            } catch (error) {
+                console.error('회원가입 에러:', error);
+
+                if (error.code === 'VALIDATION_ERROR') {
+                    // 유효성 검사 에러 처리
+                    Object.entries(error.data || {}).forEach(([field, message]) => {
+                        showError(field, message);
+                    });
+                } else {
+                    // 기타 에러 처리
+                    alert(error.message || '회원가입 중 오류가 발생했습니다.');
+                }
+            }
+        });
+
+        // 전화번호 자동 하이픈 추가
+        document.getElementById('userPhone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^0-9]/g, '');
+            if (value.length > 3 && value.length <= 7) {
+                value = value.slice(0,3) + '-' + value.slice(3);
+            } else if (value.length > 7) {
+                value = value.slice(0,3) + '-' + value.slice(3,7) + '-' + value.slice(7,11);
+            }
+            e.target.value = value;
+        });
+
+        // 생년월일 셀렉트 박스 초기화
+        function initBirthSelect() {
+            const yearSelect = document.getElementById('birthYear');
+            const monthSelect = document.getElementById('birthMonth');
+            const daySelect = document.getElementById('birthDay');
+
+            const currentYear = new Date().getFullYear();
+            for (let year = currentYear; year >= currentYear - 100; year--) {
+                yearSelect.add(new Option(year, year));
+            }
+
+            for (let month = 1; month <= 12; month++) {
+                monthSelect.add(new Option(month, month.toString().padStart(2, '0')));
+            }
+
+            for (let day = 1; day <= 31; day++) {
+                daySelect.add(new Option(day, day.toString().padStart(2, '0')));
+            }
+        }
+
+        // 페이지 로드 시 초기화
+        initBirthSelect();
     </script>
 </th:block>
 </body>

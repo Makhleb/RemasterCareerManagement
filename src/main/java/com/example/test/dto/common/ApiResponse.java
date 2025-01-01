@@ -5,31 +5,33 @@ import java.time.LocalDateTime;
 
 /**
  * Created on 2024-12-30 by 구경림
+ * API 응답의 표준 포맷을 정의하는 클래스
  */
 @Getter
 public class ApiResponse<T> {
-    private final int status;      // HTTP 상태 코드
-    private final String state;    // SUCCESS or ERROR
-    private final String type;     // VALIDATION_ERROR or BUSINESS_ERROR (에러 구분용)
-    private final T body;
+    private final String status;    // SUCCESS or ERROR
+    private final String code;      // 에러 코드 (성공시 null)
+    private final String message;   // 에러 메시지 (성공시 null)
+    private final T data;          // 실제 데이터 (에러시 null)
     private final LocalDateTime timestamp;
 
-    private ApiResponse(int status, String state, String type, T body) {
+    private ApiResponse(String status, String code, String message, T data) {
         this.status = status;
-        this.state = state;
-        this.type = type;
-        this.body = body;
+        this.code = code;
+        this.message = message;
+        this.data = data;
         this.timestamp = LocalDateTime.now();
     }
 
     public static <T> ApiResponse<T> success(T data) {
-        return new ApiResponse<>(200, "SUCCESS", null, data);
+        return new ApiResponse<>("SUCCESS", null, null, data);
     }
 
-    public static <T> ApiResponse<T> error(int status, String type, T data) {
-        return new ApiResponse<>(status, "ERROR", type, data);
+    public static <T> ApiResponse<T> success(T data, String message) {
+        return new ApiResponse<>("SUCCESS", null, message, data);
     }
-    public static <T> ApiResponse<T> error(int status, T data) {
-        return new ApiResponse<>(status, "ERROR", null, data);
+
+    public static <T> ApiResponse<T> error(String code, String message) {
+        return new ApiResponse<>("ERROR", code, message, null);
     }
 }

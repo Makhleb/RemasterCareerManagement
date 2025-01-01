@@ -6,8 +6,6 @@
     <meta charset="UTF-8">
     <title>로그인</title>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="/js/rim/api.js"></script>
-    <link rel="stylesheet" href="/css/common/variable.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         .login {
@@ -214,6 +212,9 @@
         // 폼 제출 처리
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            // 에러 메시지 초기화
+            document.getElementById('userPwError').style.display = 'none';
 
             const formData = {
                 userId: document.getElementById('userId').value,
@@ -221,22 +222,31 @@
             };
 
             try {
-
+                // 로그인 API 호출
                 const response = await (loginType.value === 'company' 
                     ? API.auth.companyLogin(formData)
                     : API.auth.login(formData));
-                console.log('response>>',response); 
-                if (response.state === 'SUCCESS') {
-                    // 로그인 성공 시 메인 페이지로 이동
+
+                console.log('로그인 응답:', response);
+
+                // 성공 시 메인 페이지로 이동
+                if (response.data.status === 'SUCCESS') {
                     location.href = '/';
                 }
             } catch (error) {
-                console.log('error -> ', error);
-                if (error.response && error.response.status === 401) {
-                    alert('아이디 또는 비밀번호가 일치하지 않습니다.');
+                console.error('로그인 에러:', error);
+
+                // 에러 메시지 표시
+                const errorDiv = document.getElementById('userPwError');
+                
+                if (error.code === 'AUTH_LOGIN_FAILED') {
+                    errorDiv.textContent = error.message;
                 } else {
-                    alert('로그인 중 오류가 발생했습니다.');
+                    errorDiv.textContent = '로그인 처리 중 오류가 발생했습니다.';
                 }
+                
+                errorDiv.style.display = 'block';
+                document.getElementById('userPw').focus();
             }
         });
     </script>

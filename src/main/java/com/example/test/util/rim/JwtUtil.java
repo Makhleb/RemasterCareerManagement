@@ -2,22 +2,27 @@ package com.example.test.util.rim;
 
 import com.example.test.dto.UserDTO;
 import com.example.test.dto.CompanyDTO;
+import com.example.test.exception.AuthException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SecurityException;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
+import lombok.extern.slf4j.Slf4j;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 /**
  * Created on 2024-12-27 by 구경림
  */
 @Component
+@Slf4j
 public class JwtUtil {
     private static final String TOKEN_PREFIX = "Bearer ";
 
@@ -44,6 +49,13 @@ public class JwtUtil {
      */
     @Value("${jwt.issuer}")
     private String issuer;
+
+    private static final long EXPIRATION_TIME = 24 * 60 * 60 * 1000L; // 24시간
+
+    @PostConstruct
+    protected void init() {
+        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+    }
 
     /**
      * JWT 토큰 생성
@@ -73,7 +85,7 @@ public class JwtUtil {
      */
     public String generateToken(CompanyDTO companyDTO) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", "ROLE_COMPANY");  // 기업 회원 역할 설정
+        claims.put("role", "ROLE_COMPANY");
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -81,7 +93,7 @@ public class JwtUtil {
                 .setIssuer(issuer)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
+                .signWith(getSigningKey())
                 .compact();
     }
 
@@ -161,7 +173,8 @@ public class JwtUtil {
      * 서명 키 생성
      */
     private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+        byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     /**
@@ -195,6 +208,44 @@ public class JwtUtil {
             return bearerToken.substring(7);
         }
         return null;
+    }
+
+    /**
+     * 토큰 검증 및 사용자 ID 추출
+     * 
+     * @param token JWT 토큰
+     * @return 사용자 ID
+     */
+    public String validateTokenAndGetUserId(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+            // 토큰 만료 체크
+            if (claims.getExpiration().before(new Date())) {
+                throw AuthException.tokenExpired();
+            }
+
+            return claims.getSubject();
+        } catch (SecurityException e) {
+            log.error("잘못된 JWT 서명");
+            throw AuthException.invalidToken();
+        } catch (ExpiredJwtException e) {
+            log.error("만료된 JWT 토큰");
+            throw AuthException.tokenExpired();
+        } catch (UnsupportedJwtException e) {
+            log.error("지원되지 않는 JWT 토큰");
+            throw AuthException.invalidToken();
+        } catch (MalformedJwtException e) {
+            log.error("잘못된 형식의 JWT 토큰");
+            throw AuthException.invalidToken();
+        } catch (IllegalArgumentException e) {
+            log.error("JWT 토큰이 비어있음");
+            throw AuthException.invalidToken();
+        }
     }
 }
 
