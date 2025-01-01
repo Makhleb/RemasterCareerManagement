@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>공통 레이아웃</title>
+    <!-- CSS 파일 적용 -->
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/mypage-layout.css}">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<!-- 헤더 -->
+<div th:replace="~{/layout_dir/fragments/header :: header}"></div>
+<!-- 본문 -->
+<body>
+<div class="flex-container">
+    <div class="container">
+<!--        todo # 연결하기-->
+        <aside>
+            <a href="#" class="aside-title">기업 마이페이지 홈</a>
+            <hr>
+            <ul>
+                <li>
+                    <a href="#">기업 프로필</a>
+                    <ul>
+                        <li><a href="#">프로필 수정</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">공고 관리</a>
+                    <ul>
+                        <li><a href="#">공고 등록</a></li>
+                        <li><a href="#">공고 조회</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">기술스택 매칭</a>
+                </li>
+            </ul>
+        </aside>
+        <div class="main-content" layout:fragment="content">
+            <!-- 본문이 동적으로 삽입될 영역 -->
+        </div>
+    </div>
+</div>
+
+</body>
+<!-- 푸터 -->
+<div th:replace="~{/layout_dir/fragments/footer :: footer}"></div>
+<!-- JavaScript 파일 적용 -->
+<script layout:fragment="script"></script>
+<script th:src="@{/js/layout.js}"></script>
+</html>

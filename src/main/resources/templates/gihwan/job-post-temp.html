@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="/css/job-post-list.css">
 </head>
 <body layout:fragment="content">
-<!--    todo 내일 마이페이지에서 공통되는 요소를 레이아웃으로 분리하기 (aside, container같은거) -->
 <div class="flex-container">
     <div class="container">
         <aside>
@@ -38,7 +37,7 @@
             <hr>
             <div class="column-flex list-padding">
                 <div>
-                    <div class="post-item row-flex">
+                    <div class="post-item-info row-flex">
                         <img src="/images/testImage.webp" class="photo-item" alt="공고 이미지">
                         <div class="column-flex post-info">
                             <div class="title-and-date">
@@ -71,9 +70,9 @@
                         나왔음
                     </div>
                 </div>
-                <div class="post-item">내용내용</div>
-                <div class="post-item">내용내용</div>
-                <div class="post-item">내용내용</div>
+                <div class="post-item-info">내용내용</div>
+                <div class="post-item-info">내용내용</div>
+                <div class="post-item-info">내용내용</div>
             </div>
         </div>
     </div>
@@ -84,7 +83,6 @@
             } else{
                 $('.user-list').hide();
             }
-
         }
     </script>
 </div>

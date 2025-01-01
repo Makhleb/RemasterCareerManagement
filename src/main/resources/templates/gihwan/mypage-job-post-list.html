@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout_dir/layout/company_mypage_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>공고 조회</title>
+    <link rel="stylesheet" href="/css/job-post-list.css">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="main-title">공고 조회</div>
+    <hr>
+    <div class="column-flex list-padding" id="post-list">
+    </div>
+</div>
+<script layout:fragment="script">
+    window.onload = function () {
+        axios.get('/api/companies/job-post/' + 'testcompany1')
+        .then(function (response) {
+            console.log(response.data);
+            response.data.forEach(function (item) {
+
+                let startDate = item.startDate.substring(0, 16).replace('T',' ');
+                let endDate = item.startDate.substring(0, 16).replace('T',' ');
+
+                $('#post-list').append(
+                `<div class="post-item">
+                    <div class="post-item-info row-flex">
+                        <img src="data:image/png;base64,${item.postThumbnail}" class="photo-item"
+                        onerror="this.onerror=null; this.src='/images/testImage.webp';" alt="공고 이미지">
+                        <div class="column-flex post-info">
+                            <div class="title-and-date">
+                                <div class="row-flex" style="align-items: center;">
+                                    <div class="post-title text-button" style="margin-right: 20px">${item.title}</div>
+                                    <button class="post-button inner-button" style="margin-right: 5px">수정</button>
+                                    <button class="post-button inner-button">삭제</button>
+                                </div>
+                                <div class="item-date">
+                                    <span class="start-date">${startDate}</span>
+                                    <span> ~ </span>
+                                    <span class="end-date">${endDate}</span>
+                                </div>
+                            </div>
+                            <div class="post-type">
+                                <span class="work-type">${item.workTypeCode}</span>
+                                <span> | </span>
+                                <span class="job-history">${item.jobHistory}</span>
+                                <span> | </span>
+                                <span class="job-type">${item.workCode}</span>
+                            </div>
+                        </div>
+                        <button class="post-button resume">공고에 맞는<br>이력서 추천</button>
+                        <div class="text-button" onclick="viewList(event)">
+                            <span>지원자 목록</span>
+                            <img src="/images/black_down_arrow.png" alt="아래 화살표">
+                        </div>
+                    </div>
+                    <div class="user-list" style="display: none">
+                        지원자 목록
+                    </div>
+                </div>`
+                );
+            })
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+    }
+
+    function viewList(event) {
+        let postItem = $(event.target).closest('.post-item').find('.user-list');
+
+        if(postItem.attr('style').includes('display: none')){
+            postItem.show();
+        } else{
+            postItem.hide();
+        }
+    }
+
+</script>
+</body>
+</html>

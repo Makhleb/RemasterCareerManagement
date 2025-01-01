@@ -1,8 +1,10 @@
 package com.example.test.dao.gihwan;
 
+import com.example.test.dto.AplcHstrResponseDto;
 import com.example.test.dto.BenefitDTO;
 import com.example.test.dto.JobPostDTO;
 import com.example.test.dto.JobPostSkillDTO;
+import com.example.test.dto.wrapper.JobPostAplcWrapDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -17,5 +19,6 @@ public interface JobPostDao {
     void insertJobPostSkill(@Param("postNo") int postNo,@Param("list") List<JobPostSkillDTO> jobPostSkillDTOList);
     void insertBenefit(@Param("postNo") int postNo, @Param("list") List<BenefitDTO> benefitDTOList);
 
-    List<JobPostDTO> selectAll(String companyId);
+    List<JobPostAplcWrapDto> selectAll(String companyId);
+    List<AplcHstrResponseDto> selectJobPostAplc(@Param("jobPostNo") int jobPostNo);
 }

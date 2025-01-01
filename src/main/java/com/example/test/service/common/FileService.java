@@ -2,7 +2,6 @@ package com.example.test.service.common;
 
 import com.example.test.dao.gihwan.FileDao;
 import com.example.test.dto.FileDto;
-import com.example.test.dto.response.FileResponseDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

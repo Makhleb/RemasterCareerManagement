@@ -1,12 +1,16 @@
-package com.example.test.dto;
+package com.example.test.dto.wrapper;
 
+import com.example.test.dto.AplcHstrResponseDto;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
+/**
+ * Created on 2025-01-02 by 최기환
+ */
 @Data
-public class JobPostDTO {
+public class JobPostAplcWrapDto {
     private int jobPostNo; // 공고 인덱스
     private String companyId; // 기업 아이디
     private String title; // 공고 제목
@@ -29,4 +33,5 @@ public class JobPostDTO {
     private String jobRankCode; // 직급/직책 코드
     private String workTypeCode; // 근무형태 코드
     private String educationCode; // 학력 코드
+    private List<AplcHstrResponseDto> alpcList;
 }

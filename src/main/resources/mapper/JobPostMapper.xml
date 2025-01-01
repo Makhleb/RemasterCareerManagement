@@ -37,14 +37,32 @@
 
     <select id="selectAll">
         SELECT
-        jobPostNo,
-        title,
-        startDate,
-        endDate,
-        workTypeCode,
-        jobHistory,
-        workCode
-        FROM tblJobPost
-        WHERE companyId = #{companyId};
+        P.jobPostNo,
+        P.title,
+        P.startDate,
+        P.endDate,
+        GWT.name AS workTypeCode,
+        P.jobHistory,
+        GT.name AS workCode
+        FROM tblJobPost P
+        JOIN (SELECT * FROM tblGubn WHERE groupCode = 'WORK_TYPE') GWT
+        ON P.workTypeCode = GWT.code
+        JOIN (SELECT * FROM tblGubn WHERE groupCode = 'WORK') GT
+        ON P.workCode = GT.code
+        WHERE P.companyId = #{companyId}
+    </select>
+
+    <select id="selectJobPostAplc">
+        SELECT
+        A.jobPostNo,
+        A.resumeNo,
+        B.title,
+        C.userName,
+        A.passYn,
+        A.aplcHstrDate
+        FROM tblAplcHstr A
+        JOIN tblResume B ON A.resumeNo = B.resumeNo
+        JOIN tblUser C  ON B.userId = C.userId AND C.userIsActive = 'Y'
+        WHERE A.jobPostNo = #{jobPostNo};
     </select>
 </mapper>

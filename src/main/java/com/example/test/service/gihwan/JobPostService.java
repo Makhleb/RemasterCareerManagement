@@ -2,6 +2,7 @@ package com.example.test.service.gihwan;
 
 import com.example.test.dao.gihwan.JobPostDao;
 import com.example.test.dto.JobPostDTO;
+import com.example.test.dto.wrapper.JobPostAplcWrapDto;
 import com.example.test.dto.wrapper.JobPostWrapDto;
 import com.example.test.service.common.FileService;
 import org.springframework.stereotype.Service;
@@ -38,9 +39,10 @@ public class JobPostService {
     }
 
 
-    public List<JobPostDTO> selectAllJobPost(String companyId) {
-        List<JobPostDTO> daoResult = jobPostDao.selectAll(companyId);
-        for (JobPostDTO listItem : daoResult) {
+    public List<JobPostAplcWrapDto> selectAllJobPost(String companyId) {
+        List<JobPostAplcWrapDto> daoResult = jobPostDao.selectAll(companyId);
+        for (JobPostAplcWrapDto listItem : daoResult) {
+            listItem.setAlpcList(jobPostDao.selectJobPostAplc(listItem.getJobPostNo()));
             String fileValue = fileService.loadImage("POST_THUMBNAIL", String.valueOf(listItem.getJobPostNo()));
             listItem.setPostThumbnail(fileValue);
         }

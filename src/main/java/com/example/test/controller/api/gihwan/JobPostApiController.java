@@ -1,6 +1,7 @@
 package com.example.test.controller.api.gihwan;
 
 import com.example.test.dto.JobPostDTO;
+import com.example.test.dto.wrapper.JobPostAplcWrapDto;
 import com.example.test.dto.wrapper.JobPostWrapDto;
 import com.example.test.service.gihwan.JobPostService;
 import org.springframework.web.bind.annotation.*;
@@ -29,9 +30,8 @@ public class JobPostApiController {
         return jobPostService.postJobPost(jobPostWrapDto);
     }
 
-    @GetMapping
-    public List<JobPostDTO> getJobPosts() {
-        String companyId = "testcompany1";
+    @GetMapping("/{companyId}")
+    public List<JobPostAplcWrapDto> getJobPosts(@PathVariable String companyId) {
         return jobPostService.selectAllJobPost(companyId);
     }
 
