@@ -71,20 +71,4 @@ public class GlobalExceptionHandler {
         return ApiResponse.error(400, "VALIDATION_ERROR", errors);
     }
 
-
-    /**
-     * @Validation 예외 프론트 유효성검사 예시
-     * try {
-     *         await axios.post('/api/users', userData);
-     *     } catch (error) {
-     *         if (error.response.status === 400) {
-     *             // 응답예시 -> error.response.data.body = { "email": "이메일 형식이 잘못됨", "name": "이름은 필수입니다" }
-     *         const errors = error.response.data.body;
-     *             Object.entries(errors).forEach(([field, message]) => {
-     *                 // 각 필드에 에러 메시지 표시
-     *                 showFieldError(field, message);
-     *             });
-     *         }
-     *     }
-     */
 } 

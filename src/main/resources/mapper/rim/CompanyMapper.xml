@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.test.dao.CompanyDao">
+<mapper namespace="com.example.test.dao.rim.CompanyDao">
 
     <select id="findById" parameterType="string" resultType="com.example.test.dto.CompanyDTO">
         SELECT *
@@ -26,7 +26,7 @@
         WHERE companyNumber = #{number}
     </select>
 
-    <insert id="save" parameterType="com.example.test.dto.CompanyCreateDTO">
+    <insert id="save" parameterType="com.example.test.dto.rim.CompanyCreateDTO">
         INSERT INTO tblCompany (
             companyId,
             companyPw,

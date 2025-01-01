@@ -7,13 +7,21 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import java.util.Arrays;
 
 /**
  * Created on 2024-12-26 by 최기환
  * Modified on 2024-12-27 by 구경림
+ * Modified on 2024-01-02 by 구경림 - 쿠키 기반 인증 설정 추가
  */
 @Configuration
 @EnableAspectJAutoProxy
+@EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
@@ -23,27 +31,71 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(auth -> auth.disable());
+        // 개발 환경에서는 CSRF 비활성화 (나중에 운영 환경에서 활성화)
+        if (isDevelopmentMode()) {
+            http.csrf(csrf -> csrf.disable());
+        } else {
+            http.csrf(csrf -> csrf
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+            );
+        }
+        
         http.formLogin(auth -> auth.disable());
 
-        // 개발 환경에서는 JWT 필터를 적용하지 않고 모든 요청 허용
+        // 쿠키 설정
+        http.sessionManagement(session -> 
+            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        );
+
+        // CORS 설정
+        http.cors(cors -> cors
+            .configurationSource(corsConfigurationSource())
+        );
+
+        // 인증/인가 설정
         if (isDevelopmentMode()) {
             http.authorizeHttpRequests(auth -> auth
                 .anyRequest().permitAll()
             );
         } else {
-            // 운영 환경에서는 JWT 인증 적용
-            http
-                .sessionManagement(session -> session
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/api/auth/**").permitAll()
-                    .requestMatchers("/api/**").authenticated()
-                    .anyRequest().permitAll()
-                );
+            http.authorizeHttpRequests(auth -> auth
+                // 공개 리소스
+                .requestMatchers(
+                    "/",
+                    "/login",
+                    "/signup",
+                    "/api/auth/login",
+                    "/api/auth/signup",
+                    "/api/auth/logout",
+                    "/api/auth/me",
+                    "/js/**",
+                    "/css/**",
+                    "/images/**"
+                ).permitAll()
+                // API 엔드포인트 보호
+                .requestMatchers("/api/users/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/api/companies/**").hasAnyRole("COMPANY", "ADMIN")
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                // 그 외 모든 요청은 인증 필요
+                .anyRequest().authenticated()
+            );
         }
-        
+
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowCredentials(true); // 쿠키 전송 허용
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setMaxAge(3600L); // preflight 캐시 시간
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     // 개발 모드 여부 확인

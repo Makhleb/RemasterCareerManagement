@@ -1,4 +1,4 @@
-package com.example.test.security;
+package com.example.test.security.rim;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

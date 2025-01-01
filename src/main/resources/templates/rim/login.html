@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout_dir/layout/main_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/rim/api.js"></script>
+    <link rel="stylesheet" href="/css/common/variable.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .login {
+            box-sizing: border-box;
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            justify-content: center;
+        }
+ 
+        .login-container {
+            margin-top: 140px;
+            width: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .login-container-top {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container-bottom {
+            padding-top: 40px;
+            border-radius: 10px;
+            width: 100%;
+        }
+
+        h2 {
+            font-weight: 550;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2 i {
+            color: var(--primary-color-1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #929AA2;
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary-color-2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        .links {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .links a {
+            color: #666;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .links a:hover {
+            color: var(--primary-color-1);
+        }
+
+        .tab-container {
+            display: flex;
+            width: 100%;
+            gap: 10px;
+            padding: 20px 0;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background: none;
+            color: #666;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-button.active {
+            color: var(--primary-color-1);
+            border-bottom: 3px solid var(--primary-color-1);
+        }
+
+        .tab-button i {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <div class="login">
+        <div class="login-container">
+            <div class="login-container-top">
+                <div class="tab-container">
+                    <button class="tab-button active" data-tab="user">
+                        <i class="fa-solid fa-user"></i>
+                        구직자 로그인
+                    </button>
+                    <button class="tab-button" data-tab="company">
+                        <i class="fa-solid fa-building"></i>
+                        기업 로그인
+                    </button>
+                </div>
+            </div>
+            
+            <div class="login-container-bottom">
+                <form id="loginForm">
+                    <input type="hidden" id="loginType" value="user">
+                    <div class="form-group">
+                        <label for="userId">아이디</label>
+                        <input type="text" id="userId" placeholder="아이디를 입력하세요">
+                        <div class="error-message" id="userIdError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="userPw">비밀번호</label>
+                        <input type="password" id="userPw" placeholder="비밀번호를 입력하세요">
+                        <div class="error-message" id="userPwError"></div>
+                    </div>
+
+                    <button type="submit" class="submit-button">로그인</button>
+
+                    <div class="links">
+                        <a href="/signup">회원가입</a>
+                        <a href="/company/signup">기업회원가입</a>
+                        <a href="/find-password">비밀번호 찾기</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const loginType = document.getElementById('loginType');
+
+        // 탭 전환 처리
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // 활성 탭 스타일 변경
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // 로그인 타입 설정
+                loginType.value = button.dataset.tab;
+                
+                // 플레이스홀더 텍스트 변경
+                const idInput = document.getElementById('userId');
+                if (button.dataset.tab === 'company') {
+                    idInput.placeholder = '기업 아이디를 입력하세요';
+                } else {
+                    idInput.placeholder = '아이디를 입력하세요';
+                }
+            });
+        });
+
+        // 폼 제출 처리
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = {
+                userId: document.getElementById('userId').value,
+                userPw: document.getElementById('userPw').value
+            };
+
+            try {
+
+                const response = await (loginType.value === 'company' 
+                    ? API.auth.companyLogin(formData)
+                    : API.auth.login(formData));
+                console.log('response>>',response); 
+                if (response.state === 'SUCCESS') {
+                    // 로그인 성공 시 메인 페이지로 이동
+                    location.href = '/';
+                }
+            } catch (error) {
+                console.log('error -> ', error);
+                if (error.response && error.response.status === 401) {
+                    alert('아이디 또는 비밀번호가 일치하지 않습니다.');
+                } else {
+                    alert('로그인 중 오류가 발생했습니다.');
+                }
+            }
+        });
+    </script>
+</th:block>
+</body>
+</html> 

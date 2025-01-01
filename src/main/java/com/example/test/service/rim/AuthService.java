@@ -1,11 +1,14 @@
-package com.example.test.service;
+package com.example.test.service.rim;
 
-import com.example.test.dao.UserDao;
-import com.example.test.dao.CompanyDao;
-import com.example.test.dto.CompanyCreateDTO;
-import com.example.test.dto.UserCreateDTO;
-import com.example.test.dto.UserDTO;
+import com.example.test.dao.rim.UserDao;
+import com.example.test.dao.rim.CompanyDao;
+import com.example.test.dto.*;
+import com.example.test.dto.rim.CompanyCreateDTO;
+import com.example.test.dto.rim.LoginDTO;
+import com.example.test.dto.rim.UserCreateDTO;
 import com.example.test.exception.BadRequestException;
+import com.example.test.exception.UnauthorizedException;
+import com.example.test.util.rim.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ public class AuthService {
     private final UserDao userDao;
     private final PasswordEncoder passwordEncoder;
     private final CompanyDao companyDao;
+    private final JwtUtil jwtUtil;
 
     @Transactional
     public void signup(UserCreateDTO dto) {
@@ -87,5 +91,52 @@ public class AuthService {
 
     private boolean checkCompanyNumberExists(String number) {
         return companyDao.existsByNumber(number);
+    }
+
+    @Transactional
+    public String login(LoginDTO dto) {
+        UserDTO user = userDao.findById(dto.getUserId())
+                .orElseThrow(() -> new UnauthorizedException("아이디 또는 비밀번호가 일치하지 않습니다"));
+
+        if (!passwordEncoder.matches(dto.getUserPw(), user.getUserPw())) {
+            throw new UnauthorizedException("아이디 또는 비밀번호가 일치하지 않습니다");
+        }
+
+        return jwtUtil.generateToken(user);
+    }
+
+    @Transactional
+    public String companyLogin(LoginDTO dto) {
+        CompanyDTO company = companyDao.findById(dto.getUserId())
+                .orElseThrow(() -> new UnauthorizedException("아이디 또는 비밀번호가 일치하지 않습니다"));
+
+        if (!passwordEncoder.matches(dto.getUserPw(), company.getCompanyPw())) {
+            throw new UnauthorizedException("아이디 또는 비밀번호가 일치하지 않습니다");
+        }
+
+        return jwtUtil.generateToken(company);
+    }
+
+    /**
+     * 일반 회원 정보 조회
+     */
+    public UserDTO getUserInfo(String userId) {
+        return userDao.findById(userId)
+            .orElseThrow(() -> new BadRequestException("사용자를 찾을 수 없습니다"));
+    }
+
+    /**
+     * 기업 회원 정보 조회
+     */
+    public CompanyDTO getCompanyInfo(String companyId) {
+        return companyDao.findById(companyId)
+            .orElseThrow(() -> new BadRequestException("기업 정보를 찾을 수 없습니다"));
+    }
+
+    /**
+     * 현재 사용자가 기업 회원인지 확인
+     */
+    public boolean isCompanyUser(String userId) {
+        return companyDao.existsById(userId);
     }
 } 

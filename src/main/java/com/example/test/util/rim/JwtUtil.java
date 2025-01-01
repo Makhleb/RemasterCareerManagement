@@ -1,9 +1,9 @@
-package com.example.test.util;
+package com.example.test.util.rim;
 
 import com.example.test.dto.UserDTO;
+import com.example.test.dto.CompanyDTO;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -58,6 +58,26 @@ public class JwtUtil {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDTO.getUserId())
+                .setIssuer(issuer)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
+                .compact();
+    }
+
+    /**
+     * 기업 회원용 JWT 토큰 생성
+     * 
+     * @param companyDTO 기업 회원 정보
+     * @return 생성된 JWT 토큰
+     */
+    public String generateToken(CompanyDTO companyDTO) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", "ROLE_COMPANY");  // 기업 회원 역할 설정
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(companyDTO.getCompanyId())
                 .setIssuer(issuer)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))

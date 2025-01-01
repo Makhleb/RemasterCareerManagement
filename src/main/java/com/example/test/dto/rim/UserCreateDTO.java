@@ -1,4 +1,4 @@
-package com.example.test.dto;
+package com.example.test.dto.rim;
 
 import lombok.Data;
 import jakarta.validation.constraints.*;

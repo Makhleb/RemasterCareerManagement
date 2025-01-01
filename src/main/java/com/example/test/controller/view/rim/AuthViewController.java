@@ -12,7 +12,7 @@ public class AuthViewController {
      */
     @GetMapping("/signup")
     public String signup() {
-        return "signup";
+        return "rim/signup";
     }
 
     /**
@@ -20,11 +20,11 @@ public class AuthViewController {
      */
     @GetMapping("/login")
     public String login() {
-        return "login";
+        return "rim/login";
     }
 
     @GetMapping("/company/signup")
     public String companySignup() {
-        return "company/signup";
+        return "rim/company/signup";
     }
 }

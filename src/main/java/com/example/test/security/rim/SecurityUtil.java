@@ -1,4 +1,4 @@
-package com.example.test.security;
+package com.example.test.security.rim;
 
 import com.example.test.exception.UnauthorizedException;
 import org.springframework.security.core.Authentication;
@@ -30,7 +30,7 @@ public class SecurityUtil {
     public static String getCurrentUserRole() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || authentication.getAuthorities().isEmpty()) {
-            throw new UnauthorizedException("권한 정보가 없습니다");
+            throw new UnauthorizedException("인증 정보가 없습니다");
         }
         return authentication.getAuthorities().iterator().next().getAuthority();
     }
@@ -50,7 +50,8 @@ public class SecurityUtil {
      * 현재 사용자가 기업 회원인지 확인
      */
     public static boolean isCompanyUser() {
-        return hasRole("ROLE_COMPANY");
+        String role = getCurrentUserRole();
+        return "ROLE_COMPANY".equals(role);
     }
 
     /**

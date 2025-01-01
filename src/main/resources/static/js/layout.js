@@ -71,3 +71,48 @@ closeBtn.addEventListener("click", () => {
 });
 // 상단 돋보기 모달 끝
 
+
+
+// 구경림 작성일 : 2024-12-31 ....주석예정 
+// 페이지 로드 시 인증 체크
+document.addEventListener('DOMContentLoaded', async function() {
+    // 현재 페이지 경로
+    const path = window.location.pathname;
+    
+    // 인증이 필요한 페이지 목록
+    const authRequiredPages = [
+        '/mypage',
+        '/company/dashboard',
+        '/recruitment/post'
+    ];
+
+    // 권한별 접근 제한
+    const roleRestrictedPages = {
+        '/company/dashboard': ['ROLE_COMPANY'],
+        '/admin': ['ROLE_ADMIN']
+    };
+
+    try {
+        const user = await auth.getCurrentUser();
+        
+        // 인증이 필요한 페이지인데 로그인하지 않은 경우
+        if (authRequiredPages.includes(path) && !user) {
+            location.href = '/login';
+            return;
+        }
+
+        // 권한 체크
+        if (roleRestrictedPages[path]) {
+            const hasPermission = roleRestrictedPages[path].includes(user?.role);
+            if (!hasPermission) {
+                alert('접근 권한이 없습니다.');
+                history.back();
+                return;
+            }
+        }
+
+    } catch (error) {
+        console.error('인증 체크 실패:', error);
+    }
+});
+

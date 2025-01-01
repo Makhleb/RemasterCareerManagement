@@ -1,4 +1,4 @@
-package com.example.test.dto;
+package com.example.test.dto.rim;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
