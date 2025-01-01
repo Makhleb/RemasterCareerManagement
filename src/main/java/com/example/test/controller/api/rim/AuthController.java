@@ -70,7 +70,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ApiResponse<Void> login(@RequestBody LoginDTO dto, HttpServletResponse response) {
+    public void login(@RequestBody LoginDTO dto, HttpServletResponse response) {
         // 1. 로그인 검증 및 JWT 토큰 생성
         String token = authService.login(dto);
         log.info("Generated JWT token: {}", token);
@@ -83,11 +83,10 @@ public class AuthController {
         
         response.addCookie(cookie);
         log.info("Set JWT cookie for user: {}", dto.getUserId());
-        return ApiResponse.success(null);
     }
 
     @PostMapping("/company/login")
-    public ApiResponse<Void> companyLogin(@RequestBody LoginDTO dto, HttpServletResponse response) {
+    public void companyLogin(@RequestBody LoginDTO dto, HttpServletResponse response) {
         String token = authService.companyLogin(dto);
         log.info("Generated JWT token for company: {}", token);
         
@@ -98,19 +97,18 @@ public class AuthController {
         
         response.addCookie(cookie);
         log.info("Set JWT cookie for company: {}", dto.getUserId());
-        return ApiResponse.success(null);
     }
 
     @GetMapping("/me")
-    public ApiResponse<Map<String, Object>> getCurrentUser() {
+    public Map<String, Object> getCurrentUser() {
         log.info("getCurrentUser 호출됨");
         Map<String, Object> userInfo = securityUtil.getCurrentUserInfo();
         log.info("현재 사용자 정보: {}", userInfo);
-        return ApiResponse.success(userInfo);
+        return userInfo;
     }
 
     @PostMapping("/logout")
-    public ApiResponse<Void> logout(HttpServletResponse response) {
+    public void logout(HttpServletResponse response) {
         // 쿠키 삭제
         Cookie cookie = new Cookie("JWT_TOKEN", null);
         cookie.setMaxAge(0);
@@ -118,6 +116,5 @@ public class AuthController {
         
         response.addCookie(cookie);
         SecurityContextHolder.clearContext();
-        return ApiResponse.success(null);
     }
 } 
