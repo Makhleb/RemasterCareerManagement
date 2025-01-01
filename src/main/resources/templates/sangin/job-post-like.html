@@ -38,8 +38,7 @@
 
     axios.get("/api/users/like/summary")
         .then(response => {
-            // 이런식으로도 된다함. 이름은 구조 분해 할당이라고 함
-            const {jplCount, clCount} = response.data;
+            const { jplCount, clCount } = response.data;
 
             // section2 업데이트
             postNumElement.textContent = jplCount || 0;
@@ -49,10 +48,11 @@
             console.error("Error fetching user summary:", error);
             alert("스크랩 및 북마크 데이터를 불러오는 중 오류가 발생했습니다.");
         });
+
     // section3 DOM 요소 가져오기
     const section3 = document.querySelector("#section3");
 
-    // API 호출
+    // 공고 데이터 불러오기
     axios.get("/api/users/like/jpl")
         .then(response => {
             const data = response.data; // 서버로부터 데이터를 가져옴
@@ -65,64 +65,96 @@
                 // 동적으로 job_post 요소 생성
                 const jobPost = document.createElement("div");
                 jobPost.classList.add("job_post");
+                jobPost.dataset.jobPostNo = item.jobPostNo; // jobPostNo 저장
 
                 // job_post의 내부 HTML 구조 설정
                 jobPost.innerHTML = `
-                    <div id="com_name">${item.companyName}</div>
-                    <div id="post_box1">
-                        <div id="box1_con">
-                            <div id="post_name"><a href="/view/users/job-post/detail/${item.jobPostNo}">${item.title}</a></div>
-                            <div id="star" class="${item.isBookmarked ? "colorstar" : "uncolorstar"}"></div>
+                <div id="com_name">${item.companyName}</div>
+                <div id="post_box1">
+                    <div id="box1_con">
+                        <div id="post_name">
+                            <a href="/view/users/job-post/detail/${item.jobPostNo}">${item.title}</a>
                         </div>
-                        <div id="request">
-                            <span>${item.postAddress}</span>
-                            <span>${item.jobHistory}년 이상</span>
-                            <span>${item.workTypeName}</span>
-                            <span>${item.jobSalary}만</span>
-                        </div>
+                        <div id="star"
+                             class="${item.isScraped === 1 ? "colorstar" : "uncolorstar"}"></div>
                     </div>
-                    <div id="post_box2">
-                        <span id="box2_text">현재 지원자</span>
-                        <span id="applicant_num">${item.likeCount || 0}</span>
+                    <div id="request">
+                        <span>${item.postAddress}</span>
+                        <span>${item.jobHistory}년 이상</span>
+                        <span>${item.workTypeName}</span>
+                        <span>${item.jobSalary}만</span>
                     </div>
-                    <div id="post_box3">
-                        <span id="regist_btn">입사지원</span>
-                        <span id="enddate">${item.endDate ? `~${new Date(item.endDate).toLocaleDateString()}` : '마감일 없음'}</span>
-                    </div>
-                `;
+                </div>
+                <div id="post_box2">
+                    <span id="box2_text">현재 지원자</span>
+                    <span id="applicant_num">${item.likeCount || 0}</span>
+                </div>
+                <div id="post_box3">
+                    <span id="regist_btn">입사지원</span>
+                    <span id="enddate">${item.endDate ? `~${new Date(item.endDate).toLocaleDateString()}` : '마감일 없음'}</span>
+                </div>
+            `;
 
                 // job_post를 section3에 추가
                 section3.appendChild(jobPost);
             });
 
-            // 북마크 이벤트 바인딩
-            addBookmarkEventListeners();
+            // 스크랩 이벤트 바인딩
+            addScrapEventListeners();
         })
         .catch(error => {
             console.error("Error fetching job posts:", error);
             alert("공고 데이터를 불러오는 중 오류가 발생했습니다.");
         });
 
-    // 북마크 클릭 이벤트 추가
-    function addBookmarkEventListeners() {
+    // 스크랩 클릭 이벤트 추가
+    function addScrapEventListeners() {
         const stars = document.querySelectorAll("#star");
 
         stars.forEach(star => {
             star.addEventListener("click", () => {
-                if (star.classList.contains("uncolorstar")) {
-                    star.classList.remove("uncolorstar");
-                    star.classList.add("colorstar");
-                    alert("북마크 되었습니다");
+                const jobPost = star.closest(".job_post");
+                const jobPostNo = jobPost.dataset.jobPostNo; // dataset으로 jobPostNo 가져오기
+                const isScraped = star.classList.contains("colorstar");
 
-                } else if (star.classList.contains("colorstar")) {
-                    star.classList.remove("colorstar");
-                    star.classList.add("uncolorstar");
-                    alert("북마크가 취소되었습니다");
-                }
+                // 스크랩 상태 변경 요청
+                toggleScrap(jobPostNo, isScraped)
+                    .then(() => {
+                        // UI 업데이트
+                        if (isScraped) {
+                            star.classList.remove("colorstar");
+                            star.classList.add("uncolorstar");
+                            alert("스크랩이 취소되었습니다");
+                        } else {
+                            star.classList.remove("uncolorstar");
+                            star.classList.add("colorstar");
+                            alert("스크랩 되었습니다");
+                        }
+                    })
+                    .catch(() => {
+                        alert("스크랩 작업 중 오류가 발생했습니다.");
+                    });
             });
         });
     }
-</script>
 
+    // 스크랩 추가/삭제 요청 함수
+    function toggleScrap(jobPostNo, isScraped) {
+        // URL 설정 (스크랩 추가/삭제)
+        const url = isScraped
+            ? `/api/users/like/jpl/remove?jobPostNo=${jobPostNo}`
+            : `/api/users/like/jpl/add?jobPostNo=${jobPostNo}`;
+
+        // GET 요청 보내기
+        return axios.get(url)
+            .then(response => {
+                console.log(response.data); // 서버 응답 메시지 확인
+            })
+            .catch(error => {
+                console.error("Error in toggleScrap:", error);
+                throw error;
+            });
+    }
+</script>
 </body>
 </html>

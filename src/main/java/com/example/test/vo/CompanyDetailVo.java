@@ -9,7 +9,7 @@ import java.util.List;
  * Created on 2024-12-31 by 한상인
  */
 @Data
-public class LikeCompanyVo {
+public class CompanyDetailVo {
     private String companyId; // 기업 아이디
     private String companyPw; // 패스워드
     private String companyName; // 회사명
@@ -28,8 +28,10 @@ public class LikeCompanyVo {
     private String companyRole; // 역할
     private String companyImage; // 회사 대표 이미지
     private long companyProfit; // 회사 연 수익(만원)
-    private Boolean isBookmarked;
 
-    // 공고용으로 추가가 필요할 것 같습니다 - 상인
+
+    // 기업에 맞는 공고 3개를 추가하기위해 만들었습니다 - 상인
     private List<JobPostDetailVo> jobPosts;
+    // 북마크용입니두아~
+    private int isBookmarked;
 }

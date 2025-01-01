@@ -9,20 +9,27 @@
     </select>
 <!--유저의 관심 기업 수-->
     <select id="clCount" resultType="java.lang.Integer">
-        select count(*) from tblLike where userId = #{userId}
+        select count(*) from tblLike where userId = #{userId} and likeType = 'C'
     </select>
 <!--유저가 관심있는 공고-->
     <select id="jobPostLike" resultType="com.example.test.vo.JobPostDetailVo">
         SELECT
         jp.*,
         gb.name AS workTypeName,
-<!--    work 타입 코드 변환    -->
         c.companyName,
-<!--    회사 이름 조인         -->
         (SELECT COUNT(*)
         FROM tblJpl l2
-        WHERE l2.jobPostNo = jp.jobPostNo) AS likeCount
-<!--    공고가 테이블에 올라온 수 == 지원자 수    -->
+        WHERE l2.jobPostNo = jp.jobPostNo) AS likeCount,
+        CASE
+        WHEN EXISTS (
+        SELECT 1
+        FROM tblJpl l2
+        WHERE l2.jobPostNo = jp.jobPostNo
+        AND l2.userId = #{userId}
+        ) THEN 1
+        ELSE 0
+<!--        이것도 scrap 나중에 빼야겠다 필요가 없네-->
+        END AS isScraped
         FROM
         tblJobPost jp
         INNER JOIN
@@ -37,12 +44,19 @@
         WHERE
         l.userId = #{userId}
     </select>
+
     <!--유저가 관심있는 기업-->
-    <select id="companyLike" resultType="com.example.test.vo.LikeCompanyVo">
-        SELECT cp.*
-        FROM tblCompany cp
-        INNER JOIN tblLike l ON cp.companyId = l.companyId
-        WHERE l.userId = #{userId}
+    <select id="companyLike" resultType="com.example.test.vo.CompanyDetailVo">
+        SELECT
+        cp.*
+        FROM
+        tblCompany cp
+        INNER JOIN
+        tblLike l
+        ON cp.companyId = l.companyId
+        WHERE
+        l.userId = #{userId} and
+        likeType = 'C'
     </select>
     <select id="jobPostByCompanyId">
 <!-- 12.31 15:44 조금있다 추가할 예정..-->
@@ -50,4 +64,19 @@
         ORDER BY RAND()
         LIMIT 3
     </select>
+<!--    scrap 용입니다 -->
+    <insert id="jplAdd">
+    insert into tblJpl (userId, jobPostNo) values (#{userId}, #{jobPostNo})
+    </insert>
+    <delete id="jplRemove">
+    delete from tblJpl where userId = #{userId} and jobPostNo = #{jobPostNo}
+    </delete>
+<!--북마크용-->
+    <insert id="clAdd">
+        insert into tblLike (userId, companyId, likeType) values (#{userId}, #{companyId} , 'C')
+    </insert>
+    <delete id="clRemove">
+        delete from tblLike where userId = #{userId} and companyId = #{companyId} and likeType='C'
+    </delete>
+<!--    liketype만 넣었다하면 고장나네-->
 </mapper>
