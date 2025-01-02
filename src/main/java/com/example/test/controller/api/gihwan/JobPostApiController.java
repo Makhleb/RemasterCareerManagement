@@ -3,6 +3,7 @@ package com.example.test.controller.api.gihwan;
 import com.example.test.dto.JobPostDTO;
 import com.example.test.dto.wrapper.JobPostAplcWrapDto;
 import com.example.test.dto.wrapper.JobPostWrapDto;
+import com.example.test.security.rim.SecurityUtil;
 import com.example.test.service.gihwan.JobPostService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,22 +19,23 @@ import java.util.List;
 @RequestMapping("/api/companies/job-post")
 public class JobPostApiController {
     private final JobPostService jobPostService;
+    private final SecurityUtil securityUtil;
 
-    public JobPostApiController(JobPostService jobPostService) {
+    public JobPostApiController(JobPostService jobPostService, SecurityUtil securityUtil) {
         this.jobPostService = jobPostService;
+        this.securityUtil = securityUtil;
     }
 
     @PostMapping
     public int postJobPost(@RequestBody JobPostWrapDto jobPostWrapDto) {
-        //todo 로그인 회원가입 완성시 고치기
-        jobPostWrapDto.getJobPost().setCompanyId("testcompany1");
+        String compnayId = securityUtil.getCurrentUserId();
+        jobPostWrapDto.getJobPost().setCompanyId(compnayId);
         return jobPostService.postJobPost(jobPostWrapDto);
     }
 
     @GetMapping("/aplc-list")
     public List<JobPostAplcWrapDto> getJobPosts() {
-        //todo 로그인 회원가입 완성시 고치기2
-        String companyId = "testcompany1";
+        String companyId = securityUtil.getCurrentUserId();
         return jobPostService.selectAllJobPost(companyId);
     }
 

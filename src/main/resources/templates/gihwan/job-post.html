@@ -2,6 +2,7 @@
 <html lang="en"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layout_dir/layout/company_mypage_layout}">
+<!--      layout:decorate="~{/layout_dir/layout/main_layout}">-->
 <head>
     <meta charset="UTF-8">
     <title>공고 등록</title>
@@ -185,8 +186,10 @@
                     )
                 })
 
+                // todo 최기환 작업중
                 beforeSkillInfo.forEach(function (skill) {
-
+                    $('.add-stack').val(skill.skillCode);
+                    skill.skillCode
                 })
             })
             .catch(function (error) {
