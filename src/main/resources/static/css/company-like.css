@@ -86,21 +86,12 @@ section {
     min-height: 650px;
     display: grid;
     grid-template-columns: repeat(4, 260px);
+    grid-auto-rows: 350px; /* 각 행의 높이 고정 */
     grid-gap: 50px;
     padding: 50px;
     box-sizing: border-box;
 }
 
-/* #section3{
-    margin-top: 30px;
-    border: 1px black solid;
-    width: 1400px;
-    max-width: 1400px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 50px;
-    padding: 50px;
-} */
 
 
 #com_detail {

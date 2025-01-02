@@ -78,7 +78,7 @@
         select * from tblResume where userId = #{userId}
     </select>
     <insert id="registAplcHstr">
-        insert into tblAplcHstr (jobPostNo, resumeNo, aplcHstrDate, passYn) Values (#{jobPostNo},#{resumeNo},now(),'N')
+        insert into tblAplcHstr (jobPostNo, resumeNo, aplcHstrDate, passYn) Values (#{jobPostNo},#{resumeNo},now(),'W')
     </insert>
 
 </mapper>
