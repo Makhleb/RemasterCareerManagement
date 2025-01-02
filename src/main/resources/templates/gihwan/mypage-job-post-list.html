@@ -93,8 +93,18 @@
         const result = {
             jobPostNo: jobPostNo,
             resumeNo: resumeNo,
-            value: value
+            passYn: value
         }
+
+        axios.put('/api/companies/aplc', result)
+        .then(function (response) {
+            console.log(response);
+            alert("수정 성공");
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+
     }
 
     /**
