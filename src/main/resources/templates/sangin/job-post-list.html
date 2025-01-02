@@ -80,181 +80,133 @@
     </div>
 </section>
 <script>
-    const section4Container = document.querySelector('.section4');
-    const section5Container = document.querySelector('.section5');
-    const keywordDisplay = document.querySelector("#keyword");
+    document.addEventListener("DOMContentLoaded", () => {
+        const section4Container = document.querySelector('.section4');
+        const section5Container = document.querySelector('.section5');
+        const keywordDisplay = document.querySelector("#keyword");
 
-    // 추천 공고 데이터 가져오기
-    axios.get('/api/users/job-post/list/matching')
-        .then(response => {
-            const data = response.data;
-            section4Container.innerHTML = '';
-            data.slice(0, 4).forEach(item => {
-                const postDiv = document.createElement('div');
-                postDiv.classList.add('section4_popular');
-                postDiv.dataset.jobPostNo = item.jobPostNo;
-                postDiv.innerHTML = `
-                <div id="section4_fake">추천 공고</div>
-                <div id="section4_postThumbnail"><img src="/images/${item.postThumbnail}" alt="기업로고"></div>
-                <a id="section4_title" href="/view/users/job-post/detail/${item.jobPostNo}">${item.title}</a>
-                <div id="section4_companyName">${item.companyName}</div>
-            `;
-                section4Container.appendChild(postDiv);
-            });
-        })
-        .catch(error => {
-            console.error(error);
-            alert('매칭할 공고가 없습니다.');
-        });
+        // URL에서 쿼리 파라미터 가져오기
+        const urlParams = new URLSearchParams(window.location.search);
+        const keyword = urlParams.get('keyword') || ''; // 'keyword' 파라미터가 없으면 빈 문자열
 
-    // 전체 공고 데이터 가져오기
-    function fetchJobPosts(keyword = '') {
-        axios.get(`/api/users/job-post/list/all`, { params: { keyword } })
+        // 파라미터를 화면에 표시
+        if (keyword) {
+            keywordDisplay.textContent = keyword;
+        } else {
+            keywordDisplay.textContent = "검색 조건 없음";
+        }
+
+        // 추천 공고 데이터 가져오기
+        axios.get('/api/users/job-post/list/matching')
             .then(response => {
                 const data = response.data;
-                section5Container.innerHTML = '';
-                if (data.length === 0) {
-                    section5Container.innerHTML = '<div>검색 결과가 없습니다.</div>';
-                    return;
-                }
-                data.forEach(item => {
+                section4Container.innerHTML = '';
+                data.slice(0, 4).forEach(item => {
                     const postDiv = document.createElement('div');
-                    postDiv.classList.add('section5_post');
+                    postDiv.classList.add('section4_popular');
                     postDiv.dataset.jobPostNo = item.jobPostNo;
                     postDiv.innerHTML = `
-                    <div id="section5_postThumbnail">
-                        <img src="/images/${item.postThumbnail}" alt="기업로고">
-                    </div>
-                    <a id="section5_title" href="/view/users/job-post/detail/${item.jobPostNo}">${item.title}</a>
-                    <div id="section5_postAddress">${item.postAddress}</div>
-                    <div id="section5_educationName">${item.educationName} 이상</div>
-                    <div class="section5_footer">
-                        <div id="section5_footer_left">성과급/상여금</div>
-                        <div id="section5_footer_right">
-                            <div id="section5_endDate">${item.endDate ? `~${new Date(item.endDate).toLocaleDateString()}` : '마감일 없음'}</div>
-                            <div id="section5_star" class="${item.isScraped === 1 ? 'colorstar' : 'uncolorstar'}"></div>
-                        </div>
-                    </div>
+                    <div id="section4_fake">추천 공고</div>
+                    <div id="section4_postThumbnail"><img src="/images/${item.postThumbnail}" alt="기업로고"></div>
+                    <a id="section4_title" href="/view/users/job-post/detail/${item.jobPostNo}">${item.title}</a>
+                    <div id="section4_companyName">${item.companyName}</div>
                 `;
-                    section5Container.appendChild(postDiv);
-
-                    // 스크랩 클릭 이벤트 추가
-                    const scrapStar = postDiv.querySelector('#section5_star');
-                    scrapStar.addEventListener('click', () => {
-                        const isScraped = scrapStar.classList.contains('colorstar');
-                        toggleScrap(item.jobPostNo, isScraped)
-                            .then(() => {
-                                if (isScraped) {
-                                    scrapStar.classList.remove('colorstar');
-                                    scrapStar.classList.add('uncolorstar');
-                                    alert('스크랩이 취소되었습니다.');
-                                } else {
-                                    scrapStar.classList.remove('uncolorstar');
-                                    scrapStar.classList.add('colorstar');
-                                    alert('스크랩되었습니다.');
-                                }
-                            })
-                            .catch(() => {
-                                alert('스크랩 작업 중 오류가 발생했습니다.');
-                            });
-                    });
+                    section4Container.appendChild(postDiv);
                 });
             })
             .catch(error => {
                 console.error(error);
-                alert('전체 공고를 불러오지 못했습니다.');
+                alert('매칭할 공고가 없습니다.');
             });
-    }
 
-    // 초기 전체 공고 로드
-    fetchJobPosts();
-
-    // 스크랩 추가/삭제 요청 함수
-    function toggleScrap(jobPostNo, isScraped) {
-        const url = isScraped
-            ? `/api/users/like/jpl/remove?jobPostNo=${jobPostNo}`
-            : `/api/users/like/jpl/add?jobPostNo=${jobPostNo}`;
-
-        return axios.get(url)
-            .then(response => {
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.error('Error in toggleScrap:', error);
-                throw error;
-            });
-    }
-
-    // 드롭다운 기능
-    const region_bar = document.querySelector("#region_bar");
-    const section2_region_option = document.querySelector(".section2_region_option");
-    const job_bar = document.querySelector("#job_bar");
-    const section2_job_option = document.querySelector(".section2_job_option");
-
-    region_bar.addEventListener("click", () => {
-        if (section2_region_option.classList.contains("section2_none")) {
-            section2_job_option.classList.add("section2_none");
-            section2_region_option.classList.remove("section2_none");
-            section2_region_option.classList.add("section2_block");
-        } else {
-            section2_region_option.classList.add("section2_none");
-            section2_region_option.classList.remove("section2_block");
+        // 전체 공고 데이터 가져오기
+        function fetchJobPosts(keyword = '') {
+            axios.get(`/api/users/job-post/list/all`, { params: { keyword } })
+                .then(response => {
+                    const data = response.data;
+                    section5Container.innerHTML = '';
+                    if (data.length === 0) {
+                        section5Container.innerHTML = '<div>검색 결과가 없습니다.</div>';
+                        return;
+                    }
+                    data.forEach(item => {
+                        const postDiv = document.createElement('div');
+                        postDiv.classList.add('section5_post');
+                        postDiv.dataset.jobPostNo = item.jobPostNo;
+                        postDiv.innerHTML = `
+                        <div id="section5_postThumbnail">
+                            <img src="/images/${item.postThumbnail}" alt="기업로고">
+                        </div>
+                        <a id="section5_title" href="/view/users/job-post/detail/${item.jobPostNo}">${item.title}</a>
+                        <div id="section5_postAddress">${item.postAddress}</div>
+                        <div id="section5_educationName">${item.educationName} 이상</div>
+                        <div class="section5_footer">
+                            <div id="section5_footer_left">성과급/상여금</div>
+                            <div id="section5_footer_right">
+                                <div id="section5_endDate">${item.endDate ? `~${new Date(item.endDate).toLocaleDateString()}` : '마감일 없음'}</div>
+                                <div id="section5_star" class="${item.isScraped === 1 ? 'colorstar' : 'uncolorstar'}"></div>
+                            </div>
+                        </div>
+                    `;
+                        section5Container.appendChild(postDiv);
+                    });
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert('전체 공고를 불러오지 못했습니다.');
+                });
         }
-    });
 
-    job_bar.addEventListener("click", () => {
-        if (section2_job_option.classList.contains("section2_none")) {
-            section2_region_option.classList.add("section2_none");
-            section2_job_option.classList.remove("section2_none");
-            section2_job_option.classList.add("section2_block");
-        } else {
-            section2_job_option.classList.add("section2_none");
-            section2_job_option.classList.remove("section2_block");
-        }
-    });
-
-    // 검색어 입력 및 처리
-    const search_bar = document.querySelector("#search_bar");
-    const keyword_container = document.querySelector("#keyword_container");
-
-    search_bar.addEventListener("click", () => {
-        const input = document.createElement("input");
-        input.type = "text";
-        input.placeholder = "검색어를 입력하세요";
-        input.classList.add("section2_option");
-
-        input.addEventListener("input", () => {
-            const value = input.value.trim();
-            keywordDisplay.textContent = value ? value : "검색 조건 없음";
-            fetchJobPosts(value);
-        });
-
-        input.addEventListener("blur", () => {
-            const value = input.value.trim();
-            search_bar.textContent = value || "검색어입력";
-            keywordDisplay.textContent = value ? value : "검색 조건 없음";
-            input.replaceWith(search_bar);
-        });
-
-        search_bar.replaceWith(input);
-        input.focus();
-    });
-
-    // 지역 및 직업 선택 이벤트
-    document.querySelectorAll(".region, .job").forEach(option => {
-        option.addEventListener("click", () => {
-            const value = option.getAttribute("value");
-            keyword_container.textContent = value;
-            keywordDisplay.textContent = value;
-        });
-    });
-
-    // 검색 버튼 클릭 처리
-    document.querySelector("#section2_btn").addEventListener("click", () => {
-        const keyword = keywordDisplay.textContent.replace("검색어: ", "").trim();
+        // 초기 전체 공고 로드 (URL에서 받은 keyword 사용)
         fetchJobPosts(keyword);
-    });
 
+        // 스크랩 추가/삭제 요청 함수
+        function toggleScrap(jobPostNo, isScraped) {
+            const url = isScraped
+                ? `/api/users/like/jpl/remove?jobPostNo=${jobPostNo}`
+                : `/api/users/like/jpl/add?jobPostNo=${jobPostNo}`;
+
+            return axios.get(url)
+                .then(response => {
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    console.error('Error in toggleScrap:', error);
+                    throw error;
+                });
+        }
+
+        // 검색 버튼 클릭 처리
+        document.querySelector("#section2_btn").addEventListener("click", () => {
+            const keyword = keywordDisplay.textContent.replace("검색어: ", "").trim();
+            fetchJobPosts(keyword);
+        });
+
+        // 검색어 입력 및 처리
+        const search_bar = document.querySelector("#search_bar");
+        search_bar.addEventListener("click", () => {
+            const input = document.createElement("input");
+            input.type = "text";
+            input.placeholder = "검색어를 입력하세요";
+            input.classList.add("section2_option");
+
+            input.addEventListener("input", () => {
+                const value = input.value.trim();
+                keywordDisplay.textContent = value ? value : "검색 조건 없음";
+                fetchJobPosts(value);
+            });
+
+            input.addEventListener("blur", () => {
+                const value = input.value.trim();
+                search_bar.textContent = value || "검색어입력";
+                keywordDisplay.textContent = value ? value : "검색 조건 없음";
+                input.replaceWith(search_bar);
+            });
+
+            search_bar.replaceWith(input);
+            input.focus();
+        });
+    });
 </script>
 </body>
 </html>

@@ -22,5 +22,4 @@ public class JobPostViewController_sangin {
         System.out.println("detail..." + jobPostNo);
         return "/sangin/job-post-detail";
     }
-
 }

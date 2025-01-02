@@ -63,7 +63,7 @@ header a{
     position: relative;
 }
 
-#dropdown {
+#header-dropdown {
     position: absolute;
     top: 100%;
     left: 0;
@@ -85,7 +85,7 @@ header a{
     max-height: 300px;
 }
 
-.dropdown-menu {
+.header-dropdown-menu {
     font-size: 13px;
     white-space: nowrap;
     padding: 10px;
@@ -123,7 +123,7 @@ header a{
 
 /* 헤더 우측 디테일 끝 */
 /* 서브 드롭 다운 시작 */
-.sub-dropdown {
+.header-sub-dropdown {
     position: absolute;
     top: 0;
     left: 100%;
@@ -140,7 +140,7 @@ header a{
     padding: 10px;
 }
 
-.sub-dropdown-menu {
+.header-sub-dropdown-menu {
     font-size: 12px;
     padding: 8px;
     white-space: nowrap;
@@ -148,7 +148,7 @@ header a{
 }
 
 /* 모달 css */
-.modal {
+.header-modal {
     display: none;
     /* 기본 상태는 숨김 */
     position: fixed;
@@ -163,7 +163,7 @@ header a{
     transition: opacity 0.3s ease-in-out; /* 부드러운 애니메이션 */
 }
 
-.modal-content {
+.header-modal-content {
     display: flex;
     flex-direction: column;
     background: white;
@@ -176,7 +176,7 @@ header a{
     animation: modalOpen 0.3s ease-in-out; /* 모달 열리는 애니메이션 */
 }
 
-.close-btn {
+.header-close-btn {
     cursor: pointer;
     font-size: 30px;
     position: relative;
@@ -191,11 +191,11 @@ header a{
     font-weight: bold;
     color: #333;
 }
-.close-btn:hover {
+.header-close-btn:hover {
     color: #000; /* 닫기 버튼 호버 효과 */
 }
 
-#search-input {
+#header-search-input {
     cursor: pointer;
     margin-right: 15px;
     padding: 12px;
@@ -205,18 +205,18 @@ header a{
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-#search-input:hover {
+#header-search-input:hover {
     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
 }
 
-.modal-content>div {
+.header-modal-content>div {
     font-size: 18px;
     font-weight: bold;
     color: #333;
     text-align: center;
     font-family: "Roboto", sans-serif;
 }
-#modal_search{
+#header-modal-search{
     cursor: pointer;
     padding: 12px;
     border-radius: 10px;
@@ -226,7 +226,7 @@ header a{
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: 0.2s ease;
 }
-#modal_search:hover{
+#header-modal-search:hover{
     scale: 1.1;
 }
 

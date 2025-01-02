@@ -125,7 +125,6 @@ section {
     /*여기서 나중에 하트 위치를 수정합니다*/
     top: 15px;
     left: 210px;
-    z-index: 1000;
     width: 30px;
     height: 30px;
     background-size: 70px 70px;
