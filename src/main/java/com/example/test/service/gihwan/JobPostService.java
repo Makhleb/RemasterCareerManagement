@@ -7,6 +7,7 @@ import com.example.test.dto.wrapper.JobPostWrapDto;
 import com.example.test.service.common.FileService;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -29,10 +30,10 @@ public class JobPostService {
         jobPostDao.insertJobPost(jobPostWrapDto.getJobPost());
         insertedNo = jobPostWrapDto.getJobPost().getJobPostNo();
 
-        if(!jobPostWrapDto.getJobPostSkills().isEmpty()){
+        if (!jobPostWrapDto.getJobPostSkills().isEmpty()) {
             jobPostDao.insertJobPostSkill(insertedNo, jobPostWrapDto.getJobPostSkills());
         }
-        if(!jobPostWrapDto.getBenefits().isEmpty()){
+        if (!jobPostWrapDto.getBenefits().isEmpty()) {
             jobPostDao.insertBenefit(insertedNo, jobPostWrapDto.getBenefits());
         }
         return insertedNo;
@@ -47,5 +48,12 @@ public class JobPostService {
             listItem.setPostThumbnail(fileValue);
         }
         return daoResult;
+    }
+
+    public boolean deletePost(int jobPostNo) throws IOException {
+        fileService.deleteImage("POST_THUMBNAIL", String.valueOf(jobPostNo));
+        return  jobPostDao.deleteJobPost(jobPostNo) != 0
+                || jobPostDao.deleteBenefit(jobPostNo) != 0
+                || jobPostDao.deleteJobPostSkill(jobPostNo) != 0;
     }
 }

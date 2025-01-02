@@ -25,19 +25,8 @@ public class FileApiController {
 
     private final FileService fileService;
 
-    private final FileDao fileDao;
-
-    public FileApiController(FileDao fileDao, FileService fileService) {
-        this.fileDao = fileDao;
+    public FileApiController(FileService fileService) {
         this.fileService = fileService;
-    }
-
-    /**
-     * 인포 저장 컨트롤러
-     */
-    @PostMapping("/file-info")
-    public boolean registFileInfo(@RequestBody FileDto fileDto) {
-        return fileDao.insertFile(fileDto) != 0;
     }
 
     /**

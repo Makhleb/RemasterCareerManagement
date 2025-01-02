@@ -32,7 +32,13 @@ public class JobPostApiController {
 
     @GetMapping
     public List<JobPostAplcWrapDto> getJobPosts() {
+        //todo 로그인 회원가입 완성시 고치기2
         String companyId = "testcompany1";
         return jobPostService.selectAllJobPost(companyId);
+    }
+
+    @DeleteMapping("/{jobPostNo}")
+    public boolean deleteJobPost(@PathVariable int jobPostNo) throws IOException {
+        return jobPostService.deletePost(jobPostNo);
     }
 }

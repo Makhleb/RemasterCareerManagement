@@ -38,7 +38,7 @@ public class FileService {
             Path filePath = stream.iterator().next();
             byte[] fileBytes = Files.readAllBytes(filePath);
 
-            return Base64.getEncoder().encodeToString(fileBytes);
+            return "data:image/png;base64,"+ Base64.getEncoder().encodeToString(fileBytes);
 
         } catch (Exception e) {
             return null;
@@ -69,6 +69,29 @@ public class FileService {
             return result != 0;
         } catch (IOException e) {
             return false;
+        }
+    }
+
+    public void deleteImage(String fileGubn, String refId) throws IOException {
+        Path dirPath = Paths.get(uploadPath)
+                .resolve(fileGubn)
+                .resolve(refId)
+                .normalize();
+
+        if (Files.exists(dirPath)) {
+            // 폴더 내 파일 삭제
+            Files.list(dirPath).forEach(path -> {
+                try {
+                    Files.delete(path);
+                } catch (IOException e) {
+                    System.out.println("파일 삭제 실패: " + dirPath + "/" + path);
+                }
+                System.out.println("파일 삭제 성공");
+            });
+            // 폴더 자체 삭제
+            Files.delete(dirPath);
+        } else {
+            System.out.println("폴더가 존재하지 않습니다: " + dirPath);
         }
     }
 }

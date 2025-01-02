@@ -17,26 +17,26 @@
 <script layout:fragment="script">
     window.onload = function () {
         axios.get('/api/companies/job-post')
-        .then(function (response) {
-            let postList = response.data;
-            console.log(postList);
+            .then(function (response) {
+                let postList = response.data;
+                console.log(postList);
 
-            postList.forEach(function (item,index) {
+                postList.forEach(function (item, index) {
 
-                let startDate = item.startDate.substring(0, 16).replace('T',' ');
-                let endDate = item.startDate.substring(0, 16).replace('T',' ');
+                    let startDate = item.startDate.substring(0, 16).replace('T', ' ');
+                    let endDate = item.startDate.substring(0, 16).replace('T', ' ');
 
-                $('#post-list').append(
-                `<div class="post-item">
+                    $('#post-list').append(
+                        `<div class="post-item">
                     <div class="post-item-info row-flex">
-                        <img src="data:image/png;base64,${item.postThumbnail}" class="photo-item"
+                        <img src=${item.postThumbnail} class="photo-item"
                         onerror="this.onerror=null; this.src='/images/noImage.jpg';" alt="공고 이미지">
                         <div class="column-flex post-info">
                             <div class="title-and-date">
                                 <div class="row-flex" style="align-items: center;">
                                     <div class="post-title text-button" style="margin-right: 20px">${item.title}</div>
                                     <button class="post-button inner-button" style="margin-right: 5px">수정</button>
-                                    <button class="post-button inner-button">삭제</button>
+                                    <button class="post-button inner-button" onclick="deletePost(${item.jobPostNo})">삭제</button>
                                 </div>
                                 <div class="item-date">
                                     <span class="start-date">${startDate}</span>
@@ -61,35 +61,38 @@
                     <div class="user-list column-flex"  data-value="${index}" style="display: none">
                     </div>
                 </div>`
-                );
+                    );
 
 
-                if(item.alpcList.length !== 0){
-                    item.alpcList.forEach(function (alpcInfo) {
-                        $('.user-list[data-value="' + index + '"]').append(
-                            `<div class="row-flex alpc-info">
+                    if (item.alpcList.length !== 0) {
+                        item.alpcList.forEach(function (alpcInfo) {
+                            $('.user-list[data-value="' + index + '"]').append(
+                                `<div class="row-flex alpc-info">
                                 <div>${alpcInfo.userName}</div>
                                 <div style="flex: 3;">${alpcInfo.title}</div>
                                 <select class="passYn" name="passYn" onchange="userPassChange(${alpcInfo.jobPostNo},${alpcInfo.resumeNo},this.value)">
-                                    <option value="Y" ${alpcInfo.passYn === "Y"?'selected':''}>합격</option>
-                                    <option value="N" ${alpcInfo.passYn === "N"?'selected':''}>불합격</option>
-                                    <option value="W" ${alpcInfo.passYn === "W"?'selected':''}>대기</option>
+                                    <option value="Y" ${alpcInfo.passYn === "Y" ? 'selected' : ''}>합격</option>
+                                    <option value="N" ${alpcInfo.passYn === "N" ? 'selected' : ''}>불합격</option>
+                                    <option value="W" ${alpcInfo.passYn === "W" ? 'selected' : ''}>대기</option>
                                 </select>
-                                <div>${alpcInfo.aplcHstrDate.substring(0,10)}</div>
+                                <div>${alpcInfo.aplcHstrDate.substring(0, 10)}</div>
                             </div>`
-                        )
-                    })
-                } else{
-                    $('.text-button[data-value="' + index + '"]').css('visibility', 'hidden');
-                }
+                            )
+                        })
+                    } else {
+                        $('.text-button[data-value="' + index + '"]').css('visibility', 'hidden');
+                    }
+                })
             })
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
+            .catch(function (error) {
+                console.log(error);
+            })
     }
 
-    function userPassChange(jobPostNo, resumeNo, value){
+    /**
+     * 유저 지원 결과 수정
+     */
+    function userPassChange(jobPostNo, resumeNo, value) {
         const result = {
             jobPostNo: jobPostNo,
             resumeNo: resumeNo,
@@ -97,14 +100,29 @@
         }
 
         axios.put('/api/companies/aplc', result)
-        .then(function (response) {
-            console.log(response);
-            alert("수정 성공");
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-
+            .then(function (response) {
+                console.log(response);
+                alert("수정 성공");
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+    }
+    // todo 하다만거 저장 테스트
+    // 다음 할거: 수정기능 구현, 공고 등록은 역순정렬으로
+    /**
+     * 공고 삭제
+     */
+    function deletePost(jobPostNo) {
+        axios.delete('/api/companies/job-post/' + jobPostNo)
+            .then(function (response) {
+                console.log(response);
+                alert("삭제 완료");
+                location.reload();
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
     }
 
     /**
@@ -113,9 +131,9 @@
     function viewList(event) {
         let postItem = $(event.target).closest('.post-item').find('.user-list');
 
-        if(postItem.attr('style').includes('display: none')){
+        if (postItem.attr('style').includes('display: none')) {
             postItem.show();
-        } else{
+        } else {
             postItem.hide();
         }
     }

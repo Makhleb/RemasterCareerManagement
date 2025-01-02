@@ -65,4 +65,14 @@
         JOIN tblUser C  ON B.userId = C.userId AND C.userIsActive = 'Y'
         WHERE A.jobPostNo = #{jobPostNo};
     </select>
+
+    <delete id="deleteJobPost">
+        DELETE FROM tblJobPost WHERE jobPostNo=#{jobPostNo};
+    </delete>
+    <delete id="deleteBenefit">
+        DELETE FROM tblBenefit WHERE jobPostNo=#{jobPostNo};
+    </delete>
+    <delete id="deleteJobPostSkill">
+        DELETE FROM tblJobPostSkill WHERE jobPostNo=#{jobPostNo};
+    </delete>
 </mapper>
