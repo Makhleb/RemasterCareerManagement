@@ -30,8 +30,9 @@ public class JobPostApiController {
         return jobPostService.postJobPost(jobPostWrapDto);
     }
 
-    @GetMapping("/{companyId}")
-    public List<JobPostAplcWrapDto> getJobPosts(@PathVariable String companyId) {
+    @GetMapping
+    public List<JobPostAplcWrapDto> getJobPosts() {
+        String companyId = "testcompany1";
         return jobPostService.selectAllJobPost(companyId);
     }
 }

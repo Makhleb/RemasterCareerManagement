@@ -68,4 +68,11 @@
     padding: 20px;
     background-color: #eee;
     border-radius: 10px;
+    gap: 20px;
+}
+
+.alpc-info{
+    padding-left: 50px;
+    justify-content: space-between;
+    gap: 65px;
 }

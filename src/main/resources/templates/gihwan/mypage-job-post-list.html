@@ -16,12 +16,12 @@
 </div>
 <script layout:fragment="script">
     window.onload = function () {
-        axios.get('/api/companies/job-post/' + 'testcompany1')
+        axios.get('/api/companies/job-post')
         .then(function (response) {
             let postList = response.data;
             console.log(postList);
 
-            postList.forEach(function (item) {
+            postList.forEach(function (item,index) {
 
                 let startDate = item.startDate.substring(0, 16).replace('T',' ');
                 let endDate = item.startDate.substring(0, 16).replace('T',' ');
@@ -30,7 +30,7 @@
                 `<div class="post-item">
                     <div class="post-item-info row-flex">
                         <img src="data:image/png;base64,${item.postThumbnail}" class="photo-item"
-                        onerror="this.onerror=null; this.src='/images/testImage.webp';" alt="공고 이미지">
+                        onerror="this.onerror=null; this.src='/images/noImage.jpg';" alt="공고 이미지">
                         <div class="column-flex post-info">
                             <div class="title-and-date">
                                 <div class="row-flex" style="align-items: center;">
@@ -53,22 +53,35 @@
                             </div>
                         </div>
                         <button class="post-button resume">공고에 맞는<br>이력서 추천</button>
-                        <div class="text-button" onclick="viewList(event)">
+                        <div class="text-button" onclick="viewList(event)" data-value="${index}">
                             <span>지원자 목록</span>
                             <img src="/images/black_down_arrow.png" alt="아래 화살표">
                         </div>
                     </div>
-                    <div class="user-list" style="display: none">
-                        지원자 목록
+                    <div class="user-list column-flex"  data-value="${index}" style="display: none">
                     </div>
                 </div>`
                 );
 
-                // postList.alpcList.forEach(function (item) {
-                //     $('.user-List').append(
-                //
-                //     )
-                // })
+
+                if(item.alpcList.length !== 0){
+                    item.alpcList.forEach(function (alpcInfo) {
+                        $('.user-list[data-value="' + index + '"]').append(
+                            `<div class="row-flex alpc-info">
+                                <div>${alpcInfo.userName}</div>
+                                <div style="flex: 3;">${alpcInfo.title}</div>
+                                <select class="passYn" name="passYn" onchange="userPassChange(${alpcInfo.jobPostNo},${alpcInfo.resumeNo},this.value)">
+                                    <option value="Y" ${alpcInfo.passYn === "Y"?'selected':''}>합격</option>
+                                    <option value="N" ${alpcInfo.passYn === "N"?'selected':''}>불합격</option>
+                                    <option value="W" ${alpcInfo.passYn === "W"?'selected':''}>대기</option>
+                                </select>
+                                <div>${alpcInfo.aplcHstrDate.substring(0,10)}</div>
+                            </div>`
+                        )
+                    })
+                } else{
+                    $('.text-button[data-value="' + index + '"]').css('visibility', 'hidden');
+                }
             })
         })
         .catch(function (error) {
@@ -76,6 +89,17 @@
         })
     }
 
+    function userPassChange(jobPostNo, resumeNo, value){
+        const result = {
+            jobPostNo: jobPostNo,
+            resumeNo: resumeNo,
+            value: value
+        }
+    }
+
+    /**
+     * 지원자 리스트 보여주는 버튼
+     */
     function viewList(event) {
         let postItem = $(event.target).closest('.post-item').find('.user-list');
 
