@@ -31,15 +31,23 @@
         SELECT
         jp.*,
         c.companyName,
-        gb.name AS educationName
+        gb.name AS educationName,
+        COUNT(DISTINCT rs.skillCode) AS matchingSkillCount
         FROM tblJobPost jp
-        JOIN tblCompany c
-        ON jp.companyId = c.companyId
-        LEFT JOIN tblGubn gb
-        ON jp.educationCode = gb.code
-        WHERE gb.groupCode = 'EDUCATION'
-        AND jp.postViewYn = 'Y'
-        ORDER BY RAND();
+        JOIN tblCompany c ON jp.companyId = c.companyId
+        LEFT JOIN tblGubn gb ON jp.educationCode = gb.code
+        JOIN tblJobPostSkill jps ON jp.jobPostNo = jps.jobPostNo
+        JOIN (
+        SELECT
+        rs.skillCode
+        FROM tblResume r
+        JOIN tblResumeSkill rs ON r.resumeNo = rs.resumeNo
+        WHERE r.userId = #{userId}
+        AND r.viewYn = 'Y'
+        ) AS rs ON rs.skillCode = jps.skillCode
+        WHERE jp.postViewYn = 'Y'
+        GROUP BY jp.jobPostNo
+        ORDER BY matchingSkillCount DESC, RAND()
     </select>
 
     <select id="getJobPost" resultType="com.example.test.vo.JobPostDetailVo">
