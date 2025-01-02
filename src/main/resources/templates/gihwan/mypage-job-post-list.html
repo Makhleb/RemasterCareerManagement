@@ -18,8 +18,10 @@
     window.onload = function () {
         axios.get('/api/companies/job-post/' + 'testcompany1')
         .then(function (response) {
-            console.log(response.data);
-            response.data.forEach(function (item) {
+            let postList = response.data;
+            console.log(postList);
+
+            postList.forEach(function (item, index) {
 
                 let startDate = item.startDate.substring(0, 16).replace('T',' ');
                 let endDate = item.startDate.substring(0, 16).replace('T',' ');
@@ -61,6 +63,12 @@
                     </div>
                 </div>`
                 );
+
+                // postList.alpcList.forEach(function (item) {
+                //     $('.user-List').append(
+                //
+                //     )
+                // })
             })
         })
         .catch(function (error) {

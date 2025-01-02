@@ -34,5 +34,4 @@ public class JobPostApiController {
     public List<JobPostAplcWrapDto> getJobPosts(@PathVariable String companyId) {
         return jobPostService.selectAllJobPost(companyId);
     }
-
 }
