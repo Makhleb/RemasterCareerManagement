@@ -60,11 +60,13 @@
             resumeNo,
             educationCode,
             schoolName,
+            specialty,
             enterDate,
             graduateDate
             ) VALUES (
             #{resumeNo},
             #{educationCode},
+            #{specialty},
             #{schoolName},
             #{enterDate},
             #{graduateDate}
@@ -157,6 +159,23 @@
             SET viewYn = 'N'
             WHERE userId = #{userId};
          </update>
+
+         <!-- 특정 사용자의 대표 이력서를 조회 -->
+        <select id="selectRepresentativeResume" parameterType="string" resultType="com.example.test.dto.ResumeDTO">
+            SELECT
+            resumeNo,
+            title,
+            createDate,
+            viewYn
+            FROM
+            tblResume
+            WHERE
+            userId = #{userId}
+            AND viewYn = 'Y'
+            LIMIT 1
+        </select>
+
+
 
          <!-- 특정 이력서를 대표이력서로 설정 -->
         <update id="updateRepresentativeResume">

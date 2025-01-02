@@ -131,6 +131,19 @@ public class ResumeRegistApiController {
         return resumeDao.selectResumesByUserId(userId);
     }
 
+    /**
+     * 특정 사용자의 대표 이력서를 조회합니다.
+     * @param userId 사용자 ID
+     * @return 대표 이력서
+     */
+    @GetMapping("/representative/{userId}")
+    public ResumeDTO getRepresentativeResume(@PathVariable String userId) {
+        return resumeDao.selectRepresentativeResume(userId);
+    }
+
+
+
+
 
     /**
      * 특정 이력서를 대표이력서로 설정합니다.

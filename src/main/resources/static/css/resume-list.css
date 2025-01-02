@@ -13,6 +13,17 @@ h1 {
     font-size: 2rem;
 }
 
+/*이력서 작성하기*/
+.resumeRegist-button-container {
+    width: 600px;
+    margin: 0 auto;
+    position: relative;
+}
+.resumeRegist-button-container #ResumeRegist {
+    position: absolute;
+    right: 0;
+}
+
 /* Resume List Container */
 #resumeList {
     max-width: 600px;
@@ -22,34 +33,98 @@ h1 {
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 80px;
 }
+
+/* Representative Container */
+#representativeContainer {
+    display: flex; /* Flexbox로 배치 */
+    align-items: center; /* 세로 정렬 */
+    justify-content: space-between; /* 양쪽 정렬 */
+    max-width: 600px; /* 적당한 너비 */
+    margin: 20px auto; /* 가운데 정렬 */
+    padding: 10px;
+    background-color: #fff; /* 배경색 */
+    border: 1px solid #ddd; /* 테두리 */
+    border-radius: 8px; /* 모서리 둥글게 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+}
+
+/* Title Resume */
+#titleResume {
+    flex-grow: 1; /* 남은 공간 차지 */
+}
+
+/* Title Resume의 텍스트 */
+#titleResume h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #B7673C;
+}
+
+#titleResume strong {
+    font-size: 1.2rem;
+    color: #B7673C;
+}
+
+#titleResume span {
+    font-size: 0.9rem;
+    color: #777;
+    margin-left: 10px;
+}
+
+/* Button Style */
+#toggleRepresentative {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #B9B0B2;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#toggleRepresentative:hover {
+    background-color: #707780;
+}
+
+
 
 /* Resume Item */
 #resumeList div {
-    padding: 10px;
+    display: flex; /* 플렉스 박스를 사용하여 정렬 */
+    justify-content: space-between; /* 제목과 작성일을 양쪽 정렬 */
+    align-items: center; /* 세로 정렬 */
+    padding: 10px 0; /* 위아래 간격 */
     border-bottom: 1px solid #eaeaea;
+    width: 100%; /* 부모 컨테이너의 전체 폭을 차지 */
+    box-sizing: border-box; /* 패딩 포함 폭 계산 */
 }
 
 #resumeList div:last-child {
-    border-bottom: none;
+    border-bottom: none; /* 마지막 요소의 밑줄 제거 */
 }
 
 /* Resume Title */
 #resumeList strong {
     font-size: 1.2rem;
     color: #B7673C;
+    flex-grow: 1; /* 제목이 남는 공간을 차지하도록 설정 */
 }
 
 /* Resume Date */
 #resumeList span {
     font-size: 0.9rem;
     color: #777;
+    text-align: right;
+    min-width: 100px; /* 일정한 공간 확보 */
 }
 
 /* Button Styles */
 button {
     display: block;
-    margin: 20px auto;
+    margin: 0px auto;
     padding: 10px 20px;
     font-size: 1rem;
     background-color: #929AA2;
@@ -93,22 +168,30 @@ button:hover {
     border-radius: 5px;
 }
 
+#confirmationPopup .button-container {
+    display: flex; /* 플렉스 레이아웃으로 변경 */
+    justify-content: center; /* 버튼을 중앙에 정렬 */
+    gap: 10px; /* 버튼 간의 간격 */
+}
+
+
+
 #confirmationPopup button:first-child {
-    background-color: #28a745;
+    background-color: #B9B0B2;
     color: white;
     border: none;
 }
 
 #confirmationPopup button:first-child:hover {
-    background-color: #218838;
+    background-color: #B9B0B2;
 }
 
 #confirmationPopup button:last-child {
-    background-color: #dc3545;
+    background-color: #929AA2;
     color: white;
     border: none;
 }
 
 #confirmationPopup button:last-child:hover {
-    background-color: #c82333;
+    background-color: #929AA2;
 }

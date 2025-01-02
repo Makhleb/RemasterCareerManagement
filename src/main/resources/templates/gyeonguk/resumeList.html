@@ -7,19 +7,33 @@
     <link rel="stylesheet" th:href="@{/css/resume-list.css}">
 </head>
 <body layout:fragment="content">
-<h1>이력서 리스트</h1>
+<h1>대표 이력서</h1>
 
-<!-- 대표이력서 설정 버튼 -->
-<button id="toggleRepresentative" onclick="toggleRepresentativeMode()">대표이력서 설정</button>
+<!-- 대표이력서 리스트-->
+<div id="representativeContainer">
+    <div id="titleResume">
+        <strong>대표 이력서 제목</strong>
+        <span>작성일자</span>
+    </div>
+    <!-- 대표이력서 설정 버튼 -->
+    <button id="toggleRepresentative" onclick="toggleRepresentativeMode()">대표이력서 설정</button>
+</div>
+
+<!-- 이력서 작성하기를 버튼을 통해 바로 등록으로 이동 -->
+<div class="resumeRegist-button-container">
+    <h1>나의 이력서</h1>
+    <button type="button" id="ResumeRegist">이력서 작성하기</button>
+</div>
 
 <!-- 이력서 리스트 -->
 <div id="resumeList">로딩중...</div>
 
-<!-- 알림창 -->
 <div id="confirmationPopup" style="display: none;">
     <p>변경하시겠습니까?</p>
-    <button onclick="confirmRepresentative()">확인</button>
-    <button onclick="cancelRepresentative()">취소</button>
+    <div class="button-container">
+        <button onclick="confirmRepresentative()">확인</button>
+        <button onclick="cancelRepresentative()">취소</button>
+    </div>
 </div>
 
 <script>
@@ -86,20 +100,25 @@
             alert('대표 이력서를 선택해주세요.');
             return;
         }
-        // 알림창 표시
-        document.getElementById('confirmationPopup').style.display = 'block';
-        console.log('알림창 표시 상태:', document.getElementById('confirmationPopup').style.display);
 
-        axios.put('/api/users/resume/representative', { resumeNo: selectedResumeId, userId: "test1"})
+        axios.put('/api/users/resume/representative', {resumeNo: selectedResumeId, userId: "test1"})
             .then(response => {
                 console.log('서버 응답:', response.data); // 서버 응답 디버깅
                 if (response.data === '대표 이력서가 설정되었습니다.') {
                     alert('대표 이력서가 설정되었습니다.');
                     document.getElementById('confirmationPopup').style.display = 'none';
-                    isRepresentativeMode = false;
+                    isRepresentativeMode = false; // 대표이력서 모드 종료
+                    selectedResumeId = null; // 선택된 이력서 초기화
+                    loadRepresentativeResume(); // 대표 이력서를 다시 불러옴
+
+
+                    // 버튼 텍스트를 "대표이력서 설정"으로 초기화
+                    const button = document.getElementById('toggleRepresentative');
+                    button.textContent = '대표이력서 설정';
+
                     loadResumeList(); // 업데이트된 리스트 다시 로드
                 } else {
-                    alert('대표 이력서 설정 중 문제가 발생했습니다.'); // 비정상적인 응답 처리
+                    alert('대표 이력서 설정 중 문제가 발생했습니다.');
                 }
             })
             .catch(error => {
@@ -113,8 +132,41 @@
         document.getElementById('confirmationPopup').style.display = 'none';
     }
 
-    // 페이지 로드 시 이력서 리스트를 가져옴
-    window.onload = loadResumeList;
+    // 대표이력서를 가져와 titleResume 영역에 표시
+    function loadRepresentativeResume() {
+        const userId = 'test1'; // 실제 사용자 ID를 대체
+        axios.get(`/api/users/resume/representative/${userId}`)
+            .then(response => {
+                const resume = response.data;
+                const titleResumeDiv = document.getElementById('titleResume');
+                if (resume) {
+                    titleResumeDiv.innerHTML = `
+                    <div>
+
+                        <strong>${resume.title}</strong>
+                        - <span>${new Date(resume.createDate).toLocaleDateString()}</span>
+                    </div>
+                `;
+                } else {
+                    titleResumeDiv.innerHTML = '<p>대표 이력서가 설정되어 있지 않습니다.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('대표 이력서 조회 중 오류:', error);
+                document.getElementById('titleResume').innerHTML = '<p>대표 이력서를 가져오는 데 실패했습니다.</p>';
+            });
+    }
+
+    window.onload = function () {
+        loadResumeList(); // 이력서 리스트를 불러옴
+        loadRepresentativeResume(); // 대표 이력서를 불러옴
+    };
+
+    // 작성완료 버튼 이벤트 리스너
+    document.getElementById("ResumeRegist").addEventListener('click', function () {
+        location.href = "/resume/register";
+    });
+
 </script>
 </body>
 </html>

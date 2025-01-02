@@ -86,6 +86,13 @@ public interface ResumeDao {
     void clearRepresentativeResume(@Param("userId") String userId);
 
     /**
+     * 특정 사용자의 대표 이력서를 조회합니다.
+     * @param userId 사용자 ID
+     * @return 대표 이력서
+     */
+    ResumeDTO selectRepresentativeResume(String userId);
+
+    /**
      * 특정 이력서를 대표이력서로 설정합니다.
      *
      * @param resumeNo 이력서 ID
