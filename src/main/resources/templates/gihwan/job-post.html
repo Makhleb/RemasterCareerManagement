@@ -1,171 +1,144 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout_dir/layout/main_layout}">
+      layout:decorate="~{/layout_dir/layout/company_mypage_layout}">
 <head>
     <meta charset="UTF-8">
     <title>공고 등록</title>
     <link rel="stylesheet" href="/css/job-post.css">
 </head>
-<body layout:fragment="content">
-<div class="flex-container">
-    <div class="container">
-        <aside>
-            <a href="#" class="aside-title">기업 마이페이지 홈</a>
-            <hr>
-            <ul>
-                <li>
-                    <a href="#">기업 프로필</a>
-                    <ul>
-                        <li><a href="#">프로필 수정</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">공고 관리</a>
-                    <ul>
-                        <li><a href="#">공고 등록</a></li>
-                        <li><a href="#">공고 조회</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">기술스택 매칭</a>
-                </li>
-            </ul>
-        </aside>
-        <div class="main-content">
-            <div class="main-title">공고 등록</div>
-            <hr>
-            <div class="input-container column-flex">
-                <div class="input-box column-flex">
-                    <label>
-                        <div class="input-name">* 공고 제목</div>
-                        <input id="post-title" placeholder="제목을 입력하세요">
-                    </label>
-                    <div>
-                        <div class="input-name">담당자 정보</div>
-                        <div class="column-flex half-width">
-                            <div class="manager-row-grid" style="margin-bottom: 15px">
-                                <input id="manager-name" placeholder="담당자명">
-                                <input id="manager-phone" placeholder="담당자 전화번호">
-                            </div>
-                            <input id="manager-email" placeholder="담당자 이메일">
-                        </div>
+<body>
+<div layout:fragment="content">
+    <div class="main-title">공고 등록</div>
+    <hr>
+    <div class="input-container column-flex">
+        <div class="input-box column-flex">
+            <label>
+                <div class="input-name">* 공고 제목</div>
+                <input id="post-title" placeholder="제목을 입력하세요">
+            </label>
+            <div>
+                <div class="input-name">담당자 정보</div>
+                <div class="column-flex half-width">
+                    <div class="manager-row-grid" style="margin-bottom: 15px">
+                        <input id="manager-name" placeholder="담당자명">
+                        <input id="manager-phone" placeholder="담당자 전화번호">
                     </div>
-
-                    <div>
-                        <div class="input-name">근무지 주소</div>
-                        <div class="column-flex half-width">
-                            <div class="post-row-grid" style="margin-bottom: 15px">
-                                <input id="post-address" placeholder="주소" readonly>
-                                <input id="post-zonecode" placeholder="우편번호" readonly>
-                                <button class="base-btn submit-btn" onclick="addressFind()">주소찾기</button>
-                            </div>
-                            <input id="post-detail-address" placeholder="상세주소">
-                        </div>
-                    </div>
-
-                    <div class="start-n-end-date row-flex">
-                        <input id="start-date" type="datetime-local">
-                        <input id="end-date" type="datetime-local">
-                    </div>
-
-                    <div class="post-type row-flex">
-                        <label>
-                            <div class="input-name">* 근무 형태</div>
-                            <select id="work-type">
-                                <option value="">선택하세요</option>
-                            </select>
-                        </label>
-                        <label>
-                            <div class="input-name">* 직급/직책</div>
-                            <select id="job-rank">
-                                <option value="">선택하세요</option>
-                            </select>
-                        </label>
-                        <label>
-                            <div class="input-name">* 직무</div>
-                            <select id="job-type">
-                                <option value="">선택하세요</option>
-                            </select>
-                        </label>
-                    </div>
-
-                    <div class="post-type row-flex">
-                        <label>
-                            <div class="input-name">경력</div>
-                            <input type="number" id="job-history" min="0">
-                        </label>
-                        <label>
-                            <div class="input-name">희망 학력</div>
-                            <select id="job-educate">
-                                <option value="">선택하세요</option>
-                            </select>
-                        </label>
-                        <label>
-                            <div class="input-name">연봉</div>
-                            <input type="number" id="job-salary" min="0">
-                        </label>
-                    </div>
-
-                    <div>
-                        <div class="input-name">보유 기술 스택</div>
-                        <div id="skill-list"></div>
-                    </div>
-                    <label>
-                        <div class="input-name">* 모집부분 및 상세내용</div>
-                        <textarea id="post-content" style="height: 200px"></textarea>
-                    </label>
-                    <label>
-                        <div class="input-name">* 접수방법</div>
-                        <textarea id="post-method" style="height: 100px"></textarea>
-                    </label>
-                    <label>
-                        <div class="input-name">* 유의사항</div>
-                        <textarea id="add-notice" style="height: 100px"></textarea>
-                    </label>
-                    <label>
-                        <div style="margin-bottom: 15px">
-                            <div class="input-name">복리후생</div>
-                            <input id="post-benefit" placeholder="복리후생을 입력해주세요">
-                            <button onclick="addBenefit()" class="add-benefit">추가 +</button>
-                        </div>
-                        <div class="benefit-add-wrapper"></div>
-                    </label>
-                    <div>
-                        <div class="input-name">이미지 추가하기</div>
-                        <div class="column-flex">
-                            <div class="row-flex" style="margin-bottom: 15px">
-                                <button id="upload-btn" class="base-btn submit-btn"
-                                        onclick="$('#image-upload').click()">파일 선택
-                                </button>
-                                <button id="img-close-btn" class="base-btn gray-btn" onclick="closeImg(event)"
-                                        style="display:none;">닫기
-                                </button>
-                            </div>
-                            <input type="file" id="image-upload" onchange="previewImage(event)" style="display:none;"/>
-                            <img id="image-preview" src="" alt="미리보기" style="display:none;"/>
-                        </div>
-                    </div>
-                    <div class="board row-flex bottom-radio" style="margin-bottom: 25px">
-                        <div style="align-self: center">다른 사람이 볼 수 있도록 공개할까요?</div>
-                        <div class="row-flex" style="align-items: center">
-                            <input type="radio" id="post-view-on" name="options" value="Y">
-                            <label for="post-view-on" style="padding-right: 2rem; width: auto">네</label>
-                            <input type="radio" id="post-view-off" name="options" value="N">
-                            <label for="post-view-off" style="width: auto">아니요</label>
-                        </div>
-                    </div>
+                    <input id="manager-email" placeholder="담당자 이메일">
                 </div>
-                <div class="btn-box">
-                    <button class="submit-btn" onclick="totalPostInfo()">등록하기</button>
-                    <button class="gray-btn" onclick="postCancel()">취소</button>
+            </div>
+
+            <div>
+                <div class="input-name">근무지 주소</div>
+                <div class="column-flex half-width">
+                    <div class="post-row-grid" style="margin-bottom: 15px">
+                        <input id="post-address" placeholder="주소" readonly>
+                        <input id="post-zonecode" placeholder="우편번호" readonly>
+                        <button class="base-btn submit-btn" onclick="addressFind()">주소찾기</button>
+                    </div>
+                    <input id="post-detail-address" placeholder="상세주소">
+                </div>
+            </div>
+
+            <div class="start-n-end-date row-flex">
+                <input id="start-date" type="datetime-local">
+                <input id="end-date" type="datetime-local">
+            </div>
+
+            <div class="post-type row-flex">
+                <label>
+                    <div class="input-name">* 근무 형태</div>
+                    <select id="work-type">
+                        <option value="">선택하세요</option>
+                    </select>
+                </label>
+                <label>
+                    <div class="input-name">* 직급/직책</div>
+                    <select id="job-rank">
+                        <option value="">선택하세요</option>
+                    </select>
+                </label>
+                <label>
+                    <div class="input-name">* 직무</div>
+                    <select id="job-type">
+                        <option value="">선택하세요</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="post-type row-flex">
+                <label>
+                    <div class="input-name">경력</div>
+                    <input type="number" id="job-history" min="0">
+                </label>
+                <label>
+                    <div class="input-name">희망 학력</div>
+                    <select id="job-educate">
+                        <option value="">선택하세요</option>
+                    </select>
+                </label>
+                <label>
+                    <div class="input-name">연봉</div>
+                    <input type="number" id="job-salary" min="0">
+                </label>
+            </div>
+
+            <div>
+                <div class="input-name">보유 기술 스택</div>
+                <div id="skill-list"></div>
+            </div>
+            <label>
+                <div class="input-name">* 모집부분 및 상세내용</div>
+                <textarea id="post-content" style="height: 200px"></textarea>
+            </label>
+            <label>
+                <div class="input-name">* 접수방법</div>
+                <textarea id="post-method" style="height: 100px"></textarea>
+            </label>
+            <label>
+                <div class="input-name">* 유의사항</div>
+                <textarea id="add-notice" style="height: 100px"></textarea>
+            </label>
+            <label>
+                <div style="margin-bottom: 15px">
+                    <div class="input-name">복리후생</div>
+                    <input id="post-benefit" placeholder="복리후생을 입력해주세요">
+                    <button onclick="addBenefit()" class="add-benefit">추가 +</button>
+                </div>
+                <div class="benefit-add-wrapper"></div>
+            </label>
+            <div>
+                <div class="input-name">이미지 추가하기</div>
+                <div class="column-flex">
+                    <div class="row-flex" style="margin-bottom: 15px">
+                        <button id="upload-btn" class="base-btn submit-btn"
+                                onclick="$('#image-upload').click()">파일 선택
+                        </button>
+                        <button id="img-close-btn" class="base-btn gray-btn" onclick="closeImg(event)"
+                                style="display:none;">닫기
+                        </button>
+                    </div>
+                    <input type="file" id="image-upload" onchange="previewImage(event)" style="display:none;"/>
+                    <img id="image-preview" src="" alt="미리보기" style="display:none;"/>
+                </div>
+            </div>
+            <div class="board row-flex bottom-radio" style="margin-bottom: 25px">
+                <div style="align-self: center">다른 사람이 볼 수 있도록 공개할까요?</div>
+                <div class="row-flex" style="align-items: center">
+                    <input type="radio" id="post-view-on" name="options" value="Y">
+                    <label for="post-view-on" style="padding-right: 2rem; width: auto">네</label>
+                    <input type="radio" id="post-view-off" name="options" value="N">
+                    <label for="post-view-off" style="width: auto">아니요</label>
                 </div>
             </div>
         </div>
+        <div class="btn-box">
+            <button class="submit-btn" onclick="totalPostInfo()">등록하기</button>
+            <button class="gray-btn" onclick="postCancel()">취소</button>
+        </div>
     </div>
 </div>
-<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script>
+<script layout:fragment="script">
     //todo 유효성 검사, (우선)아이디 적용, 등록시 페이지 이동, 수정 페이지로 재활용 하기, 마감일은 시작일보다 무조건 나중에
     /**
      * 윈도우 페이지 로드시 옵션 추가
