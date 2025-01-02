@@ -21,7 +21,7 @@
             let postList = response.data;
             console.log(postList);
 
-            postList.forEach(function (item, index) {
+            postList.forEach(function (item) {
 
                 let startDate = item.startDate.substring(0, 16).replace('T',' ');
                 let endDate = item.startDate.substring(0, 16).replace('T',' ');
