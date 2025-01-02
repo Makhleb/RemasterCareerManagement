@@ -92,14 +92,17 @@ section {
     box-sizing: border-box;
 }
 
-
-
-#com_detail {
-    width: 260px;
-    max-height: 350px;
-    min-height: 350px;
+.com_detail {
+    border-radius: 15px;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    /* 추가: 부드러운 그림자 효과 */
+}
+.com_detail:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 /* upper */
