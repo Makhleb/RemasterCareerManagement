@@ -16,8 +16,8 @@ public class JobPostService_sangin {
     @Autowired
     JobPostDao_sangin jobPostDao;
 
-    public List<JobPostDetailVo> getJobPostAll(String userId) {
-        return jobPostDao.getJobPostAll(userId);
+    public List<JobPostDetailVo> getJobPostAll(String userId, String keyword) {
+        return jobPostDao.getJobPostAll(userId, keyword);
     }
 
     public List<JobPostDetailVo> getJobPostMatching(String userId) {

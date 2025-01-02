@@ -24,6 +24,16 @@
         ON jp.educationCode = gb.code
         WHERE gb.groupCode = 'EDUCATION'
         AND jp.postViewYn = 'Y'
+        <if test="keyword != null and keyword != ''">
+            AND (
+            jp.title LIKE CONCAT('%', #{keyword}, '%')
+            OR jp.jobHistory LIKE CONCAT('%', #{keyword}, '%')
+            OR jp.jobSalary LIKE CONCAT('%', #{keyword}, '%')
+            OR jp.postAddress LIKE CONCAT('%', #{keyword}, '%')
+            OR jp.postAddressDetail LIKE CONCAT('%', #{keyword}, '%')
+            OR jp.content LIKE CONCAT('%', #{keyword}, '%')
+            )
+        </if>
         ORDER BY RAND();
 
     </select>

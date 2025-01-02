@@ -102,6 +102,20 @@ section {
     font-weight: bold;
     padding: 30px 40px;
     margin-right: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 기본 그림자 */
+    transition: all 0.3s ease; /* 부드러운 전환 효과 */
+    position: relative; /* 테두리 애니메이션용 */
+    overflow: hidden; /* 테두리 애니메이션이 밖으로 나가지 않도록 */
+}
+#section2_btn:hover {
+    background-color: #9e502d; /* 배경색 변경 */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 확대 */
+    transform: translateY(-2px); /* 살짝 떠오르는 효과 */
+}
+
+#section2_btn:active {
+    transform: scale(0.95); /* 클릭 시 버튼이 약간 작아지는 효과 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 클릭 시 그림자 축소 */
 }
 
 /* 섹션3 */
@@ -159,6 +173,11 @@ section {
     border-radius: 15px;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+    transition: box-shadow 0.3s ease; /* 부드러운 전환 효과 */
+}
+.section4_popular:hover {
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* 호버 시 더 강한 그림자 */
 }
 
 #section4_fake {
@@ -219,6 +238,11 @@ section {
     border: 1px #ddd solid;
     height: 230px;
     border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+    transition: box-shadow 0.3s ease; /* 부드러운 전환 효과 */
+}
+.section5_post:hover{
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* 호버 시 더 강한 그림자 */
 }
 
 #section5_postThumbnail {

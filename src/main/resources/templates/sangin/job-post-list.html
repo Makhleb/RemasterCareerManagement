@@ -62,7 +62,7 @@
     <div class="section3">
         <div id="section3_description">
             <img th:src="@{/images/fire.png}" alt="불">
-            <div>회원님을 위한 공고</div>
+            <div>회원님을 위한 추천 공고</div>
         </div>
         <div id="section3_option">
             <div class="section3_option" style="border-right: 1px #ddd solid;  border-radius: 10px 0px 0px 10px;">
@@ -82,6 +82,7 @@
 <script>
     const section4Container = document.querySelector('.section4');
     const section5Container = document.querySelector('.section5');
+    const keywordDisplay = document.querySelector("#keyword");
 
     // 추천 공고 데이터 가져오기
     axios.get('/api/users/job-post/list/matching')
@@ -93,11 +94,11 @@
                 postDiv.classList.add('section4_popular');
                 postDiv.dataset.jobPostNo = item.jobPostNo;
                 postDiv.innerHTML = `
-                    <div id="section4_fake">추천 공고</div>
-                    <div id="section4_postThumbnail"><img src="/images/${item.postThumbnail}" alt="기업로고"></div>
-                    <a id="section4_title" href="/view/users/job-post/detail/${item.jobPostNo}">${item.title}</a>
-                    <div id="section4_companyName">${item.companyName}</div>
-                `;
+                <div id="section4_fake">추천 공고</div>
+                <div id="section4_postThumbnail"><img src="/images/${item.postThumbnail}" alt="기업로고"></div>
+                <a id="section4_title" href="/view/users/job-post/detail/${item.jobPostNo}">${item.title}</a>
+                <div id="section4_companyName">${item.companyName}</div>
+            `;
                 section4Container.appendChild(postDiv);
             });
         })
@@ -107,15 +108,20 @@
         });
 
     // 전체 공고 데이터 가져오기
-    axios.get('/api/users/job-post/list/all')
-        .then(response => {
-            const data = response.data;
-            section5Container.innerHTML = '';
-            data.forEach(item => {
-                const postDiv = document.createElement('div');
-                postDiv.classList.add('section5_post');
-                postDiv.dataset.jobPostNo = item.jobPostNo;
-                postDiv.innerHTML = `
+    function fetchJobPosts(keyword = '') {
+        axios.get(`/api/users/job-post/list/all`, { params: { keyword } })
+            .then(response => {
+                const data = response.data;
+                section5Container.innerHTML = '';
+                if (data.length === 0) {
+                    section5Container.innerHTML = '<div>검색 결과가 없습니다.</div>';
+                    return;
+                }
+                data.forEach(item => {
+                    const postDiv = document.createElement('div');
+                    postDiv.classList.add('section5_post');
+                    postDiv.dataset.jobPostNo = item.jobPostNo;
+                    postDiv.innerHTML = `
                     <div id="section5_postThumbnail">
                         <img src="/images/${item.postThumbnail}" alt="기업로고">
                     </div>
@@ -130,34 +136,38 @@
                         </div>
                     </div>
                 `;
-                section5Container.appendChild(postDiv);
+                    section5Container.appendChild(postDiv);
 
-                // 스크랩 클릭 이벤트 추가
-                const scrapStar = postDiv.querySelector('#section5_star');
-                scrapStar.addEventListener('click', () => {
-                    const isScraped = scrapStar.classList.contains('colorstar');
-                    toggleScrap(item.jobPostNo, isScraped)
-                        .then(() => {
-                            if (isScraped) {
-                                scrapStar.classList.remove('colorstar');
-                                scrapStar.classList.add('uncolorstar');
-                                alert('스크랩이 취소되었습니다.');
-                            } else {
-                                scrapStar.classList.remove('uncolorstar');
-                                scrapStar.classList.add('colorstar');
-                                alert('스크랩되었습니다.');
-                            }
-                        })
-                        .catch(() => {
-                            alert('스크랩 작업 중 오류가 발생했습니다.');
-                        });
+                    // 스크랩 클릭 이벤트 추가
+                    const scrapStar = postDiv.querySelector('#section5_star');
+                    scrapStar.addEventListener('click', () => {
+                        const isScraped = scrapStar.classList.contains('colorstar');
+                        toggleScrap(item.jobPostNo, isScraped)
+                            .then(() => {
+                                if (isScraped) {
+                                    scrapStar.classList.remove('colorstar');
+                                    scrapStar.classList.add('uncolorstar');
+                                    alert('스크랩이 취소되었습니다.');
+                                } else {
+                                    scrapStar.classList.remove('uncolorstar');
+                                    scrapStar.classList.add('colorstar');
+                                    alert('스크랩되었습니다.');
+                                }
+                            })
+                            .catch(() => {
+                                alert('스크랩 작업 중 오류가 발생했습니다.');
+                            });
+                    });
                 });
+            })
+            .catch(error => {
+                console.error(error);
+                alert('전체 공고를 불러오지 못했습니다.');
             });
-        })
-        .catch(error => {
-            console.error(error);
-            alert('전체 공고를 불러오지 못했습니다.');
-        });
+    }
+
+    // 초기 전체 공고 로드
+    fetchJobPosts();
 
     // 스크랩 추가/삭제 요청 함수
     function toggleScrap(jobPostNo, isScraped) {
@@ -213,9 +223,16 @@
         input.placeholder = "검색어를 입력하세요";
         input.classList.add("section2_option");
 
+        input.addEventListener("input", () => {
+            const value = input.value.trim();
+            keywordDisplay.textContent = value ? value : "검색 조건 없음";
+            fetchJobPosts(value);
+        });
+
         input.addEventListener("blur", () => {
             const value = input.value.trim();
             search_bar.textContent = value || "검색어입력";
+            keywordDisplay.textContent = value ? value : "검색 조건 없음";
             input.replaceWith(search_bar);
         });
 
@@ -223,15 +240,21 @@
         input.focus();
     });
 
+    // 지역 및 직업 선택 이벤트
     document.querySelectorAll(".region, .job").forEach(option => {
         option.addEventListener("click", () => {
-            keyword_container.textContent = option.getAttribute("value");
+            const value = option.getAttribute("value");
+            keyword_container.textContent = value;
+            keywordDisplay.textContent = value;
         });
     });
 
+    // 검색 버튼 클릭 처리
     document.querySelector("#section2_btn").addEventListener("click", () => {
-        alert("검색어: " + keyword_container.textContent);
+        const keyword = keywordDisplay.textContent.replace("검색어: ", "").trim();
+        fetchJobPosts(keyword);
     });
+
 </script>
 </body>
 </html>

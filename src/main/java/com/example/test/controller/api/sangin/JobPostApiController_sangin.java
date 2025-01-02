@@ -37,11 +37,11 @@ public class JobPostApiController_sangin {
     }
     @GetMapping("/list/all")
     @ResponseBody
-    public ResponseEntity<Object> jobPostList1() {
+    public ResponseEntity<Object> jobPostList1(@RequestParam(value = "keyword", required = false) String keyword) {
 
 //      String userId =  securityUtil.getCurrentUserId();
         String userId = "test1";
-        List<JobPostDetailVo> jobPostList = jobPostService.getJobPostAll(userId);
+        List<JobPostDetailVo> jobPostList = jobPostService.getJobPostAll(userId, keyword);
         if (jobPostList != null && !jobPostList.isEmpty()) {
             return ResponseEntity.ok(jobPostList);
         } else {
