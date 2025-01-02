@@ -12,9 +12,9 @@ public interface JobPostDao_sangin {
 
     List<JobPostDetailVo> getJobPostAll(@Param("userId") String userId);
 
-    List<JobPostDetailVo> getJobPostMatching();
+    List<JobPostDetailVo> getJobPostMatching(@Param("userId") String userId);
 
-    JobPostDetailVo getJobPost(@Param("jobPostNo") int jobPostNo);
+    JobPostDetailVo getJobPost(@Param("userId")String userId,  @Param("jobPostNo") int jobPostNo);
 
     List<JobPostSkillDTO> getJobPostSkill(@Param("jobPostNo") int jobPostNo);
 

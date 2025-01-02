@@ -50,21 +50,21 @@ section {
     display: flex;
     justify-content: space-between;
 }
-#box2_con1{
-    display: flex;
-}
 
 #post_name {
     font-size: 24px;
     font-weight: bold;
 }
+#box2_con1{
+    display: flex;
+}
 
 #star{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 20px;
-    height: 20px;
+    border: 1px #3a5154 solid;
+    border-radius: 10px;
+    margin-right: 10px;
+    width: 25px;
+    padding : 15px;
     background-size: 60px 60px;
     background-repeat: no-repeat;
     background-position: center;

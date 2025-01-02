@@ -46,14 +46,24 @@
         SELECT
         jp.*,
         c.companyName,
-        gb.name AS educationName
+        gb.name AS educationName,
+        CASE
+        WHEN EXISTS (
+        SELECT 1
+        FROM tblJpl jpl
+        WHERE jpl.userId = #{userId}
+        AND jpl.jobPostNo = jp.jobPostNo
+        ) THEN 1
+        ELSE 0
+        END AS isScraped
         FROM tblJobPost jp
         JOIN tblCompany c
         ON jp.companyId = c.companyId
         LEFT JOIN tblGubn gb
         ON jp.educationCode = gb.code
         WHERE gb.groupCode = 'EDUCATION'
-        AND jp.jobPostNo = #{jobPostNo}
+        AND jp.jobPostNo = #{jobPostNo};
+
     </select>
 
     <select id="getJobPostSkill" resultType="com.example.test.dto.JobPostSkillDTO">

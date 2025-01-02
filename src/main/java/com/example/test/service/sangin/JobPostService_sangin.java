@@ -20,12 +20,12 @@ public class JobPostService_sangin {
         return jobPostDao.getJobPostAll(userId);
     }
 
-    public List<JobPostDetailVo> getJobPostMatching() {
-        return jobPostDao.getJobPostMatching();
+    public List<JobPostDetailVo> getJobPostMatching(String userId) {
+        return jobPostDao.getJobPostMatching(userId);
     }
 
-    public JobPostDetailVo getJobPost(int jobPostNo) {
-        return jobPostDao.getJobPost(jobPostNo);
+    public JobPostDetailVo getJobPost(String userId, int jobPostNo) {
+        return jobPostDao.getJobPost(userId, jobPostNo);
     }
 
     public List<JobPostSkillDTO> getJobPostSkill(int jobPostNo) {

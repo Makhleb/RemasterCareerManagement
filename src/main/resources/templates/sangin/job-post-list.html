@@ -73,10 +73,10 @@
         </div>
     </div>
     <div class="section4">
-        <!--    인기 공고가 생깁니다    -->
+        <!--    인기 공고가 생성됩니다    -->
     </div>
     <div class="section5">
-        <!--    전체 공고가 생깁니다   -->
+        <!--    전체 공고가 생성됩니다    -->
     </div>
 </section>
 <script>
@@ -103,7 +103,7 @@
         })
         .catch(error => {
             console.error(error);
-            alert('추천 공고를 불러오지 못했어요');
+            alert('추천 공고를 불러오지 못했습니다.');
         });
 
     // 전체 공고 데이터 가져오기
@@ -126,7 +126,7 @@
                         <div id="section5_footer_left">성과급/상여금</div>
                         <div id="section5_footer_right">
                             <div id="section5_endDate">${item.endDate ? `~${new Date(item.endDate).toLocaleDateString()}` : '마감일 없음'}</div>
-                            <div id="section5_star" class="${item.isScraped == 1 ? 'colorstar' : 'uncolorstar'}"></div>
+                            <div id="section5_star" class="${item.isScraped === 1 ? 'colorstar' : 'uncolorstar'}"></div>
                         </div>
                     </div>
                 `;
@@ -141,11 +141,11 @@
                             if (isScraped) {
                                 scrapStar.classList.remove('colorstar');
                                 scrapStar.classList.add('uncolorstar');
-                                alert('공고가 스크랩되었습니다!');
+                                alert('스크랩이 취소되었습니다.');
                             } else {
                                 scrapStar.classList.remove('uncolorstar');
                                 scrapStar.classList.add('colorstar');
-                                alert('공고 스크랩이 취소되었습니다.');
+                                alert('스크랩되었습니다.');
                             }
                         })
                         .catch(() => {
@@ -156,7 +156,7 @@
         })
         .catch(error => {
             console.error(error);
-            alert('Error fetching all posts');
+            alert('전체 공고를 불러오지 못했습니다.');
         });
 
     // 스크랩 추가/삭제 요청 함수
@@ -174,6 +174,64 @@
                 throw error;
             });
     }
+
+    // 드롭다운 기능
+    const region_bar = document.querySelector("#region_bar");
+    const section2_region_option = document.querySelector(".section2_region_option");
+    const job_bar = document.querySelector("#job_bar");
+    const section2_job_option = document.querySelector(".section2_job_option");
+
+    region_bar.addEventListener("click", () => {
+        if (section2_region_option.classList.contains("section2_none")) {
+            section2_job_option.classList.add("section2_none");
+            section2_region_option.classList.remove("section2_none");
+            section2_region_option.classList.add("section2_block");
+        } else {
+            section2_region_option.classList.add("section2_none");
+            section2_region_option.classList.remove("section2_block");
+        }
+    });
+
+    job_bar.addEventListener("click", () => {
+        if (section2_job_option.classList.contains("section2_none")) {
+            section2_region_option.classList.add("section2_none");
+            section2_job_option.classList.remove("section2_none");
+            section2_job_option.classList.add("section2_block");
+        } else {
+            section2_job_option.classList.add("section2_none");
+            section2_job_option.classList.remove("section2_block");
+        }
+    });
+
+    // 검색어 입력 및 처리
+    const search_bar = document.querySelector("#search_bar");
+    const keyword_container = document.querySelector("#keyword_container");
+
+    search_bar.addEventListener("click", () => {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.placeholder = "검색어를 입력하세요";
+        input.classList.add("section2_option");
+
+        input.addEventListener("blur", () => {
+            const value = input.value.trim();
+            search_bar.textContent = value || "검색어입력";
+            input.replaceWith(search_bar);
+        });
+
+        search_bar.replaceWith(input);
+        input.focus();
+    });
+
+    document.querySelectorAll(".region, .job").forEach(option => {
+        option.addEventListener("click", () => {
+            keyword_container.textContent = option.getAttribute("value");
+        });
+    });
+
+    document.querySelector("#section2_btn").addEventListener("click", () => {
+        alert("검색어: " + keyword_container.textContent);
+    });
 </script>
 </body>
 </html>

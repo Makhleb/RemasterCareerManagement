@@ -20,10 +20,15 @@ public class JobPostApiController_sangin {
     @Autowired
     JobPostService_sangin jobPostService;
 
+    //private final SecurityUtil securityUtil;
+
     @GetMapping("/list/matching")
     @ResponseBody
     public ResponseEntity<Object> jobPostList2() {
-        List<JobPostDetailVo> jobPostList = jobPostService.getJobPostMatching();
+        //String userId =  securityUtil.getCurrentUserId();
+        String userId = "test1";
+
+        List<JobPostDetailVo> jobPostList = jobPostService.getJobPostMatching(userId);
         if (jobPostList != null && !jobPostList.isEmpty()) {
             return ResponseEntity.ok(jobPostList);
         } else {
@@ -33,6 +38,8 @@ public class JobPostApiController_sangin {
     @GetMapping("/list/all")
     @ResponseBody
     public ResponseEntity<Object> jobPostList1() {
+
+//      String userId =  securityUtil.getCurrentUserId();
         String userId = "test1";
         List<JobPostDetailVo> jobPostList = jobPostService.getJobPostAll(userId);
         if (jobPostList != null && !jobPostList.isEmpty()) {
@@ -46,7 +53,9 @@ public class JobPostApiController_sangin {
     @ResponseBody
     public ResponseEntity<Object> jobPostDetail(@PathVariable("jobPostNo") Integer jobPostNo) {
         System.out.println("api/detail.......");
-        JobPostDetailVo jobPost = jobPostService.getJobPost(jobPostNo);
+        //      String userId =  securityUtil.getCurrentUserId();
+        String userId = "test1";
+        JobPostDetailVo jobPost = jobPostService.getJobPost(userId, jobPostNo);
         List<JobPostSkillDTO> skillList = jobPostService.getJobPostSkill(jobPostNo);
         List<BenefitDTO> benefitList = jobPostService.getJobPostBenefit(jobPostNo);
         jobPost.setSkillList(skillList);
@@ -63,7 +72,9 @@ public class JobPostApiController_sangin {
     @GetMapping("/resume/list")
     @ResponseBody
     public ResponseEntity<Object> ResumeList() {
-        List<ResumeDTO> resumeList = jobPostService.getResumeList("test1");
+        //      String userId =  securityUtil.getCurrentUserId();
+        String userId = "test1";
+        List<ResumeDTO> resumeList = jobPostService.getResumeList(userId);
         if (resumeList != null && !resumeList.isEmpty()) {
             return ResponseEntity.ok(resumeList);
         }else {
@@ -73,6 +84,7 @@ public class JobPostApiController_sangin {
     @PostMapping("/resume/regist")
     @ResponseBody
     public ResponseEntity<Object> ResumeRegist(@RequestBody AplcHstrDTO aplcHstrDTO) {
+
         System.out.println("api/resume/regist......." + aplcHstrDTO);
         int result = jobPostService.registAplcHstr(aplcHstrDTO);
         if (result == 1) {
