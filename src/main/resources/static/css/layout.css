@@ -132,27 +132,19 @@ header a{
     border: 1px solid #ddd;
     z-index: 10;
 
-    /* gpt */
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    /* 열 자동 생성 */
     grid-auto-rows: auto;
-    /* 행 높이를 자동 조정 */
     gap: 10px;
-    /* 아이템 간격 */
     max-width: 700px;
-    /* 최대 너비 설정 */
     padding: 10px;
-    /* 내부 여백 */
 }
 
 .sub-dropdown-menu {
     font-size: 12px;
     padding: 8px;
     white-space: nowrap;
-    /* 텍스트를 한 줄로 유지 */
     border-bottom: 1px solid #eee;
-    /* 하단 경계선 */
 }
 
 /* 모달 css */
@@ -160,13 +152,15 @@ header a{
     display: none;
     /* 기본 상태는 숨김 */
     position: fixed;
-    width: 1400px;
+    width: 100vw;
     height: 100vh;
-    /*background-color: rgba(0, 0, 0, 0.5);*/
+    inset: 0;
     background-color: white;
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.5); /* 어두운 배경 추가 */
+    transition: opacity 0.3s ease-in-out; /* 부드러운 애니메이션 */
 }
 
 .modal-content {
@@ -178,7 +172,8 @@ header a{
     width: 500px;
     text-align: center;
     gap: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* 더 진한 그림자 */
+    animation: modalOpen 0.3s ease-in-out; /* 모달 열리는 애니메이션 */
 }
 
 .close-btn {
@@ -196,8 +191,11 @@ header a{
     font-weight: bold;
     color: #333;
 }
+.close-btn:hover {
+    color: #000; /* 닫기 버튼 호버 효과 */
+}
 
-#modal-search {
+#search-input {
     cursor: pointer;
     margin-right: 15px;
     padding: 12px;
@@ -206,6 +204,9 @@ header a{
     border: 1px solid #ddd;
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+#search-input:hover {
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
 }
 
 .modal-content>div {

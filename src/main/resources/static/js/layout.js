@@ -69,5 +69,31 @@ headerRightSearch.addEventListener("click", () => {
 closeBtn.addEventListener("click", () => {
     modal.style.display = "none"; // 모달창 숨기기
 });
+// 검색 기능
+const searchInput = document.querySelector("#search-input");
+const modalSearchButton = document.querySelector("#modal_search");
+
+// 검색 버튼 클릭 시 Axios로 요청
+modalSearchButton.addEventListener("click", () => {
+    const keyword = searchInput.value.trim(); // 검색어 가져오기
+    if (keyword) {
+        axios.get(`/view/users/job-post/list`, {
+            params: { keyword: keyword }
+        })
+            .then((response) => {
+                // 요청이 성공하면 페이지를 이동
+                window.location.href = `/view/users/job-post/list?keyword=${encodeURIComponent(keyword)}`;
+            })
+            .catch((error) => {
+                console.error("검색 요청 중 오류 발생:", error);
+                alert("검색 요청 중 오류가 발생했습니다.");
+            });
+    } else {
+        alert("검색어를 입력하세요."); // 검색어가 비어있을 경우 알림
+    }
+});
+
 // 상단 돋보기 모달 끝
+
+
 
