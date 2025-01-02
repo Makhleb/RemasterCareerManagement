@@ -309,6 +309,11 @@
             const checkboxes = document.querySelectorAll('.terms-checkbox');
             checkboxes.forEach(checkbox => {
                 // 비활성화된 체크박스는 체크하지 않음
+
+
+
+
+
                 if (!checkbox.disabled) {
                     checkbox.checked = this.checked;
                 }

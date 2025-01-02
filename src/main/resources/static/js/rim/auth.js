@@ -56,6 +56,8 @@ window.auth = {
     async logout() {
         try {
             const response = await API.auth.logout();
+            console.log('로그아웃 응답:', response);
+            console.log('로그아웃 응답 데이터:', response.data);
             if (response.data.status === 'SUCCESS') {
                 this.clearUserInfo();  // 캐시 초기화
                 location.href = '/login';

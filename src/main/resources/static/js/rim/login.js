@@ -5,6 +5,7 @@ const loginType = document.getElementById('loginType');
 // 탭 전환 처리
 tabButtons.forEach(button => {
     button.addEventListener('click', () => {
+
         // 활성 탭 스타일 변경
         tabButtons.forEach(btn => btn.classList.remove('active'));
         button.classList.add('active');
@@ -51,7 +52,7 @@ loginForm.addEventListener('submit', async (e) => {
 
         // 성공 시 메인 페이지로 이동
         if (response.status === 200) {
-            // location.href = '/';
+            location.href = '/';
         }
     } catch (error) {
         console.error('로그인 에러:', error);
