@@ -34,6 +34,24 @@ window.API = {
         checkCompanyDuplicate: async (companyId) => {
             return await axios.post('/api/auth/company/check-duplicate', { companyId });
         }
+    },
+
+    // 메인 페이지 API 추가
+    main: {
+        // 인기 기술스택별 채용공고
+        getPopularPosts: async () => {
+            return await axios.get('/api/main/popular-posts');
+        },
+        
+        // TOP 10 기업 (별점 기준)
+        getTopCompanies: async () => {
+            return await axios.get('/api/main/top-companies');
+        },
+        
+        // 주목받는 채용공고 (스크랩/조회수 기준)
+        getTrendingPosts: async (sortBy) => {
+            return await axios.get(`/api/main/trending-posts?sortBy=${sortBy}`);
+        }
     }
 };
 

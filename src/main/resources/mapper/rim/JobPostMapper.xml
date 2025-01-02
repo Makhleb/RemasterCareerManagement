@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test.dao.rim.JobPostDao">
+
+    <!-- 인기 기술스택별 채용공고 -->
+    <select id="findPopularPostsBySkills" resultType="map">
+        SELECT jp.*, COUNT(ah.resumeNo) as apply_count,
+               g.name as skill_name
+        FROM tblJobPost jp
+        JOIN tblJobPostSkill jps ON jp.jobPostNo = jps.jobPostNo
+        JOIN tblGubn g ON jps.skillCode = g.code
+        LEFT JOIN tblAplcHstr ah ON jp.jobPostNo = ah.jobPostNo
+        WHERE g.groupCode = 'SKILL'
+        GROUP BY jps.skillCode
+        ORDER BY apply_count DESC
+    </select>
+
+    <!-- 스크랩순 채용공고 -->
+    <select id="findPostsByScrapCount" resultType="map">
+        SELECT jp.*, COUNT(j.userId) as scrap_count
+        FROM tblJobPost jp
+        LEFT JOIN tblJpl j ON jp.jobPostNo = j.jobPostNo
+        GROUP BY jp.jobPostNo
+        ORDER BY scrap_count DESC
+        LIMIT 10
+    </select>
+
+</mapper> 
