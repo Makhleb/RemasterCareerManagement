@@ -116,7 +116,6 @@
             })
             .catch(error => {
                 console.error(error);
-                alert('매칭할 공고가 없습니다.');
             });
 
         // 전체 공고 데이터 가져오기
@@ -205,6 +204,43 @@
 
             search_bar.replaceWith(input);
             input.focus();
+        });
+
+        // 드롭다운 기능
+        const region_bar = document.querySelector("#region_bar");
+        const section2_region_option = document.querySelector(".section2_region_option");
+        const job_bar = document.querySelector("#job_bar");
+        const section2_job_option = document.querySelector(".section2_job_option");
+
+        region_bar.addEventListener("click", () => {
+            if (section2_region_option.classList.contains("section2_none")) {
+                section2_job_option.classList.add("section2_none");
+                section2_region_option.classList.remove("section2_none");
+                section2_region_option.classList.add("section2_block");
+            } else {
+                section2_region_option.classList.add("section2_none");
+                section2_region_option.classList.remove("section2_block");
+            }
+        });
+
+        job_bar.addEventListener("click", () => {
+            if (section2_job_option.classList.contains("section2_none")) {
+                section2_region_option.classList.add("section2_none");
+                section2_job_option.classList.remove("section2_none");
+                section2_job_option.classList.add("section2_block");
+            } else {
+                section2_job_option.classList.add("section2_none");
+                section2_job_option.classList.remove("section2_block");
+            }
+        });
+
+        // 지역 및 직업 선택 이벤트
+        document.querySelectorAll(".region, .job").forEach(option => {
+            option.addEventListener("click", () => {
+                const value = option.getAttribute("value");
+                keyword_container.textContent = value;
+                keywordDisplay.textContent = value;
+            });
         });
     });
 </script>
