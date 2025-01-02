@@ -22,6 +22,10 @@ public interface JobPostDao {
     List<JobPostAplcWrapDto> selectAll(String companyId);
     List<AplcHstrResponseDto> selectJobPostAplc(@Param("jobPostNo") int jobPostNo);
 
+    JobPostDTO selectJobPostDetail(@Param("jobPostNo") int jobPostNo);
+    List<BenefitDTO> selectBenefit(@Param("jobPostNo") int jobPostNo);
+    List<JobPostSkillDTO> selectPostSkill(@Param("jobPostNo") int jobPostNo);
+
     int deleteJobPost(@Param("jobPostNo") int jobPostNo);
     int deleteBenefit(@Param("jobPostNo") int jobPostNo);
     int deleteJobPostSkill(@Param("jobPostNo") int jobPostNo);

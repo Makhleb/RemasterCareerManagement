@@ -56,4 +56,15 @@ public class JobPostService {
                 || jobPostDao.deleteBenefit(jobPostNo) != 0
                 || jobPostDao.deleteJobPostSkill(jobPostNo) != 0;
     }
+
+    public JobPostWrapDto selectDetail(int detailNo) {
+        JobPostWrapDto wrapDto = new JobPostWrapDto();
+        String fileValue = fileService.loadImage("POST_THUMBNAIL", String.valueOf(detailNo));
+
+        wrapDto.setJobPost(jobPostDao.selectJobPostDetail(detailNo));
+        wrapDto.setBenefits(jobPostDao.selectBenefit(detailNo));
+        wrapDto.setJobPostSkills(jobPostDao.selectPostSkill(detailNo));
+        wrapDto.getJobPost().setPostThumbnail(fileValue);
+        return wrapDto;
+    }
 }

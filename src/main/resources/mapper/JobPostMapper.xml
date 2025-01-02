@@ -50,6 +50,7 @@
         JOIN (SELECT * FROM tblGubn WHERE groupCode = 'WORK') GT
         ON P.workCode = GT.code
         WHERE P.companyId = #{companyId}
+        ORDER BY P.jobPostNo DESC
     </select>
 
     <select id="selectJobPostAplc">
@@ -64,6 +65,42 @@
         JOIN tblResume B ON A.resumeNo = B.resumeNo
         JOIN tblUser C  ON B.userId = C.userId AND C.userIsActive = 'Y'
         WHERE A.jobPostNo = #{jobPostNo};
+    </select>
+
+    <select id="selectJobPostDetail">
+        SELECT
+        title,
+        jobHistory,
+        jobSalary,
+        startDate,
+        endDate,
+        content,
+        method,
+        addNotice,
+        managerName,
+        managerPhone,
+        managerEmail,
+        postThumbnail,
+        postAddress,
+        postAddressDetail,
+        postZonecode,
+        postViewYn,
+        workCode,
+        jobRankCode,
+        workTypeCode,
+        educationCode
+        FROM tblJobPost
+        WHERE jobPostNo = #{jobPostNo}
+    </select>
+    <select id="selectBenefit">
+        SELECT *
+        FROM tblBenefit
+        WHERE jobPostNo = #{jobPostNo}
+    </select>
+    <select id="selectPostSkill">
+        SELECT *
+        FROM tblJobPostSkill
+        WHERE jobPostNo = #{jobPostNo}
     </select>
 
     <delete id="deleteJobPost">

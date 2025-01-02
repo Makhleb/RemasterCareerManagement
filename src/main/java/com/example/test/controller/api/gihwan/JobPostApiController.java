@@ -30,11 +30,16 @@ public class JobPostApiController {
         return jobPostService.postJobPost(jobPostWrapDto);
     }
 
-    @GetMapping
+    @GetMapping("/aplc-list")
     public List<JobPostAplcWrapDto> getJobPosts() {
         //todo 로그인 회원가입 완성시 고치기2
         String companyId = "testcompany1";
         return jobPostService.selectAllJobPost(companyId);
+    }
+
+    @GetMapping("/detail/{detailNo}")
+    public JobPostWrapDto getJobPostDetail(@PathVariable int detailNo) {
+        return jobPostService.selectDetail(detailNo);
     }
 
     @DeleteMapping("/{jobPostNo}")

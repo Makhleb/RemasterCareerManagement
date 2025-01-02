@@ -12,8 +12,8 @@ public class JobPostDTO {
     private String title; // 공고 제목
     private Integer jobHistory; // 경력
     private Integer jobSalary; // 급여
-    private Date startDate; // 공고 시작일
-    private Date endDate; // 공고 마감일
+    private LocalDateTime  startDate; // 공고 시작일
+    private LocalDateTime  endDate; // 공고 마감일
     private String content; // 모집부분 및 상세내용
     private String method; // 접수기간 및 방법
     private String addNotice; // 추가 유의사항
