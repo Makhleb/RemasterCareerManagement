@@ -45,14 +45,37 @@ section {
 }
 
 .section2_box2 {
+    position: relative;
     margin-top: 5px;
     display: flex;
     justify-content: space-between;
+}
+#box2_con1{
+    display: flex;
 }
 
 #post_name {
     font-size: 24px;
     font-weight: bold;
+}
+
+#star{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    background-size: 60px 60px;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+}
+.uncolorstar {
+    background-image: url('/images/uncolorstar.png');
+}
+
+.colorstar {
+    background-image: url('/images/colorstar.png');
 }
 
 /* section3 */
@@ -142,6 +165,7 @@ section {
     width: 100%;
     border: 1px #ddd solid;
     border-radius: 10px 10px 0 0;
+    box-sizing: border-box;
 }
 
 #region_name {

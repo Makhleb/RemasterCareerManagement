@@ -19,6 +19,7 @@ public class JobPostApiController_sangin {
 
     @Autowired
     JobPostService_sangin jobPostService;
+
     @GetMapping("/list/matching")
     @ResponseBody
     public ResponseEntity<Object> jobPostList2() {
@@ -32,7 +33,8 @@ public class JobPostApiController_sangin {
     @GetMapping("/list/all")
     @ResponseBody
     public ResponseEntity<Object> jobPostList1() {
-        List<JobPostDetailVo> jobPostList = jobPostService.getJobPostAll();
+        String userId = "test1";
+        List<JobPostDetailVo> jobPostList = jobPostService.getJobPostAll(userId);
         if (jobPostList != null && !jobPostList.isEmpty()) {
             return ResponseEntity.ok(jobPostList);
         } else {

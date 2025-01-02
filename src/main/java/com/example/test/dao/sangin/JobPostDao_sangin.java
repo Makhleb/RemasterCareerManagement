@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper
 public interface JobPostDao_sangin {
 
-    List<JobPostDetailVo> getJobPostAll();
+    List<JobPostDetailVo> getJobPostAll(@Param("userId") String userId);
 
     List<JobPostDetailVo> getJobPostMatching();
 
