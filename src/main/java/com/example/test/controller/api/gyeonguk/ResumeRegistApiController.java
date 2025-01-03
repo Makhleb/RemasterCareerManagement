@@ -54,7 +54,6 @@ public class ResumeRegistApiController {
      */
     @PostMapping("/education")
     public String saveEducationInfo(@RequestBody EducationDTO educationDTO) {
-        System.out.println(educationDTO + ".............");
         resumeService.saveEducationInfo(educationDTO);
         return "학력이 저장되었습니다.";
     }
