@@ -51,8 +51,6 @@ public class FileService {
 
         Path dirPath = Paths.get(System.getProperty("user.dir"), uploadPath, fileDto.getFileGubn(), fileDto.getFileRefId());
 
-        System.out.println(dirPath + "업데이트 이미지 ..............");
-
         if (Files.exists(dirPath)) {
             Files.list(dirPath).forEach(path -> {
                 try {
@@ -81,8 +79,6 @@ public class FileService {
                 }
             }
 
-            System.out.println(uploadDir + "세이브 이미지 ..............");
-
             //uploads에 추가
             String filePath = uploadDir + File.separator + file.getOriginalFilename();
             file.transferTo(new File(filePath));
@@ -100,9 +96,6 @@ public class FileService {
                 .resolve(fileGubn)
                 .resolve(refId)
                 .normalize();
-
-        System.out.println(dirPath + "딜리트 이미지 ..............");
-
 
         if (Files.exists(dirPath)) {
             // 폴더 내 파일 삭제

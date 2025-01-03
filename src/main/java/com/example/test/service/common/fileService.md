@@ -67,7 +67,7 @@ public List<JobPostDto> selectAllJobPost(String companyId) {
         const file = $('#image-upload')[0].files[0];
 
         let fileDto = {
-            fileGubn: 'POST_THUMBNAIL',
+            fileGubn: 'POST_THUMBNAIL', /*하위폴더에 따라서 변경*/
             fileRefId: postNo,
             fileName: file.name,
             fileExt: file.type,
