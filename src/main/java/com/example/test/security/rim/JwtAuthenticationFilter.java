@@ -85,11 +85,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private boolean isPublicUrl(String url) {
         return 
-//               url.equals("/") ||
-//               url.equals("/login") ||
-//               url.equals("/signup") ||
-//               url.equals("/company/signup");
-        false;
+            url.equals("/") ||
+            url.equals("/login") ||
+            url.equals("/signup") ||
+            url.equals("/api/auth/login") ||
+            url.equals("/api/auth/signup") ||
+            url.equals("/api/auth/logout") ||
+            url.equals("/api/auth/me") ||
+            url.startsWith("/js/") ||
+            url.startsWith("/css/") ||
+            url.startsWith("/images/") ||
+            url.startsWith("/fonts/") ||
+            url.startsWith("/favicon");
     }
 
     @Override

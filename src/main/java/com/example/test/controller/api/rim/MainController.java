@@ -1,37 +1,41 @@
 package com.example.test.controller.api.rim;
 
+import com.example.test.dto.CompanyDTO;
+import com.example.test.dto.rim.main.MainResponseDTO;
+import com.example.test.dto.rim.main.JobPostDTO;
+import com.example.test.service.rim.MainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import com.example.test.service.rim.JobPostService;
-import com.example.test.service.rim.CompanyService;
-import java.util.Map;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/main")
 @RequiredArgsConstructor
 public class MainController {
-    
-    private final JobPostService jobPostService;
-    private final CompanyService companyService;
 
-    // 인기 기술스택별 채용공고
+    private final MainService mainService;
+
+    // 메인 페이지 전체 데이터 조회
+    @GetMapping("/data")
+    public MainResponseDTO getMainPageData() {
+        return mainService.getMainPageData();
+    }
+
+    // 인기 채용공고 조회
     @GetMapping("/popular-posts")
-    public List<Map<String, Object>> getPopularPosts() {
-        return jobPostService.findPopularPostsBySkills();
+    public List<JobPostDTO> getPopularPosts() {
+        return mainService.getPopularPosts();
     }
 
-    // TOP 10 기업 (별점 기준)
+    // TOP 10 기업 조회
     @GetMapping("/top-companies")
-    public List<Map<String, Object>> getTopCompanies() {
-        return companyService.findTopCompaniesByRating();
+    public List<CompanyDTO> getTopCompanies() {
+        return mainService.getTopCompanies();
     }
 
-    // 주목받는 채용공고 (스크랩/조회수 기준)
-    @GetMapping("/trending-posts")
-    public List<Map<String, Object>> getTrendingPosts(
-        @RequestParam(defaultValue = "scrap") String sortBy  // scrap 또는 view
-    ) {
-        return jobPostService.findTrendingPosts(sortBy);
+    // 스크랩 많은 채용공고 조회
+    @GetMapping("/most-scraped")
+    public List<JobPostDTO> getMostScrapedPosts() {
+        return mainService.getMostScrapedPosts();
     }
 } 

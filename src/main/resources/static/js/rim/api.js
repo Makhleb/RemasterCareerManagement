@@ -1,6 +1,16 @@
-// API 클라이언트 전역 객체
+// API 엔드포인트 상수
+const API_ENDPOINTS = {
+    MAIN: {
+        DATA: '/api/main/data',
+        POPULAR_POSTS: '/api/main/popular-posts',
+        TOP_COMPANIES: '/api/main/top-companies',
+        MOST_SCRAPED: '/api/main/most-scraped'
+    }
+};
+
+// API 요청 객체
 window.API = {
-    // 인증 관련 API
+    // 기존 auth 관련 API 유지
     auth: {
         // 로그인
         login: async (data) => {
@@ -36,21 +46,50 @@ window.API = {
         }
     },
 
-    // 메인 페이지 API 추가
+    // 메인 페이지 관련 API 추가
     main: {
-        // 인기 기술스택별 채용공고
+        // 메인 페이지 전체 데이터 조회
+        getData: async () => {
+            try {
+                const response = await axios.get(API_ENDPOINTS.MAIN.DATA);
+                return response.data;
+            } catch (error) {
+                console.error('메인 데이터 조회 실패:', error);
+                throw error;
+            }
+        },
+
+        // 인기 채용공고 조회
         getPopularPosts: async () => {
-            return await axios.get('/api/main/popular-posts');
+            try {
+                const response = await axios.get(API_ENDPOINTS.MAIN.POPULAR_POSTS);
+                return response.data;
+            } catch (error) {
+                console.error('인기 채용공고 조회 실패:', error);
+                throw error;
+            }
         },
-        
-        // TOP 10 기업 (별점 기준)
+
+        // TOP 10 기업 조회
         getTopCompanies: async () => {
-            return await axios.get('/api/main/top-companies');
+            try {
+                const response = await axios.get(API_ENDPOINTS.MAIN.TOP_COMPANIES);
+                return response.data;
+            } catch (error) {
+                console.error('TOP 10 기업 조회 실패:', error);
+                throw error;
+            }
         },
-        
-        // 주목받는 채용공고 (스크랩/조회수 기준)
-        getTrendingPosts: async (sortBy) => {
-            return await axios.get(`/api/main/trending-posts?sortBy=${sortBy}`);
+
+        // 스크랩 많은 채용공고 조회
+        getMostScrapedPosts: async () => {
+            try {
+                const response = await axios.get(API_ENDPOINTS.MAIN.MOST_SCRAPED);
+                return response.data;
+            } catch (error) {
+                console.error('스크랩 많은 채용공고 조회 실패:', error);
+                throw error;
+            }
         }
     }
 };

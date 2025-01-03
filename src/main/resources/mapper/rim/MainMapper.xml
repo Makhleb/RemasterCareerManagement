@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test.dao.rim.MainDao">
+
+
+
+    <!-- JobPostDTO ResultMap -->
+    <resultMap id="jobPostResultMap" type="com.example.test.dto.rim.main.JobPostDTO">
+        <id property="jobPostNo" column="jobPostNo"/>
+        <result property="companyId" column="companyId"/>
+        <result property="title" column="title"/>
+        <result property="jobHistory" column="jobHistory"/>
+        <result property="jobSalary" column="jobSalary"/>
+        <result property="startDate" column="startDate"/>
+        <result property="endDate" column="endDate"/>
+        <result property="content" column="content"/>
+        <result property="method" column="method"/>
+        <result property="addNotice" column="addNotice"/>
+        <result property="postViewYn" column="postViewYn"/>
+        <result property="workCode" column="workCode"/>
+        <result property="companyName" column="companyName"/>
+        <result property="companyImage" column="companyImage"/>
+        <result property="applicationCount" column="applicationCount"/>
+        <result property="scrapCount" column="scrapCount"/>
+        <result property="matchingSkillCount" column="matchingSkillCount"/>
+        <result property="postThumbnail" column="postThumbnail"/>
+        <!-- 복리후생 정보 매핑 -->
+        <collection property="benefits" ofType="string" column="jobPostNo" 
+                    select="findBenefitsByJobPostNo"/>
+        <!-- 기술스택 정보 매핑 -->
+        <collection property="skillCodes" ofType="string" column="jobPostNo"
+                    select="findSkillCodesByJobPostNo"/>
+    </resultMap>
+
+    <!-- CompanyDTO ResultMap -->
+    <resultMap id="companyResultMap" type="com.example.test.dto.CompanyDTO">
+        <id property="companyId" column="companyId"/>
+        <result property="companyName" column="companyName"/>
+        <result property="companyImage" column="companyImage"/>
+        <result property="companyAddress" column="companyAddress"/>
+        <result property="companyWebsite" column="companyWebsite"/>
+        <result property="companyEmployee" column="companyEmployee"/>
+        <result property="companyProfit" column="companyProfit"/>
+        <result property="avgRating" column="avgRating"/>
+        <result property="reviewCount" column="reviewCount"/>
+        <result property="likeCount" column="likeCount"/>
+    </resultMap>
+
+    <!-- ApplicationStatsDTO ResultMap -->
+    <resultMap id="dashboardResultMap" type="com.example.test.dto.rim.main.DashboardDTO$ApplicationStatsDTO">
+        <result property="totalCount" column="totalCount"/>
+        <result property="passCount" column="passCount"/>
+        <result property="failCount" column="failCount"/>
+        <result property="waitingCount" column="waitingCount"/>
+        <result property="passRate" column="passRate"/>
+    </resultMap>
+
+    <!-- ApplicationDTO ResultMap -->
+    <resultMap id="applicationResultMap" type="com.example.test.dto.rim.main.ApplicationDTO">
+        <result property="jobPostNo" column="jobPostNo"/>
+        <result property="companyName" column="companyName"/>
+        <result property="postTitle" column="postTitle"/>
+        <result property="applyDate" column="aplcHstrDate"/>
+        <result property="passYn" column="passYn"/>
+        <result property="readYn" column="readYn"/>
+    </resultMap>
+
+
+    <!-- 인기 채용공고 -->
+    <select id="findPopularPosts" resultMap="jobPostResultMap">
+        SELECT jp.*, c.companyName, c.companyImage,
+               COUNT(DISTINCT ah.resumeNo) as applicationCount,
+               COUNT(DISTINCT j.userId) as scrapCount
+        FROM tblJobPost jp
+        JOIN tblCompany c ON jp.companyId = c.companyId
+        LEFT JOIN tblAplcHstr ah ON jp.jobPostNo = ah.jobPostNo
+        LEFT JOIN tblJpl j ON jp.jobPostNo = j.jobPostNo
+        WHERE jp.endDate > NOW()
+        GROUP BY jp.jobPostNo
+        ORDER BY 
+            DATEDIFF(jp.endDate, NOW()) ASC,  -- 마감일이 가까운 순
+            applicationCount DESC               -- 지원자 수 내림차순
+        LIMIT 8
+    </select>
+
+    <!-- TOP 10 기업 -->
+    <select id="findTopCompanies" resultMap="companyResultMap">
+        SELECT c.*, 
+               AVG(cs.score) as avgRating,
+               COUNT(DISTINCT cs.userId) as reviewCount,
+               COUNT(DISTINCT l.userId) as likeCount
+        FROM tblCompany c
+        LEFT JOIN tblCompanyScore cs ON c.companyId = cs.companyId
+        LEFT JOIN tblLike l ON c.companyId = l.companyId
+        GROUP BY c.companyId
+        ORDER BY avgRating DESC, reviewCount DESC
+        LIMIT 10
+    </select>
+
+    <!-- 구직자 대시보드 -->
+    <select id="findJobSeekerDashboard" resultMap="dashboardResultMap">
+        SELECT 
+            COUNT(*) as totalCount,
+            SUM(CASE WHEN ah.passYn = 'Y' THEN 1 ELSE 0 END) as passCount,
+            SUM(CASE WHEN ah.passYn = 'N' THEN 1 ELSE 0 END) as failCount,
+            SUM(CASE WHEN ah.passYn = 'W' THEN 1 ELSE 0 END) as waitingCount
+        FROM tblAplcHstr ah
+        JOIN tblResume r ON ah.resumeNo = r.resumeNo
+        WHERE r.userId = #{userId}
+    </select>
+
+    <!-- 구직자 최근 지원 내역 -->
+    <select id="findRecentApplications" resultMap="applicationResultMap">
+        SELECT ah.*, jp.title as postTitle, c.companyName
+        FROM tblAplcHstr ah
+        JOIN tblJobPost jp ON ah.jobPostNo = jp.jobPostNo
+        JOIN tblCompany c ON jp.companyId = c.companyId
+        JOIN tblResume r ON ah.resumeNo = r.resumeNo
+        WHERE r.userId = #{userId}
+        ORDER BY ah.aplcHstrDate DESC
+        LIMIT 5
+    </select>
+
+    <!-- 기업 프로필 조회 -->
+    <select id="findCompanyProfile" resultType="com.example.test.dto.rim.main.CompanyProfileDTO">
+        SELECT companyId, companyName, companyImage, 
+               companyAddress, companyWebsite, 
+               companyEmployee, companyProfit
+        FROM tblCompany
+        WHERE companyId = #{companyId}
+    </select>
+
+    <!-- 추천 인재 조회 -->
+    <select id="findRecommendedCandidates" resultType="com.example.test.dto.rim.main.CandidateDTO">
+        SELECT u.userId, u.userName, r.headshot,
+               (SELECT COUNT(*) FROM tblActivity 
+                WHERE resumeNo = r.resumeNo 
+                AND activityType = 'JOB_CAREER') as careerYears
+        FROM tblUser u
+        JOIN tblResume r ON u.userId = r.userId
+        WHERE r.viewYn = 'Y'
+        AND EXISTS (
+            SELECT 1 FROM tblResumeSkill rs
+            WHERE rs.resumeNo = r.resumeNo
+            AND rs.skillCode IN (
+                SELECT skillCode FROM tblJobPostSkill
+                WHERE jobPostNo IN (
+                    SELECT jobPostNo FROM tblJobPost
+                    WHERE companyId = #{companyId}
+                )
+            )
+        )
+        ORDER BY r.modifyDate DESC
+        LIMIT 10
+    </select>
+
+    <!-- 스크랩 많은 채용공고 -->
+    <select id="findMostScrapedPosts" resultMap="jobPostResultMap">
+        SELECT jp.*, c.companyName, c.companyImage,
+               COUNT(j.userId) as scrapCount
+        FROM tblJobPost jp
+        JOIN tblCompany c ON jp.companyId = c.companyId
+        LEFT JOIN tblJpl j ON jp.jobPostNo = j.jobPostNo
+        WHERE jp.endDate > NOW()
+        GROUP BY jp.jobPostNo
+        ORDER BY 
+            scrapCount DESC,                   -- 스크랩 수 내림차순
+            DATEDIFF(jp.endDate, NOW()) ASC    -- 마감일이 가까운 순
+        LIMIT 8
+    </select>
+
+    <!-- 맞춤 추천 공고 (이력서 기술스택 기반) -->
+    <select id="findRecommendedPosts" resultMap="jobPostResultMap">
+        SELECT DISTINCT jp.jobPostNo, jp.companyId, jp.title, jp.endDate, jp.postViewYn,
+               c.companyName, c.companyImage,
+               COUNT(DISTINCT jps.skillCode) as matchingSkillCount
+        FROM tblJobPost jp
+        JOIN tblCompany c ON jp.companyId = c.companyId
+        JOIN tblJobPostSkill jps ON jp.jobPostNo = jps.jobPostNo
+        JOIN tblResumeSkill rs ON jps.skillCode = rs.skillCode
+        JOIN tblResume r ON rs.resumeNo = r.resumeNo
+        WHERE r.userId = #{userId}
+        AND jp.endDate > NOW()
+        AND jp.postViewYn = 'Y'
+        GROUP BY jp.jobPostNo, jp.companyId, jp.title, jp.endDate, jp.postViewYn, c.companyName, c.companyImage
+        ORDER BY matchingSkillCount DESC, jp.endDate ASC
+        LIMIT 8
+    </select>
+
+    <!-- 마감 임박 공고 (관심 기업) -->
+    <select id="findDeadlinePosts" resultMap="jobPostResultMap">
+        SELECT jp.*, c.companyName, c.companyImage
+        FROM tblJobPost jp
+                 JOIN tblCompany c ON jp.companyId = c.companyId
+                 JOIN tblLike l ON c.companyId = l.companyId
+        WHERE l.userId = #{userId}
+          AND l.likeType = 'C'  -- Company type
+          AND jp.endDate > NOW()
+          AND jp.postViewYn = 'Y'
+          AND DATEDIFF(jp.endDate, NOW()) BETWEEN 0 AND 7  -- 7일 이내 마감
+        ORDER BY jp.endDate ASC
+        LIMIT 4
+    </select>
+
+    <!-- 인기 기술스택 TOP 3 조회 -->
+    <select id="findPopularSkills" resultType="com.example.test.dto.rim.main.PopularSkillDTO">
+        SELECT 
+            js.skillCode,
+            g.name as skillName,
+            COUNT(DISTINCT jp.jobPostNo) as postCount,
+            COUNT(DISTINCT ah.resumeNo) as applicationCount
+        FROM tblJobPostSkill js
+        JOIN tblJobPost jp ON js.jobPostNo = jp.jobPostNo
+        JOIN tblGubn g ON js.skillCode = g.code
+        LEFT JOIN tblAplcHstr ah ON jp.jobPostNo = ah.jobPostNo
+        WHERE g.groupCode = 'SKILL'
+        AND jp.endDate > NOW()
+        GROUP BY js.skillCode, g.name
+        ORDER BY applicationCount DESC, postCount DESC
+        LIMIT 3
+    </select>
+
+    <!-- 채용공고별 복리후생 조회 (랜덤 1개) -->
+    <select id="findBenefitsByJobPostNo" resultType="string">
+        SELECT benefitContent
+        FROM tblBenefit
+        WHERE jobPostNo = #{jobPostNo}
+        ORDER BY RAND()
+        LIMIT 1
+    </select>
+
+    <!-- 채용공고별 기술스택 조회 (랜덤 1개) -->
+    <select id="findSkillCodesByJobPostNo" resultType="string">
+        SELECT g.name
+        FROM tblJobPostSkill js
+        JOIN tblGubn g ON js.skillCode = g.code
+        WHERE js.jobPostNo = #{jobPostNo}
+        AND g.groupCode = 'SKILL'
+        ORDER BY RAND()
+        LIMIT 1
+    </select>
+</mapper> 

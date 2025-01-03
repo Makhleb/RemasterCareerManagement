@@ -47,4 +47,8 @@ public class AuthException extends BaseException {
     public static AuthException forbidden(String message) {
         return new AuthException(FORBIDDEN, message, 403);
     }
+
+    public static AuthException invalidUserType() {
+        return new AuthException("AUTH_INVALID_USER_TYPE", "유효하지 않은 사용자 타입입니다.");
+    }
 } 

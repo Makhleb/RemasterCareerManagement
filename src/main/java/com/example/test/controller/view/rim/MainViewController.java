@@ -12,4 +12,4 @@ public class MainViewController {
     public String index() {
         return "rim/index";  // templates/rim/index.html
     }
-} 
+}
