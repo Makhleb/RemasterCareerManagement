@@ -147,13 +147,23 @@
 </div>
 
 <script layout:fragment="script" th:inline="javascript">
-    let jobPostNo = /*[[${jobPostNo}]]*/ null;
 
-    //todo 유효성 검사, (우선)아이디 적용, 수정 페이지로 재활용 하기, 마감일은 시작일보다 무조건 나중에
+    let jobPostNo = /*[[${jobPostNo}]]*/ null;
+    let user = null;
+
+    //todo 유효성 검사, (우선)아이디 적용, 마감일은 시작일보다 무조건 나중에
     window.onload = function () {
+
+        auth.getCurrentUser().then(response => {
+            user = response;  // 원하는 값 출력
+        }).catch(error => {
+            console.error('사용자 정보 조회 실패:', error);
+        });
+
         optionLoad();
         if (jobPostNo != null) {
             updateInfoOnload(jobPostNo)
+            $('.btn-box .submit-btn').text('수정하기');
         }
     }
 
@@ -171,7 +181,6 @@
 
 
                 for (let key in beforePostInfo) {
-                    console.log(key +':' + beforePostInfo[key]);
                     let $input = $('[name="' + key + '"]');
                     if ($input.length) {
                         $input.val(beforePostInfo[key]);
@@ -186,11 +195,27 @@
                     )
                 })
 
-                // todo 최기환 작업중
                 beforeSkillInfo.forEach(function (skill) {
-                    $('.add-stack').val(skill.skillCode);
-                    skill.skillCode
+                    $('.add-stack').each(function (index, item) {
+                        if ($(item).val() === skill.skillCode) {
+                            $(item).removeClass('add-stack');
+                            $(item).addClass('minus-stack');
+                            $(item).text($(item).text().replace('+', '-'));
+                        }
+                    });
                 })
+
+                $("#work-type").val(beforePostInfo.workTypeCode);
+                $("#job-rank").val(beforePostInfo.jobRankCode);
+                $("#job-type").val(beforePostInfo.workCode);
+                $("#job-educate").val(beforePostInfo.educationCode);
+                $("input[name='options'][value='" + beforePostInfo.postViewYn + "']").prop('checked', true);
+
+                if(beforePostInfo.postThumbnail !== null){
+                    $('#image-preview').attr('src', beforePostInfo.postThumbnail);
+                    $('#image-preview').show();
+                    $('#img-close-btn').show();
+                }
             })
             .catch(function (error) {
                 console.log(error)
@@ -281,14 +306,12 @@
     }
 
     /**
-     * 종합 정보 전송
+     * 정보 취합 및 jobPostNo 값에 따라 수정과 추가 기능
      */
     function totalPostInfo() {
-        let file = $('#image-upload')[0].files[0];
-
         let postInfo = {
             jobPost: {
-                jobPostNo: 0,
+                jobPostNo: jobPostNo?jobPostNo:0,
                 title: $('#post-title').val(),
                 managerName: $('#manager-name').val(),
                 managerPhone: $('#manager-phone').val(),
@@ -296,7 +319,7 @@
                 postAddress: $('#post-address').val(),
                 postAddressDetail: $('#post-detail-address').val(),
                 postZonecode: $('#post-zonecode').val(),
-                postThumbnail: file ? file.name : '',
+                postThumbnail: '',
                 startDate: $('#start-date').val(),
                 endDate: $('#end-date').val(),
                 workTypeCode: $('#work-type').val(),
@@ -313,14 +336,14 @@
             benefits: $('.benefit-add-wrapper button')
                 .map(function () {
                     return {
-                        jobPostNo: 0,
+                        jobPostNo: jobPostNo?jobPostNo:0,
                         benefitContent: $(this).val()
                     };
                 }).get(),
             jobPostSkills: $('.minus-stack')
                 .map(function () {
                     return {
-                        jobPostNo: 0,
+                        jobPostNo: jobPostNo?jobPostNo:0,
                         skillCode: $(this).val()
                     };
                 }).get()
@@ -328,12 +351,19 @@
 
         console.log(postInfo);
 
+        jobPostNo != null ? updateInfo(postInfo) : registInfo(postInfo);
+    }
+
+    /**
+     * 공고 등록
+     */
+    function registInfo(postInfo) {
         axios.post('/api/companies/job-post', postInfo)
             .then(function (response) {
                 console.log(response);
                 alert("공고 등록이 완료되었습니다.");
                 if ($('#image-upload')[0].files[0]) {
-                    imageUpload(response.data);
+                    imageUpload(getFormData(response.data));
                 } else {
                     location.href = "/mypage/company/post-list";
                 }
@@ -344,10 +374,50 @@
     }
 
     /**
-     * 파일 업로드 및 파일테이블 엔티티 추가
-     * @param postNo 해당 공고 번호
+     * 공고수정
      */
-    function imageUpload(postNo) {
+    function updateInfo(postInfo) {
+        let file = $('#image-upload')[0].files[0];
+        console.log(file);
+        console.log(postInfo);
+
+        axios.put('/api/companies/job-post', postInfo)
+        .then(function (response) {
+            console.log(response);
+            alert("수정 완료")
+            if (file) {
+                console.log("파일 수정 또는 없는 파일 추가")
+                imageUpdate(getFormData(jobPostNo));
+            } else if (!file && $('#image-preview').attr('src') === undefined) {
+                console.log("파일 지웠을때")
+                deleteImage();
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+
+
+
+    }
+
+    function deleteImage() {
+        axios.delete('/api/common/file', {
+            params: {
+                gubn: "POST_THUMBNAIL",
+                id: jobPostNo
+            }
+        })
+            .then(function (response) {
+                console.log(response);
+                console.log("파일 삭제 완료")
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+    }
+
+    function getFormData(postNo) {
         const formData = new FormData();
         const file = $('#image-upload')[0].files[0];
 
@@ -356,7 +426,8 @@
             fileRefId: postNo,
             fileName: file.name,
             fileExt: file.type,
-            instId: 'companyTestNo'
+            instId: user.id,
+            updtId: user.id
         }
 
         formData.append('file', file);
@@ -367,7 +438,29 @@
                 {type: 'application/json'}
             )
         )
+        console.log("폼 데이터" + formData);
+        return formData;
+    }
 
+    function imageUpdate(formData) {
+        axios.put('/api/common/file', formData,{
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+            .then(function (response) {
+                console.log(response + "성공");
+            })
+            .catch(function (error) {
+                console.log(error + "오류발생");
+            })
+    }
+
+    /**
+     * 파일 업로드 및 파일테이블 엔티티 추가
+     * @param formData 업로드용 폼 데이터
+     */
+    function imageUpload(formData) {
         axios.post('/api/common/file', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
@@ -433,10 +526,12 @@
      * 이미지 닫기 함수
      */
     function closeImg(event) {
+        $('#image-preview').removeAttr('src');
         $('#image-preview').hide();
         $('#image-upload').val('');
         $(event.target).hide();
     }
+
 </script>
 </body>
 </html>

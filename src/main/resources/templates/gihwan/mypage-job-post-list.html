@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>공고 조회</title>
-    <link rel="stylesheet" href="/css/job-post-list.css">
+    <link rel="stylesheet" href="/css/mypage-job-post-list.css">
 </head>
 <body>
 <div layout:fragment="content">
@@ -15,6 +15,7 @@
     </div>
 </div>
 <script layout:fragment="script">
+
     window.onload = function () {
         axios.get('/api/companies/job-post/aplc-list')
             .then(function (response) {
@@ -34,7 +35,7 @@
                                     <div class="title-and-date">
                                         <div class="row-flex" style="align-items: center;">
                                             <div class="post-title text-button" style="margin-right: 20px">${item.title}</div>
-                                            <button class="post-button inner-button" style="margin-right: 5px">수정</button>
+                                            <button class="post-button inner-button" onclick="updatePost(${item.jobPostNo})" style="margin-right: 5px">수정</button>
                                             <button class="post-button inner-button" onclick="deletePost(${item.jobPostNo})">삭제</button>
                                         </div>
                                         <div class="item-date">
@@ -106,10 +107,6 @@
                 console.log(error);
             })
     }
-    /**
-     * 공고 삭제
-     * todo 삭제 전부 변경 그냥 deleteYn으로 설정할것.
-     */
     function deletePost(jobPostNo) {
         axios.delete('/api/companies/job-post/' + jobPostNo)
             .then(function (response) {
@@ -120,6 +117,13 @@
             .catch(function (error) {
                 console.log(error);
             })
+    }
+
+    /**
+     * 공고 수정
+     */
+    function updatePost(jobPostNo) {
+        location.href = '/mypage/company/job-post?post=' + jobPostNo;
     }
 
     /**

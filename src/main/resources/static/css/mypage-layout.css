@@ -25,7 +25,6 @@
 }
 
 aside {
-    background-color: var(--side);
     height: 100%;
     width: 100%;
 }
@@ -56,11 +55,13 @@ aside li ul {
 
 .main-content{
     width: 100%;
-    padding-top: 40px;
 }
 
 .main-title {
+    height: 100px;
+    display: flex;
+    align-items: flex-end;
     font-size: 30px;
     font-weight: bold;
-    padding: 8px 25px;
+    padding-left: 25px;
 }
