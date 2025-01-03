@@ -24,9 +24,11 @@ import java.util.*;
 public class FileApiController {
 
     private final FileService fileService;
+    private final FileDao fileDao;
 
-    public FileApiController(FileService fileService) {
+    public FileApiController(FileService fileService, FileDao fileDao) {
         this.fileService = fileService;
+        this.fileDao = fileDao;
     }
 
     /**
@@ -35,5 +37,20 @@ public class FileApiController {
     @PostMapping
     public boolean registFile(@RequestPart("file") MultipartFile file, @RequestPart FileDto fileDto) {
         return fileService.saveImage(file, fileDto);
+    }
+
+    @PutMapping
+    public boolean updateFile(@RequestPart("file") MultipartFile file, @RequestPart FileDto fileDto) throws IOException {
+        System.out.println(fileDto.toString() + "받은 파일 dto...............");
+        if(fileDao.selectFile(fileDto) != 0){
+            return fileService.updateImage(file, fileDto);
+        } else {
+            return fileService.saveImage(file, fileDto);
+        }
+    }
+
+    @DeleteMapping
+    public boolean deleteFile(@RequestParam("gubn") String fileGubn, @RequestParam("id") String refId) throws IOException {
+        return fileService.deleteImage(fileGubn,refId) != 0;
     }
 }

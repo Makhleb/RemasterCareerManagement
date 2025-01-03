@@ -34,7 +34,7 @@
                                     <div class="title-and-date">
                                         <div class="row-flex" style="align-items: center;">
                                             <div class="post-title text-button" style="margin-right: 20px">${item.title}</div>
-                                            <button class="post-button inner-button" style="margin-right: 5px">수정</button>
+                                            <button class="post-button inner-button" onclick="updatePost(${item.jobPostNo})" style="margin-right: 5px">수정</button>
                                             <button class="post-button inner-button" onclick="deletePost(${item.jobPostNo})">삭제</button>
                                         </div>
                                         <div class="item-date">
@@ -120,6 +120,13 @@
             .catch(function (error) {
                 console.log(error);
             })
+    }
+
+    /**
+     * 공고 수정
+     */
+    function updatePost(jobPostNo) {
+        location.href = '/mypage/company/job-post?post=' + jobPostNo;
     }
 
     /**

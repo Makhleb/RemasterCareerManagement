@@ -16,8 +16,8 @@ import java.util.List;
 @Mapper
 public interface JobPostDao {
     void insertJobPost(@Param("JP")JobPostDTO jobPostDTO);
-    void insertJobPostSkill(@Param("postNo") int postNo,@Param("list") List<JobPostSkillDTO> jobPostSkillDTOList);
-    void insertBenefit(@Param("postNo") int postNo, @Param("list") List<BenefitDTO> benefitDTOList);
+    int insertJobPostSkill(@Param("postNo") int postNo,@Param("list") List<JobPostSkillDTO> jobPostSkillDTOList);
+    int insertBenefit(@Param("postNo") int postNo, @Param("list") List<BenefitDTO> benefitDTOList);
 
     List<JobPostAplcWrapDto> selectAll(String companyId);
     List<AplcHstrResponseDto> selectJobPostAplc(@Param("jobPostNo") int jobPostNo);
@@ -25,6 +25,8 @@ public interface JobPostDao {
     JobPostDTO selectJobPostDetail(@Param("jobPostNo") int jobPostNo);
     List<BenefitDTO> selectBenefit(@Param("jobPostNo") int jobPostNo);
     List<JobPostSkillDTO> selectPostSkill(@Param("jobPostNo") int jobPostNo);
+
+    int updateJobPost(@Param("JP")JobPostDTO jobPostDTO);
 
     int deleteJobPost(@Param("jobPostNo") int jobPostNo);
     int deleteBenefit(@Param("jobPostNo") int jobPostNo);

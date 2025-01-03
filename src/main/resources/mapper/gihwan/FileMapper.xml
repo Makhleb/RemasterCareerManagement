@@ -12,7 +12,26 @@
         (
         NULL, #{fileGubn}, #{fileRefId},
         #{fileName}, #{fileExt},
-        #{instId}, NOW(), #{updtId}, NOW()
+        #{instId}, NOW(), NULL, NOW()
         )
     </insert>
+    <select id="selectFile">
+        SELECT COUNT(*) FROM tblFile WHERE fileGubn = #{fileGubn} AND fileRefId = #{fileRefId}
+    </select>
+    <update id="updateFile">
+        UPDATE tblFile
+        SET
+        fileGubn=#{fileGubn},
+        fileRefId=#{fileRefId},
+        fileName=#{fileName},
+        fileExt=#{fileExt},
+        updtId=#{updtId},
+        updtDt=NOW()
+        WHERE fileGubn = #{fileGubn} AND fileRefId = #{fileRefId}
+    </update>
+    <delete id="deleteFile">
+        DELETE FROM tblFile
+        WHERE
+        fileGubn = #{fileGubn} AND fileRefId = #{fileRefId}
+    </delete>
 </mapper>

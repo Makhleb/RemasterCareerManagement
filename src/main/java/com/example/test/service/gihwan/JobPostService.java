@@ -39,7 +39,6 @@ public class JobPostService {
         return insertedNo;
     }
 
-
     public List<JobPostAplcWrapDto> selectAllJobPost(String companyId) {
         List<JobPostAplcWrapDto> daoResult = jobPostDao.selectAll(companyId);
         for (JobPostAplcWrapDto listItem : daoResult) {
@@ -48,13 +47,6 @@ public class JobPostService {
             listItem.setPostThumbnail(fileValue);
         }
         return daoResult;
-    }
-
-    public boolean deletePost(int jobPostNo) throws IOException {
-        fileService.deleteImage("POST_THUMBNAIL", String.valueOf(jobPostNo));
-        return  jobPostDao.deleteJobPost(jobPostNo) != 0
-                || jobPostDao.deleteBenefit(jobPostNo) != 0
-                || jobPostDao.deleteJobPostSkill(jobPostNo) != 0;
     }
 
     public JobPostWrapDto selectDetail(int detailNo) {
@@ -66,5 +58,23 @@ public class JobPostService {
         wrapDto.setJobPostSkills(jobPostDao.selectPostSkill(detailNo));
         wrapDto.getJobPost().setPostThumbnail(fileValue);
         return wrapDto;
+    }
+
+    public boolean updatePost(JobPostWrapDto jobPostWrapDto){
+        System.out.println("............."+ jobPostWrapDto.getJobPost());
+        System.out.println("............."+ jobPostWrapDto.getJobPostSkills());
+        System.out.println("............."+ jobPostWrapDto.getBenefits());
+        int jobPostNo = jobPostWrapDto.getJobPost().getJobPostNo();
+        int result = jobPostDao.updateJobPost(jobPostWrapDto.getJobPost());
+        jobPostDao.deleteBenefit(jobPostNo);
+        jobPostDao.deleteJobPostSkill(jobPostNo);
+        jobPostDao.insertBenefit(jobPostNo, jobPostWrapDto.getBenefits());
+        jobPostDao.insertJobPostSkill(jobPostNo, jobPostWrapDto.getJobPostSkills());
+
+        return result != 0;
+    }
+
+    public boolean deleteJobPost(int jobPostNo) {
+        return jobPostDao.deleteJobPost(jobPostNo) != 0;
     }
 }

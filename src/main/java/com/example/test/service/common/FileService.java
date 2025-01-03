@@ -8,11 +8,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.Base64;
+import java.util.Objects;
 
 /**
  * Created on 2025-01-01 by 최기환
@@ -45,6 +43,29 @@ public class FileService {
         }
     }
 
+    public boolean updateImage(MultipartFile file, FileDto fileDto) throws IOException {
+        String originalFilename = file.getOriginalFilename();
+        if (originalFilename == null || originalFilename.isEmpty()) {
+            throw new IllegalArgumentException("파일 이름이 잘못되었습니다.");
+        }
+
+        Path dirPath = Paths.get(System.getProperty("user.dir"), uploadPath, fileDto.getFileGubn(), fileDto.getFileRefId());
+
+        System.out.println(dirPath + "업데이트 이미지 ..............");
+
+        if (Files.exists(dirPath)) {
+            Files.list(dirPath).forEach(path -> {
+                try {
+                    Files.delete(path);
+                } catch (IOException ignored) {}
+            });
+
+            Path filePath = dirPath.resolve(file.getOriginalFilename());
+            file.transferTo(filePath.toFile());
+        }
+        return fileDao.updateFile(fileDto) != 0;
+    }
+
     public boolean saveImage(MultipartFile file, FileDto fileDto) {
         try {
             String uploadDir = System.getProperty("user.dir") + "/uploads" + "/" + fileDto.getFileGubn() + "/" + fileDto.getFileRefId();
@@ -60,6 +81,8 @@ public class FileService {
                 }
             }
 
+            System.out.println(uploadDir + "세이브 이미지 ..............");
+
             //uploads에 추가
             String filePath = uploadDir + File.separator + file.getOriginalFilename();
             file.transferTo(new File(filePath));
@@ -72,11 +95,14 @@ public class FileService {
         }
     }
 
-    public void deleteImage(String fileGubn, String refId) throws IOException {
+    public int deleteImage(String fileGubn, String refId) throws IOException {
         Path dirPath = Paths.get(uploadPath)
                 .resolve(fileGubn)
                 .resolve(refId)
                 .normalize();
+
+        System.out.println(dirPath + "딜리트 이미지 ..............");
+
 
         if (Files.exists(dirPath)) {
             // 폴더 내 파일 삭제
@@ -93,5 +119,6 @@ public class FileService {
         } else {
             System.out.println("폴더가 존재하지 않습니다: " + dirPath);
         }
+        return fileDao.deleteFile(fileGubn, refId);
     }
 }
