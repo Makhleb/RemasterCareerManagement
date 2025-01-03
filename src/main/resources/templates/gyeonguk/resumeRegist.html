@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout_dir/layout/main_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>이력서 등록</title>
+    <link rel="stylesheet" th:href="@{/css/resume-regist.css}"> <!-- CSS 파일 경로 확인 -->
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>이력서 등록</h1>
+
+    <!-- 제목, 증명사진 및 인적사항 -->
+    <section>
+        <h2>제목 및 인적사항</h2>
+        <div>
+            <label for="title">이력서 제목</label>
+            <input type="text" id="title" name="title" placeholder="이력서 제목을 입력하세요">
+
+            <label for="headshot">증명사진</label>
+            <div class="photo-section">
+                <div class="photo-preview">
+                    <img src="#" alt="프로필 사진" class="profile-image" id="profileImage">
+                    <button type="button" class="edit-photo-btn" id="editPhotoBtn">✎</button>
+                </div>
+                <input type="file" id="headshot" name="headshot" accept="image/*" style="display: none;">
+            </div>
+
+            <label for="userName">이름</label>
+            <input type="text" id="userName" name="userName" readonly>
+
+            <label for="userEmail">이메일</label>
+            <input type="email" id="userEmail" name="userEmail" readonly>
+
+            <label for="userPhone">연락처</label>
+            <input type="text" id="userPhone" name="userPhone" readonly>
+
+            <label for="address">주소</label>
+            <input type="text" id="address" name="address">
+
+            <label for="addressDetail">상세주소</label>
+            <input type="text" id="addressDetail" name="addressDetail">
+
+            <label for="zonecode">우편번호</label>
+            <input type="text" id="zonecode" name="zonecode">
+
+            <label for="wishArea">희망 근무 지역</label>
+            <input type="text" id="wishArea" name="wishArea">
+
+            <label for="wishSalary">희망 연봉</label>
+            <input type="number" id="wishSalary" name="wishSalary">
+
+            <label for="wishTime">희망 근무 시간</label>
+            <input type="text" id="wishTime" name="wishTime">
+
+            <!-- 직무 코드 -->
+            <label for="workCode">직무 유형</label>
+            <select id="workCode" name="workCode">
+                <option value="BACKEND_DEVELOPER">백엔드 개발자</option>
+                <option value="DB_DESIGNER">DB 설계자</option>
+                <option value="FRONTEND_DEVELOPER">프론트엔드 개발자</option>
+                <option value="PUBLISHER">퍼블리셔</option>
+                <option value="SECURITY_DEVELOPER">보안 개발자</option>
+            </select>
+        </div>
+        <!-- 저장 버튼을 버튼 컨테이너로 감쌉니다 -->
+        <div class="button-container">
+            <button type="button" id="savePersonalInfo">저장</button>
+        </div>
+    </section>
+
+    <!-- 경력 -->
+    <section>
+        <h2>경력</h2>
+        <div>
+            <label for="activityType">활동 구분</label>
+            <select id="activityType" name="activityType">
+                <option value="JOB_ACT">직무관련활동</option>
+                <option value="JOB_CAREER">직무</option>
+                <option value="SOCIAL_ACT">봉사활동</option>
+            </select>
+
+            <label for="activityCenterName">기관명</label>
+            <input type="text" id="activityCenterName" name="activityCenterName">
+
+            <label for="activityContent">주요활동 내용</label>
+            <textarea id="activityContent" name="activityContent"></textarea>
+
+            <label for="startDate">시작일</label>
+            <input type="date" id="startDate" name="startDate">
+
+            <label for="endDate">종료일</label>
+            <input type="date" id="endDate" name="endDate">
+        </div>
+        <!-- 저장 버튼을 버튼 컨테이너로 감쌉니다 -->
+        <div class="button-container">
+            <button type="button" id="saveCareer">저장</button>
+        </div>
+    </section>
+
+    <!-- 학력 -->
+    <section>
+        <h2>학력</h2>
+        <div>
+            <label for="educationCode">학력 구분</label>
+            <select id="educationCode" name="educationCode">
+                <option value="MIDDLE_SCHOOL">중졸</option>
+                <option value="HIGH_SCHOOL">고졸</option>
+                <option value="ASSOCIATE">전문대</option>
+                <option value="BACHELOR">4년제</option>
+                <option value="MASTER">석사</option>
+                <option value="PHD">박사</option>
+            </select>
+
+            <label for="schoolName">학교명</label>
+            <input type="text" id="schoolName" name="schoolName">
+
+            <label for="specialty">전공</label>
+            <input type="text" id="specialty" name="specialty">
+
+            <label for="enterDate">입학일</label>
+            <input type="date" id="enterDate" name="enterDate">
+
+            <label for="graduateDate">졸업일</label>
+            <input type="date" id="graduateDate" name="graduateDate">
+        </div>
+        <!-- 저장 버튼을 버튼 컨테이너로 감쌉니다 -->
+        <div class="button-container">
+            <button type="button" id="saveEducation">저장</button>
+        </div>
+    </section>
+
+    <!-- 자격증 -->
+    <section>
+        <h2>자격증</h2>
+        <div>
+            <label for="licenseName">자격증명</label>
+            <input type="text" id="licenseName" name="licenseName">
+
+            <label for="licenseCenterName">발급 기관</label>
+            <input type="text" id="licenseCenterName" name="licenseCenterName">
+
+            <label for="passDate">취득일</label>
+            <input type="date" id="passDate" name="passDate">
+        </div>
+        <!-- 저장 버튼을 버튼 컨테이너로 감쌉니다 -->
+        <div class="button-container">
+            <button type="button" id="saveLicense">저장</button>
+        </div>
+    </section>
+
+    <!-- 스킬 -->
+    <section>
+        <h2>스킬</h2>
+        <div class="skill-suggestions">
+            <span class="skill" data-skill="AWS">AWS +</span>
+            <span class="skill" data-skill="CSS">CSS +</span>
+            <span class="skill" data-skill="HTML">HTML +</span>
+            <span class="skill" data-skill="JAVA">JAVA +</span>
+            <span class="skill" data-skill="JAVASCRIPT">JAVASCRIPT +</span>
+            <span class="skill" data-skill="MYSQL">MYSQL +</span>
+            <span class="skill" data-skill="NODEJS">NODEJS +</span>
+            <span class="skill" data-skill="PYTHON">PYTHON +</span>
+            <span class="skill" data-skill="REACT">REACT +</span>
+            <span class="skill" data-skill="SPRING">SPRING +</span>
+        </div>
+        <div class="selected-skills">
+            <!-- 선택된 스킬이 여기에 표시됩니다 -->
+        </div>
+        <!-- 저장 버튼을 버튼 컨테이너로 감쌉니다 -->
+        <div class="button-container">
+            <button type="button" id="saveSkill">저장</button>
+        </div>
+    </section>
+
+    <!-- 병역사항 -->
+    <section>
+        <h2>병역사항</h2>
+        <div>
+            <label for="militaryType">복무 유형</label>
+            <select id="militaryType" name="militaryType" onchange="militaryDate(event)">
+                <option value="DEFENSE_INDUSTRY">방위산업체</option>
+                <option value="DISCHARGED">전역</option>
+                <option value="EXEMPT">면제</option>
+                <option value="PUBLIC_SERVICE">공익</option>
+            </select>
+
+            <label for="enlistDate">입대일</label>
+            <input type="date" id="enlistDate" name="enlistDate">
+
+            <label for="releaseDate">전역일</label>
+            <input type="date" id="releaseDate" name="releaseDate">
+        </div>
+        <!-- 저장 버튼을 버튼 컨테이너로 감쌉니다 -->
+        <div class="button-container">
+            <button type="button" id="saveMilitary">저장</button>
+        </div>
+    </section>
+
+    <!-- 포트폴리오 -->
+    <section>
+        <h2>포트폴리오</h2>
+        <div>
+            <label for="gubn">구분</label>
+            <select id="gubn" name="gubn">
+                <option value="F">파일</option>
+                <option value="L">링크</option>
+            </select>
+
+            <label for="potfolioFilename">파일명</label>
+            <input type="text" id="potfolioFilename" name="potfolioFilename">
+        </div>
+        <!-- 저장 버튼을 버튼 컨테이너로 감쌉니다 -->
+        <div class="button-container">
+            <button type="button" id="savePortfolio">저장</button>
+        </div>
+    </section>
+
+    <!-- 자기소개서 -->
+    <section>
+        <h2>자기소개서</h2>
+        <div>
+            <label for="introTitle">제목</label>
+            <input type="text" id="introTitle" name="introTitle">
+            <label for="content">내용</label>
+            <textarea id="content" name="content"></textarea>
+        </div>
+        <!-- 저장 버튼을 버튼 컨테이너로 감쌉니다 -->
+        <div class="button-container">
+            <button type="button" id="saveIntro">저장</button>
+        </div>
+    </section>
+
+    <!-- 작성완료 버튼을 자기소개서 섹션 외부에 배치하되, 자기소개서 저장 버튼 바로 밑에 위치하도록 합니다 -->
+    <div class="complete-button-container">
+        <button type="button" id="completeResumeRegist">작성완료</button>
+    </div>
+
+    <script>
+        let resumeNo = null; // 이력서 번호를 저장할 변수
+
+        function sendData(url, data) {
+            axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (url === '/api/users/resume/personal') {
+                        console.log(response);
+                        resumeNo = response.data; // 백엔드에서 resumeNo를 반환하도록 수정 필요
+                        console.log('Resume No:', resumeNo);
+                    }
+                    alert('저장되었습니다');
+                })
+                .catch(error => {
+                    console.error('저장 중 오류가 발생했습니다:', error.response?.data || error.message);
+                    alert('저장 중 오류가 발생했습니다: ' + (error.response?.data || error.message));
+                });
+        }
+
+        // 개인 정보 저장
+        document.getElementById('savePersonalInfo').addEventListener('click', function () {
+            const data = {
+                title: document.getElementById('title').value,
+                headshot: document.getElementById('headshot').files[0]?.name || '',
+                userName: document.getElementById('userName').value,
+                userEmail: document.getElementById('userEmail').value,
+                userPhone: document.getElementById('userPhone').value,
+                address: document.getElementById('address').value,
+                addressDetail: document.getElementById('addressDetail').value,
+                zonecode: document.getElementById('zonecode').value,
+                wishArea: document.getElementById('wishArea').value,
+                wishSalary: document.getElementById('wishSalary').value,
+                wishTime: document.getElementById('wishTime').value,
+                workCode: document.getElementById('workCode').value
+            };
+            console.log('개인 정보 데이터 전송:', data)
+            sendData('/api/users/resume/personal', data);
+        });
+
+        // 스킬 저장 이벤트 리스너
+        document.getElementById('saveSkill').addEventListener('click', function () {
+            if (!resumeNo) {
+                alert('먼저 개인 정보를 저장해주세요.');
+                return;
+            }
+
+            const selectedSkills = Array.from(document.querySelectorAll('.selected-skills .selected-skill'))
+                .map(skill => skill.dataset.skill);
+
+            if (selectedSkills.length === 0) {
+                alert('적어도 하나 이상의 스킬을 선택해주세요.');
+                return;
+            }
+
+            const data = selectedSkills.map(skill => ({
+                resumeNo: resumeNo,
+                skillCode: skill
+            }));
+
+            console.log('스킬 데이터 전송:', data); // 데이터 확인을 위한 로그
+            sendData('/api/users/resume/skills', data);
+        });
+
+
+        // 나머지 저장 버튼 이벤트 리스너들...
+        document.getElementById('saveCareer').addEventListener('click', function () {
+            const data = {
+                resumeNo: resumeNo,
+                activityType: document.getElementById('activityType').value,
+                activityCenterName: document.getElementById('activityCenterName').value,
+                activityContent: document.getElementById('activityContent').value,
+                startDate: document.getElementById('startDate').value,
+                endDate: document.getElementById('endDate').value
+            };
+            sendData('/api/users/resume/activity', data);
+        });
+
+        document.getElementById('saveEducation').addEventListener('click', function () {
+            const data = {
+                resumeNo: resumeNo,
+                educationCode: document.getElementById('educationCode').value,
+                specialty: document.getElementById('specialty').value,
+                schoolName: document.getElementById('schoolName').value,
+                enterDate: document.getElementById('enterDate').value,
+                graduateDate: document.getElementById('graduateDate').value
+            };
+            sendData('/api/users/resume/education', data);
+        });
+
+        document.getElementById('saveLicense').addEventListener('click', function () {
+            const data = {
+                resumeNo: resumeNo,
+                licenseName: document.getElementById('licenseName').value,
+                licenseCenterName: document.getElementById('licenseCenterName').value,
+                passDate: document.getElementById('passDate').value
+            };
+            sendData('/api/users/resume/license', data);
+        });
+
+        document.getElementById('saveMilitary').addEventListener('click', function () {
+            const data = {
+                resumeNo: resumeNo,
+                militaryType: document.getElementById('militaryType').value,
+                enlistDate: document.getElementById('enlistDate').value,
+                releaseDate: document.getElementById('releaseDate').value
+            };
+            sendData('/api/users/resume/military', data);
+        });
+
+        document.getElementById('savePortfolio').addEventListener('click', function () {
+            const data = {
+                resumeNo: resumeNo,
+                gubn: document.getElementById('gubn').value,
+                potfolioFilename: document.getElementById('potfolioFilename').value
+            };
+            sendData('/api/users/resume/portfolio', data);
+        });
+
+        document.getElementById('saveIntro').addEventListener('click', function () {
+            const data = {
+                resumeNo: resumeNo,
+                order: 1,
+                introTitle: document.getElementById('introTitle').value,
+                content: document.getElementById('content').value
+            };
+            sendData('/api/users/resume/intro', data);
+        });
+
+        // 스킬 선택 기능 추가
+        document.addEventListener('DOMContentLoaded', function () {
+            const skillSuggestions = document.querySelector('.skill-suggestions');
+            const selectedSkillsContainer = document.querySelector('.selected-skills');
+
+            // 스킬 클릭 시 선택된 스킬 영역에 추가
+            skillSuggestions.addEventListener('click', function (event) {
+                if (event.target.classList.contains('skill')) {
+                    const skillName = event.target.dataset.skill;
+
+                    // 중복 체크
+                    if (!Array.from(selectedSkillsContainer.children).some(child => child.dataset.skill === skillName)) {
+                        const skillElement = document.createElement('span');
+                        skillElement.classList.add('selected-skill');
+                        skillElement.dataset.skill = skillName;
+                        skillElement.textContent = skillName + ' ×'; // 제거를 위한 '×' 추가
+
+                        // 클릭 시 스킬 제거
+                        skillElement.addEventListener('click', function () {
+                            selectedSkillsContainer.removeChild(skillElement);
+                        });
+
+                        selectedSkillsContainer.appendChild(skillElement);
+                    } else {
+                        alert('이미 선택된 스킬입니다.');
+                    }
+                }
+            });
+
+            // 프로필 사진 편집 버튼 기능 (선택 사항)
+            const editPhotoBtn = document.getElementById('editPhotoBtn');
+            const headshotInput = document.getElementById('headshot');
+            const profileImage = document.getElementById('profileImage');
+
+            editPhotoBtn.addEventListener('click', function () {
+                headshotInput.click();
+            });
+
+            headshotInput.addEventListener('change', function () {
+                const file = headshotInput.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        profileImage.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+
+        // 작성완료 버튼 이벤트 리스너
+        document.getElementById("completeResumeRegist").addEventListener('click', function (){
+            location.href="/resume/list";
+        });
+    </script>
+
+</div>
+</body>
+</html>

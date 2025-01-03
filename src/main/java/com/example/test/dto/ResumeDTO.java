@@ -18,6 +18,6 @@ public class ResumeDTO {
     private String offerYn; // 기업 제안 수신
     private Date createDate; // 작성일
     private Date modifyDate; // 수정일
-    private String deleteYn; // 삭제여부
+    private String viewYn; // 삭제여부
     private String workCode; // 직무 코드
 }

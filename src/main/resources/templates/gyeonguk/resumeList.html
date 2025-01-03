@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout_dir/layout/main_layout}">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/resume-list.css}">
+</head>
+<body layout:fragment="content">
+<h1>대표 이력서</h1>
+
+<!-- 대표이력서 리스트-->
+<div id="representativeContainer">
+    <div id="titleResume">
+        <strong>대표 이력서 제목</strong>
+        <span>작성일자</span>
+    </div>
+    <!-- 대표이력서 설정 버튼 -->
+    <button id="toggleRepresentative" onclick="toggleRepresentativeMode()">대표이력서 설정</button>
+</div>
+
+<!-- 이력서 작성하기를 버튼을 통해 바로 등록으로 이동 -->
+<div class="resumeRegist-button-container">
+    <h1>나의 이력서</h1>
+    <button type="button" id="ResumeRegist">이력서 작성하기</button>
+</div>
+
+<!-- 이력서 리스트 -->
+<div id="resumeList">로딩중...</div>
+
+<div id="confirmationPopup" style="display: none;">
+    <p>변경하시겠습니까?</p>
+    <div class="button-container">
+        <button onclick="confirmRepresentative()">확인</button>
+        <button onclick="cancelRepresentative()">취소</button>
+    </div>
+</div>
+
+<script>
+    let isRepresentativeMode = false; // 대표이력서 설정 모드 상태
+    let selectedResumeId = null; // 선택된 이력서 ID
+
+    // 이력서 리스트를 가져옵니다
+    function loadResumeList() {
+        const userId = 'test1'; // 실제 사용자 ID를 대체
+        axios.get(`/api/users/resume/list/${userId}`)
+            .then(response => {
+                console.log(response.data);
+                const resumes = response.data;
+                const resumeListDiv = document.getElementById('resumeList');
+                resumeListDiv.innerHTML = ''; // 기존 내용을 초기화
+
+                if (resumes.length > 0) {
+                    resumes.forEach(resume => {
+                        const div = document.createElement('div');
+                        div.innerHTML = `
+                        <div style="margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
+                            ${isRepresentativeMode ? `<input type="radio" name="representative" value="${resume.resumeNo}" onclick="selectResume(${resume.resumeNo})">` : ''}
+                            <strong>
+                                <a href="/resume/detail/${resume.resumeNo}" style="text-decoration: none; color: inherit;">
+                                ${resume.title}
+                                </a>
+                            </strong>
+                            - <span>${new Date(resume.createDate).toLocaleDateString()}</span>
+                        </div>
+                    `;
+                        resumeListDiv.appendChild(div);
+                    });
+                } else {
+                    resumeListDiv.innerHTML = '등록된 이력서가 없습니다.';
+                }
+            })
+            .catch(error => {
+                console.error('이력서 조회 중 오류:', error);
+                const resumeListDiv = document.getElementById('resumeList');
+                resumeListDiv.innerHTML = '이력서를 가져오는 데 실패했습니다. 다시 시도해 주세요.';
+            });
+    }
+
+
+    // 대표이력서 설정 버튼을 클릭했을 때
+    function toggleRepresentativeMode() {
+        if (!isRepresentativeMode) {
+            // 설정 모드 활성화
+            isRepresentativeMode = true;
+            const button = document.getElementById('toggleRepresentative');
+            button.textContent = '변경'; // 버튼 텍스트 변경
+            loadResumeList(); // 라디오 버튼이 보이도록 리스트 로드
+        } else {
+            // 설정 모드에서 변경 버튼 클릭 시 확인 팝업 표시
+            if (selectedResumeId === null) {
+                alert('대표 이력서를 선택해주세요.');
+                return;
+            }
+            document.getElementById('confirmationPopup').style.display = 'block';
+        }
+    }
+
+    // 특정 이력서를 선택
+    function selectResume(resumeId) {
+        selectedResumeId = resumeId;
+        console.log('선택된 이력서 ID:', selectedResumeId);
+    }
+
+    // 확인 버튼을 클릭했을 때
+    function confirmRepresentative() {
+        if (selectedResumeId === null) {
+            alert('대표 이력서를 선택해주세요.');
+            return;
+        }
+
+        axios.put('/api/users/resume/representative', {resumeNo: selectedResumeId, userId: "test1"})
+            .then(response => {
+                console.log('서버 응답:', response.data); // 서버 응답 디버깅
+                if (response.data === '대표 이력서가 설정되었습니다.') {
+                    alert('대표 이력서가 설정되었습니다.');
+                    document.getElementById('confirmationPopup').style.display = 'none';
+                    isRepresentativeMode = false; // 대표이력서 모드 종료
+                    selectedResumeId = null; // 선택된 이력서 초기화
+                    loadRepresentativeResume(); // 대표 이력서를 다시 불러옴
+
+                    // 버튼 텍스트를 "대표이력서 설정"으로 초기화
+                    const button = document.getElementById('toggleRepresentative');
+                    button.textContent = '대표이력서 설정';
+
+                    loadResumeList(); // 업데이트된 리스트 다시 로드
+                } else {
+                    alert('대표 이력서 설정 중 문제가 발생했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('대표 이력서 설정 오류:', error);
+                alert('대표 이력서를 설정하는 데 실패했습니다.');
+            });
+    }
+
+
+    function cancelRepresentative() {
+        document.getElementById('confirmationPopup').style.display = 'none';
+        // 설정 모드 종료
+        isRepresentativeMode = false;
+        selectedResumeId = null;
+        loadResumeList(); // 라디오 버튼 숨기기 위해 리스트 다시 로드
+        const button = document.getElementById('toggleRepresentative');
+        button.textContent = '대표이력서 설정'; // 버튼 텍스트 초기화
+    }
+
+    // 대표이력서를 가져와 titleResume 영역에 표시
+    function loadRepresentativeResume() {
+        const userId = 'test1'; // 실제 사용자 ID를 대체
+        axios.get(`/api/users/resume/representative/${userId}`)
+            .then(response => {
+                const resume = response.data;
+                const titleResumeDiv = document.getElementById('titleResume');
+                if (resume) {
+                    titleResumeDiv.innerHTML = `
+                    <div>
+
+                        <strong>${resume.title}</strong>
+                        - <span>${new Date(resume.createDate).toLocaleDateString()}</span>
+                    </div>
+                `;
+                } else {
+                    titleResumeDiv.innerHTML = '<p>대표 이력서가 설정되어 있지 않습니다.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('대표 이력서 조회 중 오류:', error);
+                document.getElementById('titleResume').innerHTML = '<p>대표 이력서를 가져오는 데 실패했습니다.</p>';
+            });
+    }
+
+    window.onload = function () {
+        loadResumeList(); // 이력서 리스트를 불러옴
+        loadRepresentativeResume(); // 대표 이력서를 불러옴
+    };
+
+    // 작성완료 버튼 이벤트 리스너
+    document.getElementById("ResumeRegist").addEventListener('click', function () {
+        location.href = "/resume/register";
+    });
+
+</script>
+</body>
+</html>
