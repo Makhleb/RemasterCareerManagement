@@ -239,34 +239,34 @@ function renderJobPostCard(post) {
     };
     
     return `
-        <div class="job-post-card">
-            <div class="company-header">
-                <img src="${post.companyImage}" 
-                     alt="${post.companyName}" 
-                     class="company-logo"
-                     onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(post.companyName)}&size=40&background=random'">
-                <h3 class="post-title">${post.title || '제목 없음'}</h3>
-            </div>
-            <div class="post-info" style="background-image: url('${post.postThumbnail}')">
-                <div class="post-overlay">
-                    <div class="post-tags">
-                        <span class="post-tag">💸연봉 ${post.jobSalary || '정보 없음'}만원</span>
+    <div class="job-post-card">
+        <div class="company-header">
+            <img src="${post.companyImage}" 
+                 alt="${post.companyName}" 
+                 class="company-logo"
+                 onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(post.companyName)}&size=40&background=random'">
+            <h3 class="post-title">${post.title || '제목 없음'}</h3>
+        </div>
+        <div class="post-info" style="background-image: url('${post.postThumbnail}')">
+            <div class="post-overlay">
+                <div class="post-tags">
+                    <span class="post-tag">💸연봉 ${post.jobSalary || '정보 없음'}만원</span>
+                </div>
+                <div class="bottom-tags">
+                    <div class="tag-group">
+                        ${skill}
+                        ${benefit}
                     </div>
-                    <div class="post-tags bottom-tags">
-                        <div class="tag-group">
-                            ${skill}
-                            ${benefit}
-                        </div>
-                        <span class="post-tag">${formatDate(post.endDate)} 
-                            <button class="scrap-btn" onclick="handleScrap(${post.jobPostNo}, event)">
-                                <i class="fas fa-bookmark"></i>
-                            </button>
-                        </span>
-                    </div>
+                    <span class="post-tag date-tag">${formatDate(post.endDate)} 
+                        <button class="scrap-btn" onclick="handleScrap(${post.jobPostNo}, event)">
+                            <i class="fas fa-bookmark"></i>
+                        </button>
+                    </span>
                 </div>
             </div>
         </div>
-    `;
+    </div>
+`;
 }
 
 // 스크랩 처리 함수
@@ -328,12 +328,32 @@ function renderPopularPosts(posts) {
     DOM.popularPosts.innerHTML = posts.map(renderJobPostCard).join('');
 }
 
-// TOP 10 기업 섹션 렌더링
+// TOP 10 기업 렌더링
 function renderTopCompanies(companies) {
-    // 기업 카드 렌더링
-    DOM.companiesSlider.innerHTML = companies.map(renderCompanyCard).join('');
+    if (!DOM.topCompanies) return;
     
-    // 슬라이드 초기화
+    const companiesHtml = companies.map(company => `
+        <div class="company-card">
+            <img src="${company.companyImage}" 
+                 alt="${company.companyName}"
+                 onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(company.companyName)}&size=50&background=random'">
+            <h3>${company.companyName}</h3>
+            <div class="company-stats">
+                <div class="rating">
+                    <i class="fas fa-star"></i>
+                    <span>${company.avgRating?.toFixed(1) || '0.0'}</span>
+                </div>
+                ${company.likeCount ? `
+                    <div class="like-count">
+                        <i class="fas fa-heart"></i>
+                        <span>${company.likeCount}명이 관심</span>
+                    </div>
+                ` : ''}
+            </div>
+        </div>
+    `).join('');
+
+    DOM.topCompanies.innerHTML = companiesHtml;
     initializeSlider();
 }
 

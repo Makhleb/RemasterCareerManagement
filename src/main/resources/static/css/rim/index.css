@@ -370,3 +370,60 @@ section h2 {
     font-size: 0.9em;
     color: #888;
 }
+
+/* 일반 post-tag 스타일 수정 */
+.post-tag {
+    display: inline-flex;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.4);  /* 더 밝게 조정 */
+    color: white;
+    padding: 2px 9px;
+    border-radius: 14px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* 날짜 태그 특별 스타일 */
+.post-tag.date-tag {
+    position: absolute;
+    bottom: 15px;
+    right: 40px;
+    background-color: rgba(0, 0, 0, 0.5);
+    margin-left: auto;  /* 우측 정렬 */
+    display: flex;
+    align-items: center;
+}
+
+/* 기술스택 태그 스타일 */
+.post-tag.skill-tag {
+    background-color: rgba(43, 82, 88, 0.6);  /* 더 밝게 */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* 복리후생 태그 스타일 */
+.post-tag.benefit-tag {
+    background-color: rgba(145, 100, 49, 0.6);  /* 더 밝게 */
+}
+
+/* 태그 그룹 위치 조정 */
+.tag-group {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    display: flex;
+    gap: 4px;
+}
+
+/* 하단 태그 컨테이너 수정 */
+.bottom-tags {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+}
