@@ -93,4 +93,30 @@ public class ResumeService {
     }
 
 
+    public ResumeDetailDTO getResumeDetail(int resumeNo) {
+        ResumeDetailDTO detail = new ResumeDetailDTO();
+        ResumeDTO resume = resumeDao.selectResumeByNo(resumeNo);
+        if (resume == null) {
+            return null; // 또는 예외 처리
+        }
+        detail.setResume(resume);
+        System.out.println(resume.getResumeNo()+"............");
+        detail.setActivities(resumeDao.selectActivitiesByResumeNo(resumeNo));
+        System.out.println(detail.getActivities()+"............");
+        detail.setEducations(resumeDao.selectEducationsByResumeNo(resumeNo));
+        System.out.println(detail.getEducations()+"............");
+        detail.setLicenses(resumeDao.selectLicensesByResumeNo(resumeNo));
+        System.out.println(detail.getLicenses()+"............");
+        detail.setSkills(resumeDao.selectSkillsByResumeNo(resumeNo));
+        System.out.println(detail.getSkills()+"............");
+        detail.setMilitary(resumeDao.selectMilitaryByResumeNo(resumeNo));
+        System.out.println(detail.getMilitary()+"............");
+        detail.setPortfolios(resumeDao.selectPortfoliosByResumeNo(resumeNo));
+        System.out.println(detail.getPortfolios()+"............");
+        detail.setIntro(resumeDao.selectIntroByResumeNo(resumeNo));
+        System.out.println(detail.getIntro()+"............");
+        return detail;
+    }
+
+
 }

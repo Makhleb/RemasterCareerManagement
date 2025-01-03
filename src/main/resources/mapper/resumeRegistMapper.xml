@@ -131,7 +131,7 @@
         <insert id="insertIntro" parameterType="com.example.test.dto.IntroduceDTO">
             INSERT INTO tblIntroduce (
             resumeNo,
-            title,
+            introTitle,
             content,
             `order`
             ) VALUES (
@@ -183,6 +183,43 @@
             SET viewYn = 'Y'
             WHERE resumeNo = #{resumeNo} AND userId = #{userId};
         </update>
+
+
+    <select id="selectResumeByNo" parameterType="int" resultType="com.example.test.dto.ResumeDTO">
+        SELECT * FROM tblResume WHERE resumeNo = #{resumeNo}
+    </select>
+
+    <select id="selectActivitiesByResumeNo" parameterType="int" resultType="com.example.test.dto.ActivityDTO">
+        SELECT * FROM tblActivity WHERE resumeNo = #{resumeNo}
+    </select>
+
+    <select id="selectEducationsByResumeNo" parameterType="int" resultType="com.example.test.dto.EducationDTO">
+        SELECT * FROM tblEducation WHERE resumeNo = #{resumeNo}
+    </select>
+
+    <select id="selectLicensesByResumeNo" parameterType="int" resultType="com.example.test.dto.LicenseDTO">
+        SELECT * FROM tblLicense WHERE resumeNo = #{resumeNo}
+    </select>
+
+    <select id="selectSkillsByResumeNo" parameterType="int" resultType="com.example.test.dto.ResumeSkillDTO">
+        SELECT * FROM tblResumeSkill WHERE resumeNo = #{resumeNo}
+    </select>
+
+    <select id="selectMilitaryByResumeNo" parameterType="int" resultType="com.example.test.dto.MilitaryDTO">
+        SELECT * FROM tblMilitary WHERE resumeNo = #{resumeNo}
+    </select>
+
+    <select id="selectPortfoliosByResumeNo" parameterType="int" resultType="com.example.test.dto.PotfolioDTO">
+        SELECT * FROM tblPotfolio WHERE resumeNo = #{resumeNo}
+    </select>
+
+    <select id="selectIntroByResumeNo" parameterType="int" resultType="com.example.test.dto.IntroduceDTO">
+        SELECT * FROM tblIntroduce WHERE resumeNo = #{resumeNo}
+    </select>
+
+
+
+
 
     </mapper>
 

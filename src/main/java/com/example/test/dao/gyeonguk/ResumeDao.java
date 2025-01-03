@@ -100,4 +100,18 @@ public interface ResumeDao {
      */
     void updateRepresentativeResume(@Param("resumeNo") int resumeNo, @Param("userId") String userId);
 
+    // 이력서 기본 정보 조회
+    ResumeDTO selectResumeByNo(int resumeNo);
+
+    // 이력서 섹션별 정보 조회
+    ActivityDTO selectActivitiesByResumeNo(int resumeNo);
+    EducationDTO selectEducationsByResumeNo(int resumeNo);
+    LicenseDTO selectLicensesByResumeNo(int resumeNo);
+    List<ResumeSkillDTO> selectSkillsByResumeNo(int resumeNo);
+    MilitaryDTO selectMilitaryByResumeNo(int resumeNo);
+    PotfolioDTO selectPortfoliosByResumeNo(int resumeNo);
+    IntroduceDTO selectIntroByResumeNo(int resumeNo);
+
+
+
 }

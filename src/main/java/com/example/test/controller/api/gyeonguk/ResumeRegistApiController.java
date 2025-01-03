@@ -159,4 +159,23 @@ public class ResumeRegistApiController {
         return "대표 이력서가 설정되었습니다.";
     }
 
+    /**
+     * 특정 이력서의 상세 정보를 조회합니다.
+     *
+     * @param resumeNo 이력서 번호
+     * @return 이력서 상세 정보
+     */
+    @GetMapping("/detail/{resumeNo}")
+    public ResponseEntity<ResumeDetailDTO> getResumeDetail(@PathVariable int resumeNo) {
+        ResumeDetailDTO detail = resumeService.getResumeDetail(resumeNo);
+        if (detail != null) {
+            return ResponseEntity.ok(detail);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+
+
 }

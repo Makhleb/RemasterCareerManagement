@@ -53,14 +53,17 @@
                 if (resumes.length > 0) {
                     resumes.forEach(resume => {
                         const div = document.createElement('div');
-                        console.log("resume" + resume);
                         div.innerHTML = `
-                            <div style="margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
-                                ${isRepresentativeMode ? `<input type="radio" name="representative" value="${resume.resumeNo}" onclick="selectResume(${resume.resumeNo})">` : ''}
-                                <strong>${resume.title}</strong>
-                                - <span>${new Date(resume.createDate).toLocaleDateString()}</span>
-                            </div>
-                        `;
+                        <div style="margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
+                            ${isRepresentativeMode ? `<input type="radio" name="representative" value="${resume.resumeNo}" onclick="selectResume(${resume.resumeNo})">` : ''}
+                            <strong>
+                                <a href="/resume/detail/${resume.resumeNo}" style="text-decoration: none; color: inherit;">
+                                ${resume.title}
+                                </a>
+                            </strong>
+                            - <span>${new Date(resume.createDate).toLocaleDateString()}</span>
+                        </div>
+                    `;
                         resumeListDiv.appendChild(div);
                     });
                 } else {
@@ -74,18 +77,23 @@
             });
     }
 
+
     // 대표이력서 설정 버튼을 클릭했을 때
     function toggleRepresentativeMode() {
-        isRepresentativeMode = !isRepresentativeMode; // 모드 토글
-        const button = document.getElementById('toggleRepresentative');
-        button.textContent = isRepresentativeMode ? '변경' : '대표이력서 설정';
-
-        if (isRepresentativeMode) {
-            document.getElementById('confirmationPopup').style.display = 'block';
+        if (!isRepresentativeMode) {
+            // 설정 모드 활성화
+            isRepresentativeMode = true;
+            const button = document.getElementById('toggleRepresentative');
+            button.textContent = '변경'; // 버튼 텍스트 변경
+            loadResumeList(); // 라디오 버튼이 보이도록 리스트 로드
         } else {
-            document.getElementById('confirmationPopup').style.display = 'none';
+            // 설정 모드에서 변경 버튼 클릭 시 확인 팝업 표시
+            if (selectedResumeId === null) {
+                alert('대표 이력서를 선택해주세요.');
+                return;
+            }
+            document.getElementById('confirmationPopup').style.display = 'block';
         }
-        loadResumeList(); // 리스트를 다시 로드
     }
 
     // 특정 이력서를 선택
@@ -111,7 +119,6 @@
                     selectedResumeId = null; // 선택된 이력서 초기화
                     loadRepresentativeResume(); // 대표 이력서를 다시 불러옴
 
-
                     // 버튼 텍스트를 "대표이력서 설정"으로 초기화
                     const button = document.getElementById('toggleRepresentative');
                     button.textContent = '대표이력서 설정';
@@ -127,9 +134,15 @@
             });
     }
 
-    // 취소 버튼을 클릭했을 때
+
     function cancelRepresentative() {
         document.getElementById('confirmationPopup').style.display = 'none';
+        // 설정 모드 종료
+        isRepresentativeMode = false;
+        selectedResumeId = null;
+        loadResumeList(); // 라디오 버튼 숨기기 위해 리스트 다시 로드
+        const button = document.getElementById('toggleRepresentative');
+        button.textContent = '대표이력서 설정'; // 버튼 텍스트 초기화
     }
 
     // 대표이력서를 가져와 titleResume 영역에 표시
