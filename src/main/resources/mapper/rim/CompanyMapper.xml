@@ -62,4 +62,16 @@
         )
     </insert>
 
+    <!-- TOP 10 기업 (별점 기준) -->
+    <select id="findTopCompaniesByRating" resultType="map">
+        SELECT c.*, AVG(cs.score) as avg_rating,
+               COUNT(cs.userId) as review_count
+        FROM tblCompany c
+        LEFT JOIN tblCompanyScore cs ON c.companyId = cs.companyId
+        GROUP BY c.companyId
+        HAVING review_count > 0
+        ORDER BY avg_rating DESC
+        LIMIT 10
+    </select>
+
 </mapper> 

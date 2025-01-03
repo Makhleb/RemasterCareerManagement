@@ -76,7 +76,9 @@ public class SecurityConfig {
                     "/api/auth/me",
                     "/js/**",
                     "/css/**",
-                    "/images/**"
+                    "/images/**",
+                    "/fonts/**",
+                    "/favicon"
                 ).permitAll()
                 // API 엔드포인트 보호
                 .requestMatchers("/api/users/**").hasAnyRole("USER", "ADMIN")

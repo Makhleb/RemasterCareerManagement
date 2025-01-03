@@ -23,4 +23,7 @@ public class CompanyDTO {
     private String companyRole;
     private String companyIsActive;
     private String companyImage;
+    private Double avgRating;
+    private Integer reviewCount;
+    private Integer likeCount;
 }
