@@ -1,0 +1,130 @@
+.login {
+    box-sizing: border-box;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+}
+
+.login-container {
+    margin-top: 140px;
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+.login-container-top {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-container-bottom {
+    padding-top: 40px;
+    border-radius: 10px;
+    width: 100%;
+}
+
+h2 {
+    font-weight: 550;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+h2 i {
+    color: var(--primary-color-1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #666;
+    font-size: 14px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+input:focus {
+    outline: none;
+    border-color: #929AA2;
+}
+
+.error-message {
+    color: #f44336;
+    font-size: 12px;
+    margin-top: 5px;
+    display: none;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 12px;
+    background: var(--primary-color-2);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+.links {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.links a {
+    color: #666;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.links a:hover {
+    color: var(--primary-color-1);
+}
+
+.tab-container {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    padding: 20px 0;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    background: none;
+    color: #666;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-bottom: 3px solid transparent;
+}
+
+.tab-button.active {
+    color: var(--primary-color-1);
+    border-bottom: 3px solid var(--primary-color-1);
+}
+
+.tab-button i {
+    font-size: 18px;
+}

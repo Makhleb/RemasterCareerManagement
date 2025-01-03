@@ -1,0 +1,41 @@
+:root {
+    --primary-color-1: #b76737;
+    --primary-color-1-deep: #703e21;
+    --primary-color-2: #3A5154;
+    --primary-color-3: #B9B0B2;
+    --primary-color-4: #929AA2;
+    --primary-color-5: #1D2625;
+}
+
+
+
+@font-face {
+    font-family: 'KopupDodum';
+    src: url('../../fonts/KoPubWorld Dotum Medium.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'KopupDodum';
+    src: url('../../fonts/KoPubWorld Dotum Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'KopupDodum';
+    src: url('../../fonts/KoPubWorld Dotum Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+/* 전역 폰트 설정 */
+* {
+    font-family: 'KopupDodum', sans-serif !important;
+}
+/* FontAwesome 아이콘 전용 폰트 설정 */
+i, .fa, .fas, .far, .fal, .fab {
+    font-family: "Font Awesome 6 Free" !important;
+    font-weight: 900; /* Solid 아이콘 */
+}
