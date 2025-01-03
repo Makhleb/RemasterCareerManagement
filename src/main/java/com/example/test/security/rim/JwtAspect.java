@@ -17,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import jakarta.servlet.http.Cookie;
+import org.springframework.security.core.Authentication;
+import java.util.Map;
 /**
  * Created on 2024-12-30 by 구경림
  */
@@ -53,6 +55,42 @@ public class JwtAspect {
                 throw AuthException.forbidden();
             }
         }
+    }
+
+    @Before("execution(* com.example.test.service.rim.MainService.getMainPageData())")
+    public void checkMainPageAccess(JoinPoint joinPoint) {
+        log.info("메인 페이지 접근 권한 체크");
+        
+        try {
+            Map<String, Object> userInfo = securityUtil.getCurrentUserInfo();
+            String userType = (String) userInfo.get("type");
+            
+            // 유효한 사용자 타입인지 검증
+            if (!isValidUserType(userType)) {
+                throw AuthException.invalidUserType();
+            }
+            
+            log.info("사용자 타입: {}", userType);
+            
+        } catch (Exception e) {
+            // 권한 체크 실패 시 게스트로 처리
+            SecurityContextHolder.getContext().setAuthentication(createGuestAuthentication());
+        }
+    }
+    
+    private boolean isValidUserType(String userType) {
+        return userType != null && 
+               (userType.equals("guest") || 
+                userType.equals("user") || 
+                userType.equals("company"));
+    }
+    
+    private Authentication createGuestAuthentication() {
+        return new UsernamePasswordAuthenticationToken(
+            "guest",
+            null,
+            Collections.singletonList(new SimpleGrantedAuthority("ROLE_GUEST"))
+        );
     }
 
     private String extractResourceId(JoinPoint joinPoint) {

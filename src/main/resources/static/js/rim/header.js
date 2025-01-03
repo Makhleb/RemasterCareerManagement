@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', async function() {
     try {
         const user = await auth.getCurrentUser();
+        console.log('user>>>',user)
         const headerRight = document.querySelector('.header-right');
         
         if (user && user.type !== 'guest') {

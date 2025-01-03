@@ -1,6 +1,16 @@
-// API 클라이언트 전역 객체
+// API 엔드포인트 상수
+const API_ENDPOINTS = {
+    MAIN: {
+        DATA: '/api/main/data',
+        POPULAR_POSTS: '/api/main/popular-posts',
+        TOP_COMPANIES: '/api/main/top-companies',
+        MOST_SCRAPED: '/api/main/most-scraped'
+    }
+};
+
+// API 요청 객체
 window.API = {
-    // 인증 관련 API
+    // 기존 auth 관련 API 유지
     auth: {
         // 로그인
         login: async (data) => {
@@ -33,6 +43,42 @@ window.API = {
         // 기업 아이디 중복 체크
         checkCompanyDuplicate: async (companyId) => {
             return await axios.post('/api/auth/company/check-duplicate', { companyId });
+        }
+    },
+
+    // 메인 페이지 관련 API 추가
+    main: {
+        // 메인 페이지 전체 데이터 조회
+        getData: async () => {
+            try {
+                const response = await axios.get(API_ENDPOINTS.MAIN.DATA);
+                return response.data;
+            } catch (error) {
+                console.error('메인 데이터 조회 실패:', error);
+                throw error;
+            }
+        },
+
+        // 인기 채용공고 조회
+        getPopularPosts: async () => {
+            try {
+                const response = await axios.get(API_ENDPOINTS.MAIN.POPULAR_POSTS);
+                return response.data;
+            } catch (error) {
+                console.error('인기 채용공고 조회 실패:', error);
+                throw error;
+            }
+        },
+
+        // TOP 10 기업 조회
+        getTopCompanies: async () => {
+            try {
+                const response = await axios.get(API_ENDPOINTS.MAIN.TOP_COMPANIES);
+                return response.data;
+            } catch (error) {
+                console.error('TOP 10 기업 조회 실패:', error);
+                throw error;
+            }
         }
     }
 };

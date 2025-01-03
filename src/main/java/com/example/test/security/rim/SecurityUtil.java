@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Created on 2024-12-30 by 구경림
@@ -15,6 +16,7 @@ import java.util.Map;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class SecurityUtil {
     
     /**
@@ -113,5 +115,17 @@ public class SecurityUtil {
         }
         String currentUserId = getCurrentUserId();
         return currentUserId.equals(resourceOwnerId);
+    }
+
+    public String getUserType() {
+        Map<String, Object> userInfo = getCurrentUserInfo();
+        return (String) userInfo.getOrDefault("type", "guest");
+    }
+
+    public boolean isValidUserType(String userType) {
+        return userType != null && 
+               (userType.equals("guest") || 
+                userType.equals("user") || 
+                userType.equals("company"));
     }
 } 
