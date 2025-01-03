@@ -135,7 +135,7 @@ axios.interceptors.response.use(
         console.log('Status:', response.status);
         console.log('Data:', response.data);
         console.groupEnd();
-        return response;
+        return response.data;
     },
     error => {
         console.groupCollapsed(

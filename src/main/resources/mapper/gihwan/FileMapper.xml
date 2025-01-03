@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test.dao.gihwan.FileDao">
+    <insert id="insertFile">
+        INSERT INTO tblFile
+        (fileId, fileGubn, fileRefId,
+        fileName, fileExt,
+        instId, instDt, updtId, updtDt)
+        VALUES
+        (
+        NULL, #{fileGubn}, #{fileRefId},
+        #{fileName}, #{fileExt},
+        #{instId}, NOW(), #{updtId}, NOW()
+        )
+    </insert>
+</mapper>
