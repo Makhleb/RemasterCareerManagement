@@ -64,6 +64,7 @@ public List<JobPostDto> selectAllJobPost(String companyId) {
 ```javascript
     function imageUpload(postNo) {
         const formData = new FormData();
+        // <input type="file" id="image-upload"> 필요
         const file = $('#image-upload')[0].files[0];
 
         let fileDto = {
@@ -88,15 +89,7 @@ public List<JobPostDto> selectAllJobPost(String companyId) {
                 'Content-Type': 'multipart/form-data'
             }
         })
-            .then(response => {
-                console.log(response.data);
-                if (response.data) {
-                    alert("이미지 저장 완료");
-                    location.href = "/mypage/company/post-list";
-                }
-            })
-            .catch(error => {
-                console.error('파일 업로드 실패:', error);
-            });
+            .then(response => {})
+            .catch(error => {});
     }
 ```
