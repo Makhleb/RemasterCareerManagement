@@ -147,10 +147,19 @@
 </div>
 
 <script layout:fragment="script" th:inline="javascript">
+
     let jobPostNo = /*[[${jobPostNo}]]*/ null;
+    let user = null;
 
     //todo 유효성 검사, (우선)아이디 적용, 마감일은 시작일보다 무조건 나중에
     window.onload = function () {
+
+        auth.getCurrentUser().then(response => {
+            user = response;  // 원하는 값 출력
+        }).catch(error => {
+            console.error('사용자 정보 조회 실패:', error);
+        });
+
         optionLoad();
         if (jobPostNo != null) {
             updateInfoOnload(jobPostNo)
@@ -417,8 +426,8 @@
             fileRefId: postNo,
             fileName: file.name,
             fileExt: file.type,
-            instId: 'companyTestNo', // todo 이거 로그인된 계정아이디로 바꾸기
-            updtId: 'companyTestNo'
+            instId: user.id,
+            updtId: user.id
         }
 
         formData.append('file', file);
@@ -522,6 +531,7 @@
         $('#image-upload').val('');
         $(event.target).hide();
     }
+
 </script>
 </body>
 </html>

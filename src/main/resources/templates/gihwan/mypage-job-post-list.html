@@ -15,6 +15,7 @@
     </div>
 </div>
 <script layout:fragment="script">
+
     window.onload = function () {
         axios.get('/api/companies/job-post/aplc-list')
             .then(function (response) {
@@ -106,10 +107,6 @@
                 console.log(error);
             })
     }
-    /**
-     * 공고 삭제
-     * todo 삭제 전부 변경 그냥 deleteYn으로 설정할것.
-     */
     function deletePost(jobPostNo) {
         axios.delete('/api/companies/job-post/' + jobPostNo)
             .then(function (response) {
