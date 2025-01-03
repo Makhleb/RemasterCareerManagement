@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout_dir/layout/main_layout}">
+<head>
+  <meta charset="UTF-8">
+  <title>공고 리스트</title>
+  <link rel="stylesheet" th:href="@{/css/post-list.css}">
+</head>
+<body layout:fragment="content">
+  <section>
+    <div class="section1">
+      <div id="region_kind">지역별</div>
+      <div id="region_name"><span class="separator">|</span> 타임리프, 동기처리 예정</div>
+    </div>
+    <div class="section2">
+      <div class="section2_option_container">
+        <div class="section2_option" id="region_bar">
+          지역선택
+        </div>
+        <div class="section2_option" id="job_bar">
+          직업선택
+        </div>
+        <div class="section2_option" id="search_bar">검색어입력</div>
+      </div>
+      <div class="section2_region_option section2_none">
+        <div class="region" value="서울">서울</div>
+        <div class="region" value="인천">인천</div>
+        <div class="region" value="대구">대구</div>
+        <div class="region" value="대전">대전</div>
+        <div class="region" value="세종">세종</div>
+        <div class="region" value="경남">경남</div>
+        <div class="region" value="전남">전남</div>
+        <div class="region" value="경기">경기</div>
+        <div class="region" value="부산">부산</div>
+        <div class="region" value="광주">광주</div>
+        <div class="region" value="울산">울산</div>
+        <div class="region" value="강원">강원</div>
+        <div class="region" value="경북">경북</div>
+        <div class="region" value="전북">전북</div>
+        <div class="region" value="충남">충남</div>
+        <div class="region" value="충북">충북</div>
+        <div class="region" value="제주">제주</div>
+      </div>
+      <div class="section2_job_option section2_none">
+        <div class="job" value="개발">개발</div>
+        <div class="job" value="경영">경영·비즈니스</div>
+        <div class="job" value="마케팅">마케팅·광고</div>
+        <div class="job" value="디자인">디자인</div>
+        <div class="job" value="영업">영업</div>
+        <div class="job" value="고객서비스">고객서비스·리테일</div>
+        <div class="job" value="엔지니어링">엔지니어링·설계</div>
+        <div class="job" value="제조">제조·생산</div>
+        <div class="job" value="의료">의료·제약·바이오</div>
+      </div>
+      <div class="section2_container">
+        <div id="keyword_container"></div>
+        <div id="section2_btn">검색</div>
+      </div>
+    </div>
+    <div class="section3">
+      <div id="section3_description">
+        <img th:src="@{/images/불.png}" alt="불">
+        <div>회원님을 위한 공고</div>
+      </div>
+      <div id="section3_option">
+        <div class="section3_option" style="border-right: 1px #ddd solid;  border-radius: 10px 0px 0px 10px;">
+          추천순</div>
+        <div class="section3_option" style="border-right: 1px #ddd solid;">최신순</div>
+        <div class="section3_option" style="border-radius: 0 10px 10px 0;">인기순</div>
+      </div>
+    </div>
+    <div class="section4">
+      <div class="section4_popular">
+        <div id="section4_fake">인기있는</div>
+        <div id="section4_logo"></div>
+        <div id="section4_postName">공고명은이렇게만들어집니다계속길어지면어떻게될까요</div>
+        <div id="section4_comName">회사이름</div>
+      </div>
+      <div class="section4_popular">
+        <div id="section4_fake">인기있는</div>
+        <div id="section4_logo"></div>
+        <div id="section4_postName">공고명은이렇게만들어집니다계속길어지면어떻게될까요</div>
+        <div id="section4_comName">회사이름</div>
+      </div>
+      <div class="section4_popular">
+        <div id="section4_fake">인기있는</div>
+        <div id="section4_logo"></div>
+        <div id="section4_postName">공고명은이렇게만들어집니다계속길어지면어떻게될까요</div>
+        <div id="section4_comName">회사이름</div>
+      </div>
+      <div class="section4_popular">
+        <div id="section4_fake">인기있는</div>
+        <div id="section4_logo"></div>
+        <div id="section4_postName">공고명은이렇게만들어집니다계속길어지면어떻게될까요</div>
+        <div id="section4_comName">회사이름</div>
+      </div>
+    </div>
+    <div class="section5">
+      <div class="section5_post">
+        <div id="section5_logo"></div>
+        <div id="section5_postName">공고명</div>
+        <div id="section5_region">지역</div>
+        <div id="section5_education">경력 (->)</div>
+        <div class="section5_footer">
+          <div id="section5_footer_left">성과급/상여금</div>
+          <div id="section5_footer_right">
+            <div id="section5_endDate">마감일</div>
+            <div id="section5_star">☆</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script>
+    // 드롭다운
+    const region_bar = document.querySelector("#region_bar")
+    const section2_region_option = document.querySelector(".section2_region_option");
+    const job_bar = document.querySelector("#job_bar")
+    const section2_job_option = document.querySelector(".section2_job_option")
+
+    region_bar.addEventListener("click", () => {
+      if (section2_region_option.classList.contains("section2_none")) {
+        section2_job_option.classList.add("section2_none");
+        section2_region_option.classList.remove("section2_none");
+        section2_region_option.classList.add("section2_block");
+      } else if (section2_region_option.classList.contains("section2_block")) {
+        section2_job_option.classList.add("section2_none");
+        section2_region_option.classList.add("section2_none");
+        section2_region_option.classList.remove("section2_block");
+      }
+    });
+
+    job_bar.addEventListener("click", () => {
+      if (section2_job_option.classList.contains("section2_none")) {
+        section2_region_option.classList.add("section2_none");
+        section2_job_option.classList.add("section2_block");
+        section2_job_option.classList.remove("section2_none");
+      } else if (section2_job_option.classList.contains("section2_block")) {
+        section2_region_option.classList.add("section2_none");
+        section2_job_option.classList.add("section2_none");
+        section2_job_option.classList.remove("section2_block");
+      }
+    });
+    // sec 검색칸
+    const search_bar = document.querySelector("#search_bar");
+
+    search_bar.addEventListener("click", () => {
+      const input = document.createElement("input");
+      input.type = "text";
+      input.placeholder = "검색어를 입력하세요";
+      input.classList.add("section2_option");
+
+      input.addEventListener("blur", () => {
+        const value = input.value.trim();
+        search_bar.textContent = value || "검색어입력";
+        search_bar.classList.add("nofocus");
+        input.replaceWith(search_bar);
+      });
+
+      search_bar.replaceWith(input);
+      input.focus(); // `input`에 포커스 설정
+    });
+    // 키워드 저장칸에 옮기기용
+    const regions = document.querySelectorAll(".region");
+    const jobs = document.querySelectorAll(".job");
+    const keyword_container = document.querySelector("#keyword_container");
+    regions.forEach(region => {
+      region.addEventListener("click", () => {
+        keyword_container.innerHTML = region.getAttribute("value");
+      });
+    });
+    jobs.forEach(job => {
+      job.addEventListener("click", () => {
+        keyword_container.innerHTML = job.getAttribute("value");
+      });
+    });
+
+    const section2_btn = document.querySelector("#section2_btn");
+    section2_btn.addEventListener("click", () => {
+      alert("우리는 어디로 가고 있나요?");
+    });
+  </script>
+</body>
+
+</html>

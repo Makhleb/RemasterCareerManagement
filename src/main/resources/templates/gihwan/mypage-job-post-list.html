@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout_dir/layout/company_mypage_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>공고 조회</title>
+    <link rel="stylesheet" href="/css/mypage-job-post-list.css">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="main-title">공고 조회</div>
+    <hr>
+    <div class="column-flex list-padding" id="post-list">
+    </div>
+</div>
+<script layout:fragment="script">
+
+    window.onload = function () {
+        axios.get('/api/companies/job-post/aplc-list')
+            .then(function (response) {
+                let postList = response.data;
+                console.log(postList);
+
+                postList.forEach(function (item, index) {
+                    let startDate = item.startDate.substring(0, 16).replace('T', ' ');
+                    let endDate = item.startDate.substring(0, 16).replace('T', ' ');
+
+
+                    $('#post-list').append(
+                        `<div class="post-item">
+                            <div class="post-item-info row-flex">
+                                <img src=${item.postThumbnail != null? item.postThumbnail : '/images/noImage.jpg'} class="photo-item" alt="공고 이미지">
+                                <div class="column-flex post-info">
+                                    <div class="title-and-date">
+                                        <div class="row-flex" style="align-items: center;">
+                                            <div class="post-title text-button" style="margin-right: 20px">${item.title}</div>
+                                            <button class="post-button inner-button" onclick="updatePost(${item.jobPostNo})" style="margin-right: 5px">수정</button>
+                                            <button class="post-button inner-button" onclick="deletePost(${item.jobPostNo})">삭제</button>
+                                        </div>
+                                        <div class="item-date">
+                                            <span class="start-date">${startDate}</span>
+                                            <span> ~ </span>
+                                            <span class="end-date">${endDate}</span>
+                                        </div>
+                                    </div>
+                                    <div class="post-type">
+                                        <span class="work-type">${item.workTypeCode}</span>
+                                        <span> | </span>
+                                        <span class="job-history">${item.jobHistory}</span>
+                                        <span> | </span>
+                                        <span class="job-type">${item.workCode}</span>
+                                    </div>
+                                </div>
+                                <div class="text-button" onclick="viewList(event)" data-value="${index}">
+                                    <span>지원자 목록</span>
+                                    <img src="/images/black_down_arrow.png" alt="아래 화살표">
+                                </div>
+                                <button class="post-button resume">공고에 맞는<br>이력서 추천</button>
+                            </div>
+                            <div class="user-list column-flex"  data-value="${index}" style="display: none">
+                            </div>
+                        </div>`
+                    );
+
+                    if (item.alpcList.length !== 0) {
+                        item.alpcList.forEach(function (alpcInfo) {
+                            $('.user-list[data-value="' + index + '"]').append(
+                                `<div class="row-flex alpc-info">
+                                <div>${alpcInfo.userName}</div>
+                                <div style="flex: 3;">${alpcInfo.title}</div>
+                                <select class="passYn" name="passYn" onchange="userPassChange(${alpcInfo.jobPostNo},${alpcInfo.resumeNo},this.value)">
+                                    <option value="Y" ${alpcInfo.passYn === "Y" ? 'selected' : ''}>합격</option>
+                                    <option value="N" ${alpcInfo.passYn === "N" ? 'selected' : ''}>불합격</option>
+                                    <option value="W" ${alpcInfo.passYn === "W" ? 'selected' : ''}>대기</option>
+                                </select>
+                                <div>${alpcInfo.aplcHstrDate.substring(0, 10)}</div>
+                            </div>`
+                            )
+                        })
+                    } else {
+                        $('.text-button[data-value="' + index + '"]').css('visibility', 'hidden');
+                    }
+                })
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+    }
+
+    /**
+     * 유저 지원 결과 수정
+     */
+    function userPassChange(jobPostNo, resumeNo, value) {
+        const result = {
+            jobPostNo: jobPostNo,
+            resumeNo: resumeNo,
+            passYn: value
+        }
+
+        axios.put('/api/companies/aplc', result)
+            .then(function (response) {
+                console.log(response);
+                alert("수정 성공");
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+    }
+    function deletePost(jobPostNo) {
+        axios.delete('/api/companies/job-post/' + jobPostNo)
+            .then(function (response) {
+                console.log(response);
+                alert("삭제 완료");
+                location.reload();
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+    }
+
+    /**
+     * 공고 수정
+     */
+    function updatePost(jobPostNo) {
+        location.href = '/mypage/company/job-post?post=' + jobPostNo;
+    }
+
+    /**
+     * 지원자 리스트 보여주는 버튼
+     */
+    function viewList(event) {
+        let postItem = $(event.target).closest('.post-item').find('.user-list');
+
+        if (postItem.attr('style').includes('display: none')) {
+            postItem.show();
+        } else {
+            postItem.hide();
+        }
+    }
+
+</script>
+</body>
+</html>

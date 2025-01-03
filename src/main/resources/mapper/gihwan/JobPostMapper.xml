@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test.dao.gihwan.JobPostDao">
+    <insert id="insertJobPost" useGeneratedKeys="true" keyProperty="jobPostNo">
+        INSERT INTO tblJobPost
+        (
+        jobPostNo, companyId, title, jobHistory, jobSalary, startDate, endDate, content, method, addNotice,
+        managerName, managerPhone, managerEmail, postThumbnail, postAddress, postAddressDetail, postZonecode,
+        postViewYn, workCode, jobRankCode, workTypeCode, educationCode
+        )
+        VALUES
+        (
+        NULL, #{JP.companyId}, #{JP.title}, #{JP.jobHistory}, #{JP.jobSalary}, #{JP.startDate}, #{JP.endDate},
+        #{JP.content}, #{JP.method}, #{JP.addNotice}, #{JP.managerName}, #{JP.managerPhone}, #{JP.managerEmail},
+        #{JP.postThumbnail}, #{JP.postAddress}, #{JP.postAddressDetail}, #{JP.postZonecode}, #{JP.postViewYn},
+        #{JP.workCode}, #{JP.jobRankCode}, #{JP.workTypeCode}, #{JP.educationCode}
+        )
+    </insert>
+    <insert id="insertJobPostSkill">
+        INSERT INTO tblJobPostSkill
+        (jobPostNo, skillCode)
+        VALUES
+        <foreach collection="list" item="JPS" separator=",">
+            (#{postNo}, #{JPS.skillCode})
+        </foreach>
+    </insert>
+    <insert id="insertBenefit">
+        INSERT INTO tblBenefit
+        (jobPostNo, benefitContent)
+        VALUES
+        <foreach collection="list" item="B" separator=",">
+            (#{postNo}, #{B.benefitContent})
+        </foreach>
+    </insert>
+
+    <select id="selectAll">
+        SELECT
+        P.jobPostNo,
+        P.title,
+        P.startDate,
+        P.endDate,
+        GWT.name AS workTypeCode,
+        P.jobHistory,
+        GT.name AS workCode
+        FROM tblJobPost P
+        JOIN (SELECT * FROM tblGubn WHERE groupCode = 'WORK_TYPE') GWT
+        ON P.workTypeCode = GWT.code
+        JOIN (SELECT * FROM tblGubn WHERE groupCode = 'WORK') GT
+        ON P.workCode = GT.code
+        WHERE P.companyId = #{companyId} AND P.deleteYn = 'N'
+        ORDER BY P.jobPostNo DESC
+    </select>
+
+    <select id="selectJobPostAplc">
+        SELECT
+        A.jobPostNo,
+        A.resumeNo,
+        B.title,
+        C.userName,
+        A.passYn,
+        A.aplcHstrDate
+        FROM tblAplcHstr A
+        JOIN tblResume B ON A.resumeNo = B.resumeNo
+        JOIN tblUser C  ON B.userId = C.userId AND C.userIsActive = 'Y'
+        WHERE A.jobPostNo = #{jobPostNo};
+    </select>
+
+    <select id="selectJobPostDetail">
+        SELECT
+        title,
+        jobHistory,
+        jobSalary,
+        startDate,
+        endDate,
+        content,
+        method,
+        addNotice,
+        managerName,
+        managerPhone,
+        managerEmail,
+        postThumbnail,
+        postAddress,
+        postAddressDetail,
+        postZonecode,
+        postViewYn,
+        workCode,
+        jobRankCode,
+        workTypeCode,
+        educationCode
+        FROM tblJobPost
+        WHERE jobPostNo = #{jobPostNo}
+    </select>
+    <select id="selectBenefit">
+        SELECT *
+        FROM tblBenefit
+        WHERE jobPostNo = #{jobPostNo}
+    </select>
+    <select id="selectPostSkill">
+        SELECT *
+        FROM tblJobPostSkill
+        WHERE jobPostNo = #{jobPostNo}
+    </select>
+
+    <update id="updateJobPost">
+        UPDATE tblJobPost
+        SET
+        title = #{JP.title},
+        jobHistory = #{JP.jobHistory},
+        jobSalary = #{JP.jobSalary},
+        startDate = #{JP.startDate},
+        endDate = #{JP.endDate},
+        content = #{JP.content},
+        method = #{JP.method},
+        addNotice = #{JP.addNotice},
+        managerName = #{JP.managerName},
+        managerPhone = #{JP.managerPhone},
+        managerEmail = #{JP.managerEmail},
+        postThumbnail = #{JP.postThumbnail},
+        postAddress = #{JP.postAddress},
+        postAddressDetail = #{JP.postAddressDetail},
+        postZonecode = #{JP.postZonecode},
+        postViewYn = #{JP.postViewYn},
+        workCode = #{JP.workCode},
+        jobRankCode = #{JP.jobRankCode},
+        workTypeCode = #{JP.workTypeCode},
+        educationCode = #{JP.educationCode}
+        WHERE jobPostNo = #{JP.jobPostNo}
+    </update>
+
+
+    <delete id="deleteJobPost">
+        UPDATE tblJobPost SET deleteYn = 'Y' WHERE jobPostNo=#{jobPostNo};
+    </delete>
+    <delete id="deleteBenefit">
+        DELETE FROM tblBenefit WHERE jobPostNo=#{jobPostNo};
+    </delete>
+    <delete id="deleteJobPostSkill">
+        DELETE FROM tblJobPostSkill WHERE jobPostNo=#{jobPostNo};
+    </delete>
+</mapper>
