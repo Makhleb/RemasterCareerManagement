@@ -72,7 +72,7 @@ section {
 #company-detail2 {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 50px;
+    margin-bottom: 35px;
 }
 
 #detail2_con1 {
@@ -171,9 +171,24 @@ section {
 }
 
 /*lv2 뽀대용 이미지 */
+#fakeTag{
+    position: relative;
+    width: 100%;
+}
 #fake-img {
     border-radius: 10px;
     width: 100%;
+}
+#fake-text {
+    position: absolute;
+    height: auto;
+    left: 68.7%;
+    top: 23.8%;
+    font-weight: bold;
+    color: #3a5154;
+    font-size: 19px;
+    background-color: #60BFB6;
+
 }
 
 /*lv2 data */
