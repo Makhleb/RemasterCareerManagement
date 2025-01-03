@@ -10,7 +10,7 @@ import java.util.List;
 
 @Mapper
 public interface CompanyDetailDao_sangin {
-    public CompanyDetailVo getCompanyDetailById(@Param("companyId") String companyId);
+    public CompanyDetailVo getCompanyDetailById(@Param("companyId") String companyId, @Param("userId") String userId);
 
     public List<JobPostDetailVo> jobPostByCompanyId(@Param("companyId")String companyId);
 

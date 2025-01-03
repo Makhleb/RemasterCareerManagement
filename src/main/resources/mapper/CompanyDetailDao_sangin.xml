@@ -4,7 +4,10 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.test.dao.sangin.CompanyDetailDao_sangin">
     <select id="getCompanyDetailById" resultType="com.example.test.vo.CompanyDetailVo">
-        select * from tblCompany where companyId = #{companyId}
+        select *,
+        (select 1 from tblLike where userId = #{userId} and companyId = #{companyId})
+        as isBookmarked from
+        tblCompany cp where companyId = #{companyId}
     </select>
 
     <select id="jobPostByCompanyId" resultType="com.example.test.vo.JobPostDetailVo">

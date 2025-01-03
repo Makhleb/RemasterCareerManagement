@@ -18,9 +18,9 @@ public class CompanyDetailService_sangin {
     @Autowired
     CompanyDetailDao_sangin companyDetailDao;
 
-    public CompanyDetailVo getCompanyDetailById(String companyId) {
+    public CompanyDetailVo getCompanyDetailById(String companyId, String userId) {
         System.out.println("company detail service1..." + companyId);
-        CompanyDetailVo companyDetail = companyDetailDao.getCompanyDetailById(companyId);
+        CompanyDetailVo companyDetail = companyDetailDao.getCompanyDetailById(companyId, userId);
 //        companyId 에 해당하는 회사 정보 찾아오기
         System.out.println("company detail service2..." + companyDetail);
 //        companyId 에 해당하는 공고랑 score 찾기
