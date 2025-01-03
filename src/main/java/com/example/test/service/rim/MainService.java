@@ -131,4 +131,19 @@ public class MainService {
     public List<PopularSkillDTO> getPopularSkills() {
         return mainDao.findPopularSkills();
     }
+
+    public DashboardDTO getJobSeekerDashboard(String userId) {
+        DashboardDTO dashboard = new DashboardDTO();
+        dashboard.setStats(mainDao.findJobSeekerDashboard(userId));
+        dashboard.setRecentApplications(mainDao.findRecentApplications(userId));
+        return dashboard;
+    }
+
+    public List<JobPostDTO> getRecommendedPosts(String userId) {
+        return mainDao.findRecommendedPosts(userId);
+    }
+
+    public List<JobPostDTO> getDeadlinePosts(String userId) {
+        return mainDao.findDeadlinePosts(userId);
+    }
 } 

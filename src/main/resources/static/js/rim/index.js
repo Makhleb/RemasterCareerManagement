@@ -1,14 +1,18 @@
-// DOM 요소
+// DOM 요소 업데이트
 const DOM = {
     guestBanner: document.getElementById('guestBanner'),
     popularPosts: document.getElementById('popularPosts'),
     topCompanies: document.getElementById('topCompanies'),
     trendingPosts: document.getElementById('trendingPosts'),
-    sortButtons: document.querySelectorAll('.filter-buttons button'),
+    companyFilterButtons: document.querySelectorAll('.top-companies .filter-buttons button'),
+    trendingFilterButtons: document.querySelectorAll('.trending-posts .filter-buttons button'),
     prevButton: document.getElementById('slideLeft'),
     nextButton: document.getElementById('slideRight'),
     companiesSlider: document.getElementById('topCompanies')
 };
+
+// 전역 변수로 데이터 저장
+let mainPageData = null;
 
 let testValue = null
 
@@ -31,11 +35,13 @@ async function initMainPage() {
         const response = await API.main.getData();
         console.log('메인 데이터 응답:', response);
         
-        const userSection = response.data.userSection;
+        mainPageData = response;
+
+        const userSection = response.userSection;
         
         // 인기 기술스택 렌더링
-        if (response.data.popularSkills) {
-            renderPopularSkills(response.data.popularSkills);
+        if (response.popularSkills) {
+            renderPopularSkills(response.popularSkills);
         }
 
         // 사용자 타입에 따른 섹션 렌더링
@@ -89,6 +95,121 @@ function renderCompanySection(companyData) {
     renderActivePosts(companyData.activePosts || []);
     // 추천 인재
     renderRecommendedCandidates(companyData.recommendedCandidates || []);
+}
+
+//구직자 대시보드
+// 최근 지원 내역 렌더링
+function renderDashboard(dashboardData) {
+    const dashboardContainer = document.getElementById('dashboardContainer');
+    if (!dashboardContainer) return;
+
+    // 통계 데이터 렌더링
+    const stats = dashboardData.stats;
+    const total = stats.inProgress + stats.accepted + stats.rejected;
+    const acceptanceRate = total > 0 ? ((stats.accepted / total) * 100).toFixed(1) : 0;
+
+    const dashboardHtml = `
+        <div class="section-header">
+            <h2>지원 현황</h2>
+            <div class="stats-summary">전체 지원: ${total}건 / 합격률: ${acceptanceRate}%</div>
+        </div>
+        <div class="dashboard-content">
+            <div class="stats-container">
+                <div class="stat-item">
+                    <span class="stat-label">진행 중</span>
+                    <span class="stat-value waiting">${stats.inProgress}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">합격</span>
+                    <span class="stat-value accepted">${stats.accepted}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">불합격</span>
+                    <span class="stat-value rejected">${stats.rejected}</span>
+                </div>
+            </div>
+
+            <div class="recent-applications">
+                <h3>최근 지원 내역</h3>
+                <div class="applications-list">
+                    ${dashboardData.recentApplications && dashboardData.recentApplications.length > 0
+        ? dashboardData.recentApplications.map(app => `
+                            <div class="application-item">
+                                <div class="application-info">
+                                    <div class="company-name">${app.companyName}</div>
+                                    <div class="post-title">${app.postTitle}</div>
+                                    <div class="apply-date">${new Date(app.applyDate).toLocaleDateString()}</div>
+                                </div>
+                                <span class="application-status status-${getStatusClass(app.passYn)}">
+                                    ${getStatusText(app.passYn)}
+                                </span>
+                            </div>
+                        `).join('')
+        : '<div class="no-data">최근 지원 내역이 없습니다.</div>'
+    }
+                </div>
+            </div>
+        </div>
+    `;
+
+    dashboardContainer.innerHTML = dashboardHtml;
+}
+// 상태 클래스 반환
+function getStatusClass(status) {
+    switch(status) {
+        case 'W': return 'waiting';
+        case 'Y': return 'accepted';
+        case 'N': return 'rejected';
+        default: return 'waiting';
+    }
+}
+
+// 상태 텍스트 반환
+function getStatusText(status) {
+    switch(status) {
+        case 'W': return '진행중';
+        case 'Y': return '합격';
+        case 'N': return '불합격';
+        default: return '확인중';
+    }
+}
+
+
+
+//구직자 - 마감임박 공고
+function renderDeadlinePosts(deadlinePosts) {
+    const deadlineContainer = document.getElementById('deadlinePosts');
+    if (!deadlineContainer) return;
+
+    const postsHtml = deadlinePosts.map(post => `
+        <div class="job-post-card">
+            <img src="${post.companyImage}" alt="${post.companyName}" class="company-logo">
+            <h3 class="post-title">${post.title || '제목 없음'}</h3>
+            <p>${post.companyName}</p>
+            <p>${post.benefits ? post.benefits.join(', ') : '복리후생 정보 없음'}</p>
+        </div>
+    `).join('');
+
+    deadlineContainer.innerHTML = postsHtml;
+}
+
+
+
+//구직자- 추천공고 랜더링
+function renderRecommendedPosts(recommendedPosts) {
+    const recommendedContainer = document.getElementById('recommendedPosts');
+    if (!recommendedContainer) return;
+
+    const postsHtml = recommendedPosts.map(post => `
+        <div class="job-post-card">
+            <img src="${post.companyImage}" alt="${post.companyName}" class="company-logo">
+            <h3 class="post-title">${post.title || '제목 없음'}</h3>
+            <p>${post.companyName}</p>
+            <p>${post.benefits ? post.benefits.join(', ') : '복리후생 정보 없음'}</p>
+        </div>
+    `).join('');
+
+    recommendedContainer.innerHTML = postsHtml;
 }
 
 // 채용공고 카드 렌더링
@@ -243,24 +364,68 @@ function toggleGuestBanner(show) {
     DOM.guestBanner.style.display = show ? 'block' : 'none';
 }
 
-// 정렬 버튼 이벤트 핸들러
-DOM.sortButtons.forEach(button => {
-    button.addEventListener('click', async () => {
-        const sortType = button.dataset.sort;
-        
-        // 활성 버튼 스타일 변경
-        DOM.sortButtons.forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
-        
-        try {
-            // 스크랩순으로만 정렬
-            const posts = await API.main.getMostScrapedPosts();
-            renderTrendingPosts(posts);
-        } catch (error) {
-            console.error('채용공고 정렬 실패:', error);
+
+// 기업 TOP 10 필터 버튼 이벤트 핸들러
+DOM.companyFilterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        if (!mainPageData || !mainPageData.userSection) {
+            console.error('데이터가 없습니다');
+            return;
         }
+
+        const sortType = button.dataset.sort;
+
+        // 활성 버튼 스타일 변경
+        DOM.companyFilterButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+
+        // 저장된 데이터에서 정렬
+        const companies = mainPageData.userSection.guest?.topCompanies ||
+            mainPageData.userSection.jobSeeker?.topCompanies || [];
+
+        // 정렬 로직
+        const sortedCompanies = [...companies].sort((a, b) => {
+            if (sortType === 'rating') {
+                return b.avgRating - a.avgRating;
+            } else if (sortType === 'interest') {
+                return b.likeCount - a.likeCount;
+            }
+            return 0;
+        });
+
+        renderTopCompanies(sortedCompanies);
     });
 });
+
+// 주목받는 채용공고 필터 버튼 이벤트 핸들러
+// DOM.trendingFilterButtons.forEach(button => {
+//     button.addEventListener('click', () => {
+//         if (!mainPageData || !mainPageData.userSection) {
+//             console.error('데이터가 없습니다');
+//             return;
+//         }
+//
+//         const sortType = button.dataset.sort;
+//
+//         // 활성 버튼 스타일 변경
+//         DOM.trendingFilterButtons.forEach(btn => btn.classList.remove('active'));
+//         button.classList.add('active');
+//
+//         // 저장된 데이터에서 정렬
+//         const posts = mainPageData.userSection.guest?.scrapedPosts ||
+//             mainPageData.userSection.jobSeeker?.scrapedPosts || [];
+//
+//         // 정렬 로직
+//         const sortedPosts = [...posts].sort((a, b) => {
+//             if (sortType === 'scrap') {
+//                 return b.scrapCount - a.scrapCount;
+//             }
+//             return 0;
+//         });
+//
+//         renderTrendingPosts(sortedPosts);
+//     });
+// });
 
 // 페이지 로드 시 초기화
 document.addEventListener('DOMContentLoaded', initMainPage); 

@@ -74,14 +74,13 @@
         
         .job-post-card {
             position: relative;
-            border: none;
             border-radius: 8px;
             overflow: hidden;
             background: white;
             height: 300px;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e1e1e1;
         }
 
         .job-post-card::before {
@@ -103,9 +102,7 @@
             background: white;
             height: 100px;
             flex-shrink: 0;
-            border: 1px solid #e1e1e1;
             border-top: none;
-            border-radius: 0 0 8px 8px;
         }
 
         .company-logo {
@@ -180,7 +177,7 @@
             background: none;
             border: none;
             cursor: pointer;
-            color: white;
+            color: rgba(255, 255, 255, 0.18);
             font-size: 1.2rem;
             padding: 0.25rem;
             margin-left: 8px;
@@ -288,6 +285,45 @@
             <div class="banner-text">로그인하시면 더 많은 서비스를 이용할 수 있습니다.</div>
         </div>
         
+
+
+        <!-- 대시보드 섹션 -->
+        <section class="dashboard-section">
+            <div id="dashboardContainer" class="dashboard-container">
+                <div class="dashboard-header">
+                </div>
+                <div class="dashboard-content">
+                    <!-- 지원 현황 통계 -->
+                    <div class="stats-container">
+                        <div class="stat-item">
+                            <span class="stat-label">진행 중</span>
+                            <span class="stat-value waiting"></span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">합격</span>
+                            <span class="stat-value accepted"></span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">불합격</span>
+                            <span class="stat-value rejected"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- 최근 지원 목록 -->
+                    <div class="recent-applications">
+                        <h3>최근 지원 내역</h3>
+                        <div class="applications-list">
+                            <!-- JavaScript로 동적 렌더링 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div id="deadlinePosts" class="deadline-posts-container">
+            <!-- 마감 임박 공고 데이터가 여기에 렌더링됩니다. -->
+        </div>
+        
         <!-- 인기 기술스택별 채용공고 -->
         <section class="popular-posts">
             <div class="section-header">
@@ -310,6 +346,10 @@
         <!-- TOP 10 기업 -->
         <section class="top-companies">
             <h2>별점 높은 기업 TOP 10</h2>
+            <div class="filter-buttons">
+                <button class="active" data-sort="rating">별점 높은 순</button>
+                <button data-sort="interest">관심 기업 수 많은 순</button>
+            </div>
             <div class="companies-slider-container">
                 <button id="slideLeft" class="slide-button" aria-label="이전 슬라이드">
                     <i class="fas fa-chevron-left"></i>
@@ -327,9 +367,6 @@
         <section class="trending-posts">
             <div class="section-header">
                 <h2>주목받는 채용공고</h2>
-                <div class="filter-buttons">
-                    <button class="active" data-sort="scrap">스크랩 많은순</button>
-                </div>
             </div>
             <div class="posts-container" id="trendingPosts">
                 <!-- JavaScript로 동적 렌더링 -->
@@ -339,6 +376,11 @@
                 <p>이곳에 광고가 들어갑니다.</p>
             </div>
         </section>
+
+        <div id="recommendedPosts" class="recommended-posts-container">
+            <!-- 추천 공고 데이터가 여기에 렌더링됩니다. -->
+        </div>
+
     </div>
     <script src="/js/rim/index.js"></script>
 </th:block>

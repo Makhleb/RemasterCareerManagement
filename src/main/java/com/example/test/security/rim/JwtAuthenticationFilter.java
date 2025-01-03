@@ -56,6 +56,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     userDetails, null, userDetails.getAuthorities()
                 );
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                
+
                 log.debug("JWT 인증 성공: {}", userId);
                 
             } catch (AuthException e) {
@@ -91,7 +94,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             url.equals("/api/auth/login") ||
             url.equals("/api/auth/signup") ||
             url.equals("/api/auth/logout") ||
-            url.equals("/api/auth/me") ||
             url.startsWith("/js/") ||
             url.startsWith("/css/") ||
             url.startsWith("/images/") ||

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.test.dao.rim.JobPostDao">
+<mapper namespace="com.example.test.dao.rim.MainJobPostDao">
 
     <!-- 인기 기술스택별 채용공고 -->
     <select id="findPopularPostsBySkills" resultType="map">

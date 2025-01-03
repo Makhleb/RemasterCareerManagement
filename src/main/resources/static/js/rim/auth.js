@@ -25,9 +25,9 @@ window.auth = {
         // 2. 캐시가 없으면 API 호출
         try {
             const response = await API.auth.me();
-            if (response.data.status === 'SUCCESS') {
+            if (response.status === 'SUCCESS') {
                 // 3. API 응답을 캐시에 저장
-                this._userInfo = response.data.data;
+                this._userInfo = response.data;
                 return this._userInfo;
             }
             return null;

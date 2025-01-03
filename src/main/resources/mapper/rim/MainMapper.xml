@@ -76,7 +76,25 @@
         LEFT JOIN tblAplcHstr ah ON jp.jobPostNo = ah.jobPostNo
         LEFT JOIN tblJpl j ON jp.jobPostNo = j.jobPostNo
         WHERE jp.endDate > NOW()
-        GROUP BY jp.jobPostNo
+        GROUP BY 
+            jp.jobPostNo,
+            jp.companyId,
+            jp.title,
+            jp.content,
+            jp.startDate,
+            jp.endDate,
+            jp.jobSalary,
+            jp.postViewYn,
+            jp.postThumbnail,
+            jp.postAddress,
+            jp.postAddressDetail,
+            jp.postZonecode,
+            jp.workCode,
+            jp.jobRankCode,
+            jp.workTypeCode,
+            jp.educationCode,
+            c.companyName,
+            c.companyImage
         ORDER BY 
             DATEDIFF(jp.endDate, NOW()) ASC,  -- 마감일이 가까운 순
             applicationCount DESC               -- 지원자 수 내림차순
@@ -109,13 +127,19 @@
         WHERE r.userId = #{userId}
     </select>
 
-    <!-- 구직자 최근 지원 내역 -->
+    <!-- 최근 지원 내역 조회 -->
     <select id="findRecentApplications" resultMap="applicationResultMap">
-        SELECT ah.*, jp.title as postTitle, c.companyName
+        SELECT 
+            ah.jobPostNo,
+            jp.title as postTitle,
+            c.companyName,
+            ah.aplcHstrDate,
+            ah.passYn,
+            ah.readYn
         FROM tblAplcHstr ah
+        JOIN tblResume r ON ah.resumeNo = r.resumeNo
         JOIN tblJobPost jp ON ah.jobPostNo = jp.jobPostNo
         JOIN tblCompany c ON jp.companyId = c.companyId
-        JOIN tblResume r ON ah.resumeNo = r.resumeNo
         WHERE r.userId = #{userId}
         ORDER BY ah.aplcHstrDate DESC
         LIMIT 5
@@ -169,7 +193,7 @@
         LIMIT 8
     </select>
 
-    <!-- 맞춤 추천 공고 (이력서 기술스택 기반) -->
+    <!-- 맞춤 추천 공고 (이력서 기술스택 기반, 이렫서가 없면 ) -->
     <select id="findRecommendedPosts" resultMap="jobPostResultMap">
         SELECT DISTINCT jp.jobPostNo, jp.companyId, jp.title, jp.endDate, jp.postViewYn,
                c.companyName, c.companyImage,

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 @Mapper
-public interface JobPostDao {
+public interface MainJobPostDao {
     
     // 인기 기술스택별 채용공고 조회
     List<Map<String, Object>> findPopularPostsBySkills();

@@ -79,17 +79,6 @@ window.API = {
                 console.error('TOP 10 기업 조회 실패:', error);
                 throw error;
             }
-        },
-
-        // 스크랩 많은 채용공고 조회
-        getMostScrapedPosts: async () => {
-            try {
-                const response = await axios.get(API_ENDPOINTS.MAIN.MOST_SCRAPED);
-                return response.data;
-            } catch (error) {
-                console.error('스크랩 많은 채용공고 조회 실패:', error);
-                throw error;
-            }
         }
     }
 };

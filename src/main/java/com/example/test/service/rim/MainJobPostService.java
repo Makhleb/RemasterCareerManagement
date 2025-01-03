@@ -2,15 +2,15 @@ package com.example.test.service.rim;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.example.test.dao.rim.JobPostDao;
+import com.example.test.dao.rim.MainJobPostDao;
 import java.util.List;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class JobPostService {
+public class MainJobPostService {
     
-    private final JobPostDao jobPostDao;
+    private final MainJobPostDao jobPostDao;
 
     // 인기 기술스택별 채용공고 조회
     public List<Map<String, Object>> findPopularPostsBySkills() {
