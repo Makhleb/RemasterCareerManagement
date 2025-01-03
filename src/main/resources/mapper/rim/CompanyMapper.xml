@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test.dao.rim.CompanyDao">
+
+    <select id="findById" parameterType="string" resultType="com.example.test.dto.CompanyDTO">
+        SELECT *
+        FROM tblCompany
+        WHERE companyId = #{companyId}
+    </select>
+
+    <select id="existsById" parameterType="string" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM tblCompany
+        WHERE companyId = #{companyId}
+    </select>
+
+    <select id="existsByEmail" parameterType="string" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM tblCompany
+        WHERE companyEmail = #{email}
+    </select>
+
+    <select id="existsByNumber" parameterType="string" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM tblCompany
+        WHERE companyNumber = #{number}
+    </select>
+
+    <insert id="save" parameterType="com.example.test.dto.rim.CompanyCreateDTO">
+        INSERT INTO tblCompany (
+            companyId,
+            companyPw,
+            companyName,
+            companyNumber,
+            companyAddress,
+            companyZonecode,
+            companyAddressDetail,
+            companyContact,
+            companyEmail,
+            companyWebsite,
+            companyBirth,
+            companyEmployee,
+            companyProfit,
+            companyRole,
+            companyIsActive
+        ) VALUES (
+            #{companyId},
+            #{companyPw},
+            #{companyName},
+            #{companyNumber},
+            #{companyAddress},
+            #{companyZonecode},
+            #{companyAddressDetail},
+            #{companyContact},
+            #{companyEmail},
+            #{companyWebsite},
+            #{companyBirth},
+            #{companyEmployee},
+            #{companyProfit},
+            'ROLE_COMPANY',
+            'Y'
+        )
+    </insert>
+
+</mapper> 

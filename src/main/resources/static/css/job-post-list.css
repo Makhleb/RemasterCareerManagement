@@ -1,0 +1,78 @@
+.column-flex{
+    display: flex;
+    flex-direction: column;
+}
+
+.row-flex{
+    display: flex;
+    flex-direction: row;
+}
+
+.list-padding{
+    padding: 20px 25px;
+    gap: 25px;
+}
+
+.post-item-info{
+    height: 120px;
+    border-radius: 10px;
+    padding: 15px 20px;
+    background-color: var(--side);
+    gap: 15px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.photo-item{
+    width: 150px;
+    height: 120px;
+    border-radius: 10px;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.post-info{
+    flex: 3;
+    height: 100%;
+    justify-content: space-between;
+}
+
+.post-button{
+    background-color: var(--base);
+    color: #eee;
+    border-radius: 10px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.resume{
+    padding: 10px 20px;
+}
+
+.text-button{
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.inner-button{
+    padding: 5px 20px;
+}
+
+.post-item-info.row-flex {
+    white-space: nowrap;
+}
+
+.user-list{
+    padding: 20px;
+    background-color: #eee;
+    border-radius: 10px;
+    gap: 20px;
+}
+
+.alpc-info{
+    padding-left: 50px;
+    justify-content: space-between;
+    gap: 65px;
+}

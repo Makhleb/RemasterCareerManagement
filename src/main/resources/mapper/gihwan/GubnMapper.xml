@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test.dao.gihwan.GubnDao">
+    <select id="getGubn" resultType="com.example.test.dto.GubnDTO">
+        SELECT * FROM tblGubn
+        WHERE groupCode IN
+        <foreach collection="list" item="groupCode" open="(" separator="," close=")">
+            #{groupCode}
+        </foreach>
+    </select>
+</mapper>
