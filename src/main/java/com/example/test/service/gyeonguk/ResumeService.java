@@ -24,6 +24,7 @@ public class ResumeService {
      */
     public int savePersonalInfo(ResumeDTO resumeDTO) {
         resumeDao.insertPersonalInfo(resumeDTO);
+
         return resumeDTO.getResumeNo();
     }
 
