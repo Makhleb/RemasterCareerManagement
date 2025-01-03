@@ -1,64 +1,178 @@
-*{
+button, .input-name, input, textarea, select {
+    font-size: 16px;
+}
+.btn-box button{
+    width: 150px;
+    padding: 10px;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+input, textarea, select {
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border: 1px solid var(--text);
+    box-shadow: 0 0 4px rgba(29, 38, 37, 0.3);
+}
+.input-name{
+    padding-bottom: 5px;
+}
+
+textarea{
+    resize: none;
+    width: 100%;
+}
+
+.input-container{
+    padding: 50px 100px;
+}
+.input-box{
+    gap: 25px;
+}
+#post-title{
+    width: 100%;
+}
+.half-width{
+    width: 500px;
+}
+
+.submit-btn{
+    background-color: var(--base);
+}
+.gray-btn{
+    background-color: var(--line);
+}
+
+.column-flex{
+    display: flex;
+    flex-direction: column;
+}
+
+.row-flex{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+.row-flex label{
+    width: 150px
+}
+
+.row-flex label input,select{
+    width: 100%;
+}
+
+.manager-row-grid{
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    gap: 10px;
+}
+.post-row-grid{
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 10px;
+}
+.post-row-grid :is(input, button){
+    width: 100%;
+}
+
+.minus-stack {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    color: white;
+    background-color: var(--point);
+    border: 1px solid #CECECE;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 3px;
+    width: auto;
+}
+
+.add-stack {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    background-color: #f0f0f0;
+    border: 1px solid #CECECE;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 3px;
+    width: auto;
+}
+
+.btn-box {
+    align-self: end;
+}
+
+.add-benefit{
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    background-color: #f0f0f0;
+    border: 1px solid #CECECE;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 3px;
+    width: auto;
+}
+
+.base-btn{
+    padding: 10px;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#image-preview {
+    width: 400px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.bottom-radio {
+    justify-content: space-between;
+    padding: 1rem;
+}
+
+.board {
+    background-color: #F3F3F3;
     color: #333;
 }
 
-.flex-container{
+input[type='radio'] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 1rem;
+    height: 1rem;
+    margin: 0.5rem;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    background-color: #fff;
+    position: relative;
+    cursor: pointer;
+    transition: 0.2s ease;
     display: flex;
+    flex-direction: row;
     justify-content: center;
+    align-items: center;
 }
 
-.container {
-    width: 1400px;
-    font-size: 16px;
-    display: grid;
-    grid-template-columns: 1fr 3fr;
-}
-
-aside {
-    background-color: #f0f0f0;
-    height: 100%;
-    width: 100%;
-}
-aside .aside-title {
-    padding-left: 30px;
-    padding-top: 50px;
-}
-
-aside ul {
-    list-style-type: none;
-    padding-left: 30px;
-}
-aside a {
-    display: block;
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s ease;
-    padding: 25px 0;
-}
-
-aside a:hover {
-    color: skyblue;
-}
-
-aside li ul {
-    padding-left: 20px;
-}
-
-.main-content{
-    width: 100%;
-    padding-top: 40px;
-}
-.main-title {
-    font-size: 30px;
-    font-weight: bold;
-    padding: 8px 25px;
-}
-.input-container{
-    padding-top: 50px;
-    padding-left: 100px;
-    padding-right: 100px;
-}
-
-#post-title{
-    width: 100%;
+input[type='radio']:checked {
+    border-color: var(--point);
+    background-color: var(--point);
+    box-shadow: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }

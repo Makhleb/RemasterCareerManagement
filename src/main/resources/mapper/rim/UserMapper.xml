@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test.dao.rim.UserDao">
+    
+    <select id="findById" resultType="com.example.test.dto.UserDTO">
+        SELECT *
+        FROM tblUser
+        WHERE userId = #{userId}
+    </select>
+
+    <select id="existsById" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM tblUser
+        WHERE userId = #{userId}
+    </select>
+
+    <select id="existsByEmail" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM tblUser
+        WHERE userEmail = #{email}
+    </select>
+
+    <insert id="save" parameterType="com.example.test.dto.UserDTO">
+        INSERT INTO tblUser (
+            userId, userPw, userName, userPhone, 
+            userEmail, userBirth, userGender, userRole,
+            userIsActive, userCreateDate
+        ) VALUES (
+            #{userId}, #{userPw}, #{userName}, #{userPhone},
+            #{userEmail}, #{userBirth}, #{userGender}, #{userRole},
+            #{userIsActive}, NOW()
+        )
+    </insert>
+
+    <!-- findById는 이미 @Select 어노테이션으로 구현됨 -->
+    <!-- existsById는 이미 @Select 어노테이션으로 구현됨 -->
+    <!-- existsByEmail은 이미 @Select 어노테이션으로 구현됨 -->
+</mapper> 
