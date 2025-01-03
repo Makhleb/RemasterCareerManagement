@@ -245,7 +245,9 @@ function renderJobPostCard(post) {
                  alt="${post.companyName}" 
                  class="company-logo"
                  onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(post.companyName)}&size=40&background=random'">
-            <h3 class="post-title">${post.title || '제목 없음'}</h3>
+            <p class="company-name">${post.companyName}</p>
+                 <h3 class="post-title">${post.title || '제목 없음'}</h3>
+             
         </div>
         <div class="post-info" style="background-image: url('${post.postThumbnail}')">
             <div class="post-overlay">

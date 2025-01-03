@@ -100,7 +100,7 @@
         .company-header {
             padding: 15px;
             background: white;
-            height: 85px;
+            height: 104px;
             flex-shrink: 0;
             border-top: none;
         }
@@ -140,7 +140,6 @@
 
         .bottom-tags {
             display: flex;
-            justify-content: space-between;
             align-items: center;
             margin-top: auto;
             width: 100%;
@@ -177,8 +176,8 @@
             background: none;
             border: none;
             cursor: pointer;
-            color: rgba(255, 255, 255, 0.18);
-            font-size: 0.8rem;
+            color: rgba(220, 220, 220, 0.76);
+            font-size: 1rem;
             padding: 0.25rem;
             margin-left: 8px;
             display: flex;
@@ -280,12 +279,11 @@
         </section>
 
         <!-- 비로그인 시 안내 배너 -->
-        <div class="guest-banner" id="guestBanner">
-
-            <div class="banner-text">로그인하시면 더 많은 서비스를 이용할 수 있습니다.</div>
-        </div>
-        
-
+        <a href="/login" style="text-decoration: none;">
+            <div class="guest-banner" id="guestBanner">
+                <div class="banner-text">로그인하시면 더 많은 서비스를 이용할 수 있습니다.</div>
+            </div>
+        </a>
 
         <!-- 대시보드 섹션 -->
         <section class="dashboard-section">
