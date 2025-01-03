@@ -1,3 +1,7 @@
+a{
+    text-decoration: none;
+    color: inherit;
+}
 /* 공통 시작 */
 section {
     display: flex;
@@ -6,7 +10,6 @@ section {
     margin: 0 auto;
     width: 1400px;
     box-sizing: border-box;
-    margin: 0 auto;
 }
 
 /* 공통 끝 */
@@ -16,7 +19,7 @@ section {
     margin-top: 40px;
 }
 
-#region_kind {
+#kind {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -24,17 +27,22 @@ section {
     font-weight: bold;
 }
 
-#region_name {
+.separator {
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 20px;
-}
-
-.separator {
     margin: 0 10px;
     color: #999;
 }
+
+#keyword {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+}
+
 
 /* 섹션2 */
 .section2 {
@@ -94,6 +102,20 @@ section {
     font-weight: bold;
     padding: 30px 40px;
     margin-right: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 기본 그림자 */
+    transition: all 0.3s ease; /* 부드러운 전환 효과 */
+    position: relative; /* 테두리 애니메이션용 */
+    overflow: hidden; /* 테두리 애니메이션이 밖으로 나가지 않도록 */
+}
+#section2_btn:hover {
+    background-color: #9e502d; /* 배경색 변경 */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 확대 */
+    transform: translateY(-2px); /* 살짝 떠오르는 효과 */
+}
+
+#section2_btn:active {
+    transform: scale(0.95); /* 클릭 시 버튼이 약간 작아지는 효과 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 클릭 시 그림자 축소 */
 }
 
 /* 섹션3 */
@@ -151,6 +173,11 @@ section {
     border-radius: 15px;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+    transition: box-shadow 0.3s ease; /* 부드러운 전환 효과 */
+}
+.section4_popular:hover {
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* 호버 시 더 강한 그림자 */
 }
 
 #section4_fake {
@@ -161,10 +188,14 @@ section {
     border-radius: 9px;
     margin-left: 20px;
     border: 1px #ddd solid;
+    font-weight: bold;
 }
 
-#section4_logo {
-    padding: 40px;
+#section4_postThumbnail {
+    min-height: 80px;
+    max-height: 80px;
+    min-width: 80px;
+    max-width: 80px;
     border-radius: 50%;
     position: absolute;
     top: 140px;
@@ -173,11 +204,10 @@ section {
 
 }
 
-#section4_postName {
+#section4_title {
     display: flex;
     align-items: center;
-    justify-content: center;
-    margin-top: 240px;
+    margin-top: 250px;
     margin-left: 20px;
     margin-right: 20px;
     font-size: 20px;
@@ -187,22 +217,20 @@ section {
 
 }
 
-#section4_comName {
-    margin-top: 10px;
+#section4_companyName {
     margin-left: 20px;
     margin-right: 20px;
-    font-size: 18px;
-
+    font-size: 17px;
+    color: gray;
 }
 
 /* 섹션5 */
 .section5 {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-    /* 각 칸의 최소 너비 230px, 빈 공간은 자동 분배 */
-    gap: 20px;
+    gap: 30px;
     margin-top: 20px;
-    padding: 20px;
+    margin-bottom: 100px;
     justify-content: center;
 }
 
@@ -210,33 +238,43 @@ section {
     border: 1px #ddd solid;
     height: 230px;
     border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+    transition: box-shadow 0.3s ease; /* 부드러운 전환 효과 */
+}
+.section5_post:hover{
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* 호버 시 더 강한 그림자 */
 }
 
-#section5_logo {
+#section5_postThumbnail {
     margin-top: 20px;
     margin-left: 20px;
-    padding: 20px;
-    width: 30px;
-    height: 30px;
-    max-width: 30px;
-    max-height: 30px;
+    margin-bottom: 10px;
+    min-height: 70px;
+    min-width: 70px;
+    max-width: 70px;
+    max-height: 70px;
     border: 1px #ddd solid;
 }
 
-#section5_postName {
-    margin-top: 15px;
+#section5_title {
     margin-left: 20px;
-    font-size: 18px;
+    font-size: 19px;
     font-weight: bold;
 }
 
-#section5_region {
+#section5_postAddress {
+    margin-top: 3px;
     margin-left: 20px;
-    font-size: 16px;
+    font-size: 14px;
+    color: #4a4a4a;
 }
 
-#section5_education {
+#section5_educationName {
+    margin-top: 3px;
     margin-left: 20px;
+    font-size: 15px;
+    color: #1a73e8;
+    font-weight: bold;
 }
 
 .section5_footer {
@@ -248,19 +286,42 @@ section {
 }
 
 #section5_footer_left {
-    background-color: #dac6ca;
+    background-color: #ddd;
     display: flex;
     align-items: center;
     justify-content: center;
     border: 1px #ddd solid;
     padding: 5px;
     border-radius: 5px;
+    font-weight: bold;
 }
 
 #section5_footer_right {
     display: flex;
     gap: 10px;
 }
+
+#section5_endDate{
+    font-weight: bold;
+}
+#section5_star {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    background-size: 60px 60px;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+}
+
+.uncolorstar {
+    background-image: url('/images/uncolorstar.png');
+}
+
+.colorstar {
+    background-image: url('/images/colorstar.png');
+}
+
 
 /* sec2 드롭다운 */
 .section2_block {

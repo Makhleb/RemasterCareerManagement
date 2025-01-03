@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout_dir/layout/main_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>공고 상세 보기</title>
+    <link rel="stylesheet" href="/css/job-post-detail.css">
+</head>
+<body layout:fragment="content" th:attr="data-job-post-no=${jobPostNo}">
+<section id="job-post-detail"></section>
+<div id="resume-modal" class="modal">
+    <div class="modal-content">
+        <div style="display: flex; gap: 20px; align-items: center; justify-content: center;">
+            <h2>이력서 선택</h2>
+            <div class="close">&times;</div>
+        </div>
+        <ul id="resume-list"></ul>
+        <button id="apply-btn">지원하기</button>
+    </div>
+</div>
+<script>
+    const section = document.getElementById("job-post-detail");
+    const modal = document.getElementById("resume-modal");
+    const closeModal = document.querySelector(".close");
+    const applyBtn = document.getElementById("apply-btn");
+    const resumeList = document.getElementById("resume-list");
+    const jobPostNo = document.body.dataset.jobPostNo; // 공고 번호를 body의 dataset에서 가져오기
+
+    // 공고 상세 정보 요청
+    axios.get(`/api/users/job-post/detail/${jobPostNo}`)
+        .then(response => {
+            const data = response.data;
+
+            // 공고 상세 정보 동적 생성
+            section.innerHTML = `
+                <div class="section1">
+                    <div id="post_img">
+                        <img src="/images/${data.postThumbnail}" alt="공고 이미지">
+                    </div>
+                </div>
+                <div class="section2">
+                    <div class="section2_box1">
+                        <div id="com_name"><a href="/view/users/company/detail/${data.companyId}">${data.companyName}</a></div>
+                        <div class="request">
+                            <span id="post_address">${data.postAddress}</span>
+                            <span id="job_history">${data.jobHistory}</span>
+                        </div>
+                    </div>
+                    <div class="section2_box2">
+                        <div id="post_name">${data.title}</div>
+                        <div id="box2_con1">
+                            <span id="star" class="${data.isScraped === 1 ? 'colorstar' : 'uncolorstar'}"></span>
+                            <span id="section2_regist" class="regist">지원하기</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="section3">
+                    <div id="section3_text">포지션 상세</div>
+                    <div id="description">${data.content}</div>
+                </div>
+                <div class="section4">
+                    <div id="section4_text">기술 스택 · 툴</div>
+                    <div id="stack_list"></div>
+                </div>
+                <div class="section5">
+                    <div id="section5_text">복리 후생</div>
+                    <div id="benefit_list"></div>
+                </div>
+                <div class="section6">
+                    <div id="section6_text">근무지역</div>
+                    <div id="map"></div>
+                    <div id="region_name">${data.postAddressDetail}</div>
+                </div>
+                <div class="section7">
+                    <span class="regist">지원하기</span>
+                </div>
+            `;
+
+            // 기술 스택 리스트 추가
+            const stackList = document.getElementById("stack_list");
+            data.skillList.forEach(skill => {
+                const span = document.createElement("span");
+                span.textContent = skill.skillCode;
+                stackList.appendChild(span);
+            });
+
+            // 복리 후생 리스트 추가
+            const benefitList = document.getElementById("benefit_list");
+            data.benefitList.forEach(benefit => {
+                const span = document.createElement("span");
+                span.textContent = benefit.benefitContent;
+                benefitList.appendChild(span);
+            });
+
+            // 스크랩 클릭 이벤트 추가
+            const star = document.getElementById("star");
+            star.addEventListener("click", () => {
+                const isScraped = star.classList.contains("colorstar");
+                toggleScrap(jobPostNo, isScraped)
+                    .then(() => {
+                        if (isScraped) {
+                            star.classList.remove("colorstar");
+                            star.classList.add("uncolorstar");
+                            alert("스크랩이 취소되었습니다");
+                        } else {
+                            star.classList.remove("uncolorstar");
+                            star.classList.add("colorstar");
+                            alert("스크랩이 추가되었습니다");
+                        }
+                    })
+                    .catch(() => {
+                        alert("스크랩 작업 중 오류가 발생했습니다.");
+                    });
+            });
+
+            // '지원하기' 버튼 클릭 이벤트 추가
+            document.querySelectorAll(".regist").forEach(regist => {
+                regist.addEventListener("click", () => {
+                    loadResumes(); // 이력서 목록 로드
+                    modal.style.display = "block";
+                });
+            });
+        })
+        .catch(error => console.error("Error fetching job post details:", error));
+
+    // 이력서 목록 로드
+    function loadResumes() {
+        resumeList.innerHTML = ""; // 기존 목록 초기화
+
+        // Axios 요청으로 이력서 목록 가져오기
+        axios.get("/api/users/job-post/resume/list")
+            .then(response => {
+                const resumes = response.data;
+
+                resumes.forEach(resume => {
+                    const li = document.createElement("li");
+                    li.textContent = resume.title; // title 사용
+                    li.dataset.resumeNo = resume.resumeNo; // resumeNo를 dataset에 저장
+                    li.addEventListener("click", () => {
+                        document.querySelectorAll("#resume-list li").forEach(item => {
+                            item.style.backgroundColor = "";
+                            item.dataset.selected = "false";
+                        });
+                        li.style.backgroundColor = "#d1f7d1"; // 선택된 이력서 강조
+                        li.dataset.selected = "true";
+                    });
+                    resumeList.appendChild(li); // 목록에 추가
+                });
+            })
+            .catch(error => console.error("Error fetching resume list:", error));
+    }
+
+    // 모달 닫기
+    closeModal.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    // 이력서 선택 후 지원하기
+    applyBtn.addEventListener("click", () => {
+        const selectedResume = document.querySelector("#resume-list li[data-selected='true']");
+        if (selectedResume) {
+            // 선택된 이력서 정보 확인 및 확인창 표시
+            const resumeNo = selectedResume.dataset.resumeNo;
+            const confirmApply = window.confirm(
+                `[ ${selectedResume.textContent} ] 로 지원하시겠습니까?`
+            );
+
+            if (confirmApply) {
+                // Axios 요청으로 지원 데이터 전송
+                axios.post("/api/users/job-post/resume/regist", {
+                    jobPostNo: jobPostNo,
+                    resumeNo: resumeNo
+                })
+                    .then(() => {
+                        alert("지원이 완료되었습니다!");
+                        modal.style.display = "none";
+                    })
+                    .catch(error => {
+                        console.error("Error during application:", error);
+                        alert("지원 중 문제가 발생했습니다. 다시 시도해주세요.");
+                    });
+            }
+        } else {
+            alert("이력서를 선택해주세요!");
+        }
+    });
+
+    // 모달 외부 클릭 시 닫기
+    window.addEventListener("click", event => {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+
+    // 스크랩 추가/삭제 요청 함수
+    function toggleScrap(jobPostNo, isScraped) {
+        const url = isScraped
+            ? `/api/users/like/jpl/remove?jobPostNo=${jobPostNo}`
+            : `/api/users/like/jpl/add?jobPostNo=${jobPostNo}`;
+
+        return axios.get(url)
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.error("Error in toggleScrap:", error);
+                throw error;
+            });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout_dir/layout/main_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>관심기업</title>
+    <link rel="stylesheet" href="/css/job-post-like.css">
+</head>
+<body layout:fragment="content">
+<section>
+    <div id="section1">
+        스크랩/관심기업
+    </div>
+    <div id="section2">
+        <div id="section2_box1">
+            <div id="scrap_post">스크랩</div>
+            <div id="post_num"></div>
+        </div>
+        <div id="section2_box2">
+            <a href="/view/users/like/cl" id="bookmark_com">관심기업</a>
+            <div id="com_num"></div>
+        </div>
+    </div>
+    <!-- 공고 리스트 -->
+    <div id="section3">
+        <!-- Axios로 추가 -->
+    </div>
+
+    <div id="section4">
+        <!-- 페이징 네이션 -->
+    </div>
+
+    <!-- 모달 -->
+    <div id="resume-modal" class="modal">
+        <div class="modal-content">
+            <div style="display: flex; gap: 20px; align-items: center; justify-content: center;">
+                <h2>이력서 선택</h2>
+                <div class="close">&times;</div>
+            </div>
+            <ul id="resume-list"></ul>
+            <button id="apply-btn">지원하기</button>
+        </div>
+    </div>
+</section>
+<script>
+    // section2 DOM 요소 가져오기
+    const postNumElement = document.querySelector("#post_num");
+    const comNumElement = document.querySelector("#com_num");
+
+    axios.get("/api/users/like/summary")
+        .then(response => {
+            const {jplCount, clCount} = response.data;
+
+            // section2 업데이트
+            postNumElement.textContent = jplCount || 0;
+            comNumElement.textContent = clCount || 0;
+        })
+        .catch(error => {
+            console.error("Error fetching user summary:", error);
+            alert("스크랩 및 북마크 데이터를 불러오는 중 오류가 발생했습니다.");
+        });
+
+    const section3 = document.querySelector("#section3");
+    const modal = document.getElementById("resume-modal");
+    const closeModal = document.querySelector(".close");
+    const applyBtn = document.getElementById("apply-btn");
+    const resumeList = document.getElementById("resume-list");
+
+    // 공고 리스트 로드
+    axios.get("/api/users/like/jpl")
+        .then(response => {
+            const data = response.data;
+
+            section3.innerHTML = "";
+
+            data.forEach(item => {
+                const jobPost = document.createElement("div");
+                jobPost.classList.add("job_post");
+                jobPost.dataset.jobPostNo = item.jobPostNo;
+
+                jobPost.innerHTML = `
+                    <div id="com_name"><a href="/view/users/company/detail/${item.companyId}">${item.companyName}</a></div>
+                    <div id="post_box1">
+                        <div id="box1_con">
+                            <div id="post_name">
+                                <a href="/view/users/job-post/detail/${item.jobPostNo}">${item.title}</a>
+                            </div>
+                            <div id="star" class="colorstar"></div>
+                        </div>
+                        <div id="request">
+                            <span>${item.postAddress}</span>
+                            <span>${item.jobHistory}년 이상</span>
+                            <span>${item.workTypeName}</span>
+                            <span>${item.jobSalary}만</span>
+                        </div>
+                    </div>
+                    <div id="post_box2">
+                        <span id="box2_text">현재 지원자</span>
+                        <span id="applicant_num">${item.aplcHstrCount}</span>
+                    </div>
+                    <div id="post_box3">
+                        <button class="regist_btn">입사지원</button>
+                        <span id="enddate">${item.endDate ? `~${new Date(item.endDate).toLocaleDateString()}` : '마감일 없음'}</span>
+                    </div>
+                `;
+                section3.appendChild(jobPost);
+            });
+
+            addEventListeners();
+        })
+        .catch(error => console.error("Error fetching job posts:", error));
+
+    // 이벤트 바인딩
+    function addEventListeners() {
+        // 스크랩 이벤트
+        document.querySelectorAll("#star").forEach(star => {
+            star.addEventListener("click", () => {
+                const jobPost = star.closest(".job_post");
+                const jobPostNo = jobPost.dataset.jobPostNo;
+                const isScraped = star.classList.contains("colorstar");
+
+                toggleScrap(jobPostNo, isScraped)
+                    .then(() => {
+                        star.classList.toggle("colorstar");
+                        star.classList.toggle("uncolorstar");
+                        alert(isScraped ? "스크랩이 취소되었습니다" : "스크랩 되었습니다");
+                    })
+                    .catch(() => alert("스크랩 작업 중 오류가 발생했습니다."));
+            });
+        });
+
+        // 지원하기 이벤트
+        document.querySelectorAll(".regist_btn").forEach(button => {
+            button.addEventListener("click", () => {
+                const jobPost = button.closest(".job_post");
+                modal.dataset.jobPostNo = jobPost.dataset.jobPostNo;
+                loadResumes();
+                modal.style.display = "block";
+            });
+        });
+
+        closeModal.addEventListener("click", () => {
+            modal.style.display = "none";
+        });
+
+        window.addEventListener("click", event => {
+            if (event.target === modal) modal.style.display = "none";
+        });
+
+        applyBtn.addEventListener("click", () => {
+            const selectedResume = document.querySelector("#resume-list li[data-selected='true']");
+            const jobPostNo = modal.dataset.jobPostNo;
+
+            if (selectedResume) {
+                const resumeNo = selectedResume.dataset.resumeNo;
+                const confirmApply = window.confirm(
+                    `[ ${selectedResume.textContent} ] 로 지원하시겠습니까?`
+                );
+
+                if (confirmApply) {
+                    axios.post("/api/users/job-post/resume/regist", { jobPostNo, resumeNo })
+                        .then(() => {
+                            alert("지원이 완료되었습니다!");
+                            modal.style.display = "none";
+                        })
+                        .catch(() => alert("지원 중 문제가 발생했습니다."));
+                }
+            } else {
+                alert("이력서를 선택해주세요!");
+            }
+        });
+    }
+
+    // 이력서 목록 로드
+    function loadResumes() {
+        resumeList.innerHTML = "";
+        axios.get("/api/users/job-post/resume/list")
+            .then(response => {
+                response.data.forEach(resume => {
+                    const li = document.createElement("li");
+                    li.textContent = resume.title;
+                    li.dataset.resumeNo = resume.resumeNo;
+                    li.addEventListener("click", () => {
+                        document.querySelectorAll("#resume-list li").forEach(item => {
+                            item.style.backgroundColor = "";
+                            item.dataset.selected = "false";
+                        });
+                        li.style.backgroundColor = "#d1f7d1";
+                        li.dataset.selected = "true";
+                    });
+                    resumeList.appendChild(li);
+                });
+            })
+            .catch(error => console.error("Error fetching resumes:", error));
+    }
+
+    // 스크랩 요청 함수
+    function toggleScrap(jobPostNo, isScraped) {
+        const url = isScraped
+            ? `/api/users/like/jpl/remove?jobPostNo=${jobPostNo}`
+            : `/api/users/like/jpl/add?jobPostNo=${jobPostNo}`;
+        return axios.get(url).catch(error => console.error("Error in toggleScrap:", error));
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test.dao.sangin.CompanyDetailDao_sangin">
+    <select id="getCompanyDetailById" resultType="com.example.test.vo.CompanyDetailVo">
+        select *,
+        (select 1 from tblLike where userId = #{userId} and companyId = #{companyId})
+        as isBookmarked from
+        tblCompany cp where companyId = #{companyId}
+    </select>
+
+    <select id="jobPostByCompanyId" resultType="com.example.test.vo.JobPostDetailVo">
+        SELECT
+        jp.*,
+        gb.name AS workTypeName,
+        COUNT(ah.jobPostNo) AS aplcHstrCount
+        FROM tblJobPost jp
+        LEFT JOIN tblGubn gb ON jp.workTypeCode = gb.code
+        LEFT JOIN tblAplcHstr ah ON jp.jobPostNo = ah.jobPostNo
+        WHERE jp.companyId = #{companyId}
+    </select>
+
+    <select id="companyScoreByCompanyId" resultType="com.example.test.dto.CompanyScoreDTO">
+        select * from tblCompanyScore where companyId = #{companyId}
+    </select>
+</mapper>
