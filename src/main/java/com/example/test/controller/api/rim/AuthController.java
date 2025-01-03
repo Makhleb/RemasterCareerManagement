@@ -7,7 +7,9 @@ import com.example.test.exception.AuthException;
 import com.example.test.security.rim.SecurityUtil;
 import com.example.test.service.rim.AuthService;
 import com.example.test.dto.rim.CompanyCreateDTO;
+import com.example.test.util.rim.JwtUtil;
 import groovy.util.logging.Slf4j;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,7 @@ public class AuthController {
 
     private final AuthService authService;
     private final SecurityUtil securityUtil;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/signup")
     public String signup(@Valid @RequestBody UserCreateDTO dto) {
@@ -70,7 +73,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public void login(@RequestBody LoginDTO dto, HttpServletResponse response) {
+    public Map<String, String> login(@RequestBody LoginDTO dto, HttpServletResponse response) {
         // 1. 로그인 검증 및 JWT 토큰 생성
         String token = authService.login(dto);
         log.info("Generated JWT token: {}", token);
@@ -80,9 +83,24 @@ public class AuthController {
         cookie.setHttpOnly(true);  // XSS 방지
         cookie.setPath("/");
         // cookie.setMaxAge(3600);
+
         
         response.addCookie(cookie);
         log.info("Set JWT cookie for user: {}", dto.getUserId());
+
+        Map<String, String> responseData = new HashMap<>();
+        responseData.put("message", "로그인 성공");
+
+        // JWT 토큰에서 권한 정보 추출
+        Claims claims = jwtUtil.getAllClaimsFromToken(token);
+        String role = (String) claims.get("role");
+        String type = role.equals("ROLE_COMPANY") ? "company" : "user";
+
+        responseData.put("role", role);
+        responseData.put("type", type);
+
+        return responseData;
+
     }
 
     @PostMapping("/company/login")

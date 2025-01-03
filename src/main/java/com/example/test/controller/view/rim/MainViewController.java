@@ -15,14 +15,7 @@ public class MainViewController {
 
     @GetMapping
     public String index() {
-        String userType = (String)securityUtil.getCurrentUserInfo().get("type");
-        
-        // 사용자 타입에 따라 적절한 메인 페이지로 리다이렉트
-        return switch (userType) {
-            case "user" -> "redirect:/jobseeker";
-            case "company" -> "redirect:/company";
-            default -> "rim/index";  // 비회원용 메인 페이지
-        };
+            return "rim/index";
     }
 
     @GetMapping("/jobseeker")
