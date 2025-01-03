@@ -22,13 +22,10 @@ import java.util.List;
 public class CompanyDetailApiController {
     @Autowired
     CompanyDetailService_sangin companyDetailService;
-    //private final SecurityUtil securityUtil;
 
     @GetMapping("/detail/{companyId}")
     public ResponseEntity<Object> detail(@PathVariable String companyId) {
-        //String userId =  securityUtil.getCurrentUserId();
-        String userId = "test1";
-        CompanyDetailVo companyDetail = companyDetailService.getCompanyDetailById(companyId, userId);
+        CompanyDetailVo companyDetail = companyDetailService.getCompanyDetailById(companyId);
 
         System.out.println("company detail controller " + companyDetail);
         if(companyDetail == null) {
