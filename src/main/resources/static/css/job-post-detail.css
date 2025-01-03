@@ -30,8 +30,8 @@ section {
     gap: 10px;
 }
 
-#com_name {
-    text-decoration-line: underline;
+#com_name > a{
+    color: inherit;
 }
 
 .request {

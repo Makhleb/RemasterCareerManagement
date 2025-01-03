@@ -44,4 +44,5 @@ public class JobPostDetailVo {
     private String workTypeName; //직무 코드 -> 한글화
     private int isScraped; // 공고 scrap 용
     private int likeCount; // 스크랩 수
+    private int aplcHstrCount;
 }

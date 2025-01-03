@@ -106,6 +106,9 @@ section {
     font-weight: bold;
     color: gray;
 }
+#com_name > a{
+    color: inherit;
+}
 
 #post_box1 {
     display: flex;

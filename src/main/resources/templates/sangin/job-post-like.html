@@ -80,13 +80,13 @@
                 jobPost.dataset.jobPostNo = item.jobPostNo;
 
                 jobPost.innerHTML = `
-                    <div id="com_name">${item.companyName}</div>
+                    <div id="com_name"><a href="/view/users/company/detail/${item.companyId}">${item.companyName}</a></div>
                     <div id="post_box1">
                         <div id="box1_con">
                             <div id="post_name">
                                 <a href="/view/users/job-post/detail/${item.jobPostNo}">${item.title}</a>
                             </div>
-                            <div id="star" class="${item.isScraped === 1 ? "colorstar" : "uncolorstar"}"></div>
+                            <div id="star" class="colorstar"></div>
                         </div>
                         <div id="request">
                             <span>${item.postAddress}</span>
@@ -97,7 +97,7 @@
                     </div>
                     <div id="post_box2">
                         <span id="box2_text">현재 지원자</span>
-                        <span id="applicant_num">${item.likeCount || 0}</span>
+                        <span id="applicant_num">${item.aplcHstrCount}</span>
                     </div>
                     <div id="post_box3">
                         <button class="regist_btn">입사지원</button>

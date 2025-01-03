@@ -18,18 +18,8 @@
         gb.name AS workTypeName,
         c.companyName,
         (SELECT COUNT(*)
-        FROM tblJpl l2
-        WHERE l2.jobPostNo = jp.jobPostNo) AS likeCount,
-        CASE
-        WHEN EXISTS (
-        SELECT 1
-        FROM tblJpl l2
-        WHERE l2.jobPostNo = jp.jobPostNo
-        AND l2.userId = #{userId}
-        ) THEN 1
-        ELSE 0
-<!--        이것도 scrap 나중에 빼야겠다 필요가 없네-->
-        END AS isScraped
+        FROM tblAplcHstr ah
+        WHERE ah.jobPostNo = jp.jobPostNo) AS aplcHstrCount
         FROM
         tblJobPost jp
         INNER JOIN

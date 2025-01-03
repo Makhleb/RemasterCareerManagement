@@ -156,6 +156,7 @@
                 });
         }
 
+
         // 초기 전체 공고 로드 (URL에서 받은 keyword 사용)
         fetchJobPosts(keyword);
 
@@ -174,6 +175,24 @@
                     throw error;
                 });
         }
+        section5Container.addEventListener("click", (event) => {
+            const target = event.target;
+
+            if (target && (target.classList.contains("colorstar") || target.classList.contains("uncolorstar"))) {
+                const jobPostNo = target.closest(".section5_post").dataset.jobPostNo;
+                const isScraped = target.classList.contains("colorstar");
+
+                toggleScrap(jobPostNo, isScraped)
+                    .then(() => {
+                        target.classList.toggle("colorstar");
+                        target.classList.toggle("uncolorstar");
+                    })
+                    .catch(error => {
+                        console.error("스크랩 상태 변경 실패:", error);
+                    });
+            }
+        });
+
 
         // 검색 버튼 클릭 처리
         document.querySelector("#section2_btn").addEventListener("click", () => {
