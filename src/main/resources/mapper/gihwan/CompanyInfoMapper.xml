@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test.dao.gihwan.CompanyInfoDao">
+    <select id="findById">
+        SELECT *
+        FROM tblCompany
+        WHERE companyId = #{companyId}
+    </select>
+    <update id="updateInfo">
+        UPDATE tblCompany
+        <set>
+            companyPw = #{C.companyPw},
+            companyName = #{C.companyName},
+            companyNumber = #{C.companyNumber},
+            companyAddress = #{C.companyAddress},
+            companyZonecode = #{C.companyZonecode},
+            companyAddressDetail = #{C.companyAddressDetail},
+            companyContact = #{C.companyContact},
+            companyWebsite = #{C.companyWebsite},
+            companyEmail = #{C.companyEmail},
+            companyBirth = #{C.companyBirth},
+            companyEmployee = #{C.companyEmployee},
+            companyProfit = #{C.companyProfit},
+            companyModifyDate = NOW(),
+            companyPresident = #{C.companyPresident}
+        </set>
+        WHERE companyId = #{C.companyId}
+    </update>
+</mapper>
