@@ -19,6 +19,16 @@ public class MainService {
     private final FileService fileService;
     private final MainDao mainDao;
     private final SecurityUtil securityUtil;
+
+
+    // 기본 썸네일 이미지 배열 추가
+    private static final String[] DEFAULT_THUMBNAILS = {
+        "/images/default-job-post-thumbnails/job-post-thumbnail1.png",
+        "/images/default-job-post-thumbnails/job-post-thumbnail2.png",
+        "/images/default-job-post-thumbnails/job-post-thumbnail3.png",
+        "/images/default-job-post-thumbnails/job-post-thumbnail4.png",
+        "/images/default-job-post-thumbnails/job-post-thumbnail5.png"
+    };
     
     // 기존 메인 페이지 전체 데이터 조회 메서드
     public MainResponseDTO getMainPageData() {
@@ -127,7 +137,7 @@ public class MainService {
             if (thumbnail != null) {
                 post.setPostThumbnail(thumbnail);
             } else {
-                post.setPostThumbnail("/images/default-post-thumbnail.png");
+                post.setPostThumbnail(getRandomDefaultThumbnail());
             }
         });
     }
@@ -159,24 +169,11 @@ public class MainService {
         return mainDao.findPopularSkills();
     }
 
-    // 채용공고 목록 조회 시 썸네일 처리
-    public List<JobPostDTO> getJobPosts() {
-        List<JobPostDTO> posts = mainDao.findPopularPosts();
-        
-        // 각 공고의 썸네일 처리
-        posts.forEach(post -> {
-            String thumbnail = fileService.loadImage(
-                "POST_THUMBNAIL", 
-                String.valueOf(post.getJobPostNo())
-            );
-            
-            if (thumbnail != null) {
-                post.setPostThumbnail(thumbnail);
-            } else {
-                post.setPostThumbnail("/images/default-post-thumbnail.png");
-            }
-        });
-        
-        return posts;
+    // 랜덤 썸네일 선택 메서드
+    private String getRandomDefaultThumbnail() {
+        int randomIndex = (int) (Math.random() * DEFAULT_THUMBNAILS.length);
+        return DEFAULT_THUMBNAILS[randomIndex];
     }
+
+
 } 
