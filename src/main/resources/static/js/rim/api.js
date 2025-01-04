@@ -88,23 +88,75 @@ window.API = {
             formData.append('file', file);
             
             const fileDto = {
-                fileGubn: fileGubn,    // 예: 'company', 'jobpost' 등
-                fileRefId: fileRefId,  // 예: 회사ID나 공고ID
+                fileGubn: fileGubn,
+                fileRefId: fileRefId,
                 fileName: file.name,
-                fileSize: file.size,
-                fileType: file.type
+                fileExt: file.type,
+                instId: fileRefId
+            };
+            
+            // FormData에 fileDto를 Blob으로 추가
+            formData.append('fileDto', new Blob([JSON.stringify(fileDto)], {
+                type: 'application/json'
+            }));
+
+            try {
+                const response = await axios.post('/api/common/file', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+                return response.data;
+            } catch (error) {
+                console.error('파일 업로드 실패:', error);
+                throw error;
+            }
+        },
+
+        // 파일 수정
+        update: async (file, fileGubn, fileRefId) => {
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            const fileDto = {
+                fileGubn: fileGubn,
+                fileRefId: fileRefId,
+                fileName: file.name,
+                fileExt: file.type,
+                updtId: fileRefId
             };
             
             formData.append('fileDto', new Blob([JSON.stringify(fileDto)], {
                 type: 'application/json'
             }));
 
-            const response = await fetch('/api/common/file', {
-                method: 'POST',
-                body: formData
-            });
-            
-            return response.ok;
+            try {
+                const response = await axios.put('/api/common/file', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+                return response.status === 200;
+            } catch (error) {
+                console.error('파일 수정 실패:', error);
+                return false;
+            }
+        },
+
+        // 파일 삭제
+        delete: async (fileGubn, fileRefId) => {
+            try {
+                const response = await axios.delete('/api/common/file', {
+                    params: {
+                        gubn: fileGubn,
+                        id: fileRefId
+                    }
+                });
+                return response.status === 200;
+            } catch (error) {
+                console.error('파일 삭제 실패:', error);
+                return false;
+            }
         }
     }
 };
