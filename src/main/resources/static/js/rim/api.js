@@ -145,7 +145,12 @@ window.API = {
         // 기업 아이디 중복 체크
         checkCompanyDuplicate: async (companyId) => {
             return await axios.post('/api/auth/company/check-duplicate', { companyId });
-        }
+        },
+        // 비밀번호 찾기
+        findPassword: (data) => axios.post('/api/auth/find-password', data),
+        
+        // 비밀번호 재설정
+        resetPassword: (data) => axios.post('/api/auth/reset-password', data)
     },
     // 메인 페이지 관련 API 추가
     main: {

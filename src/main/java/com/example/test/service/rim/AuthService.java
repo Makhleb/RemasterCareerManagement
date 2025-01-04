@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.test.exception.BusinessException;
+import com.example.test.dao.rim.AuthDao;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +31,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final CompanyDao companyDao;
     private final JwtUtil jwtUtil;
+    private final AuthDao authDao;
 
     @Transactional
     public void signup(UserCreateDTO dto) {
@@ -184,5 +186,22 @@ public class AuthService {
         cookie.setPath("/");
         cookie.setMaxAge(0);  // 즉시 만료
         response.addCookie(cookie);
+    }
+
+
+    public void resetPassword(String userId, String newPassword) {
+        // 사용자 존재 여부 확인
+        if (!authDao.existsById(userId)) {
+            throw AuthException.authenticationFailed("존재하지 않는 사용자입니다");
+        }
+
+        // 비밀번호 암호화 및 업데이트
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        authDao.updatePassword(userId, encodedPassword);
+    }
+
+    public String findUserByIdEmailAndPhone(String userId, String email, String phone) {
+        return authDao.findUserByIdEmailAndPhone(userId, email, phone)
+            .orElseThrow(() -> AuthException.authenticationFailed("일치하는 사용자 정보를 찾을 수 없습니다"));
     }
 } 

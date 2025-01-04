@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
@@ -35,13 +37,11 @@ public class MainService {
         
         // 공통 섹션 설정
         response.setCommon(getCommonSection());
-        
-        // 인기 기술스택 설정
         response.setPopularSkills(getPopularSkills());
         
-        // 사용자 타입별 섹션 설정 (이미 AOP에서 검증됨)
+        // 사용자 타입별 섹션 설정
         UserTypeDTO userSection = new UserTypeDTO();
-        String userType = securityUtil.getUserType();  // 검증된 타입
+        String userType = securityUtil.getUserType();
         
         switch (userType) {
             case "guest":
@@ -49,7 +49,16 @@ public class MainService {
                 break;
                 
             case "user":
-                userSection.setJobSeeker(getJobSeekerSection(securityUtil.getCurrentUserId()));
+                // 구직자의 경우 guest 섹션도 함께 제공
+                GuestSectionDTO guestData = getGuestSection();
+                JobSeekerSectionDTO seekerData = getJobSeekerSection(securityUtil.getCurrentUserId());
+                
+                // guest 데이터를 JobSeekerSection에 통합
+                seekerData.setPopularPosts(guestData.getPopularPosts());
+                seekerData.setScrapedPosts(guestData.getScrapedPosts());
+                // topCompanies는 이미 있으므로 제외
+                
+                userSection.setJobSeeker(seekerData);
                 break;
                 
             case "company":
@@ -99,7 +108,7 @@ public class MainService {
         
         // 대시보드 설정
         DashboardDTO dashboard = new DashboardDTO();
-        dashboard.setStats(mainDao.findJobSeekerDashboard(userId));
+        dashboard.setStats(mainDao.findJobSeekerDashboard(userId));  // DTO로 직접 매핑
         dashboard.setRecentApplications(mainDao.findRecentApplications(userId));
         seekerSection.setDashboard(dashboard);
         

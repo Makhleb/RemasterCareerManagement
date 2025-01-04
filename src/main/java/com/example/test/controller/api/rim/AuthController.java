@@ -9,19 +9,17 @@ import com.example.test.service.rim.AuthService;
 import com.example.test.dto.rim.CompanyCreateDTO;
 import com.example.test.util.rim.JwtUtil;
 import groovy.util.logging.Slf4j;
-import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.context.SecurityContextHolder;
-import jakarta.servlet.http.Cookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.example.test.exception.BusinessException;
-
 import java.util.Map;
-import java.util.HashMap;
+import com.example.test.dto.rim.FindPasswordRequest;
+import com.example.test.dto.rim.ResetPasswordRequest;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -96,5 +94,26 @@ public class AuthController {
     public void logout(HttpServletResponse response) {
         authService.logout(response);  // 서비스로 위임
         SecurityContextHolder.clearContext();  // 시큐리티 컨텍스트 클리어
+    }
+
+    @PostMapping("/find-password")
+    public ApiResponse<Map<String, String>> findPassword(@Valid @RequestBody FindPasswordRequest request) {
+        String userId = authService.findUserByIdEmailAndPhone(
+            request.getUserId(),
+            request.getUserEmail(), 
+            request.getUserPhone()
+        );
+        
+        if (userId != null) {
+            return ApiResponse.success(Map.of("userId", userId));
+        } else {
+            throw AuthException.authenticationFailed("일치하는 사용자 정보를 찾을 수 없습니다");
+        }
+    }
+
+    @PostMapping("/reset-password")
+    public ApiResponse<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        authService.resetPassword(request.getUserId(), request.getNewPassword());
+        return ApiResponse.success(null, "비밀번호가 성공적으로 변경되었습니다");
     }
 } 
