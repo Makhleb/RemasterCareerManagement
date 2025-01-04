@@ -1,9 +1,12 @@
 package com.example.test.controller.api.sangin;
 
 import com.example.test.dto.CompanyScoreDTO;
+import com.example.test.security.rim.SecurityUtil;
 import com.example.test.service.sangin.CompanyDetailService_sangin;
 import com.example.test.vo.CompanyDetailVo;
 import com.example.test.vo.JobPostDetailVo;
+import groovy.util.logging.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,15 +22,18 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/users/company")
+@RequiredArgsConstructor
+@Slf4j
 public class CompanyDetailApiController {
     @Autowired
     CompanyDetailService_sangin companyDetailService;
-    //private final SecurityUtil securityUtil;
+
+    private final SecurityUtil securityUtil;
 
     @GetMapping("/detail/{companyId}")
     public ResponseEntity<Object> detail(@PathVariable String companyId) {
-        //String userId =  securityUtil.getCurrentUserId();
-        String userId = "test1";
+        String userId =  securityUtil.getCurrentUserId();
+//        String userId = "test1";
         CompanyDetailVo companyDetail = companyDetailService.getCompanyDetailById(companyId, userId);
 
         System.out.println("company detail controller " + companyDetail);

@@ -25,7 +25,12 @@ public class JobPostService_sangin {
     }
 
     public JobPostDetailVo getJobPost(String userId, int jobPostNo) {
-        return jobPostDao.getJobPost(userId, jobPostNo);
+        JobPostDetailVo jobPost = jobPostDao.getJobPost(userId, jobPostNo);
+        List<JobPostSkillDTO> skillList = jobPostDao.getJobPostSkill(jobPostNo);
+        List<BenefitDTO> benefitList = jobPostDao.getJobPostBenefit(jobPostNo);
+        jobPost.setSkillList(skillList);
+        jobPost.setBenefitList(benefitList);
+        return jobPost;
     }
 
     public List<JobPostSkillDTO> getJobPostSkill(int jobPostNo) {
