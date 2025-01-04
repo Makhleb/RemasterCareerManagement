@@ -51,6 +51,9 @@
         ON P.workCode = GT.code
         WHERE P.companyId = #{companyId} AND P.deleteYn = 'N'
         ORDER BY P.jobPostNo DESC
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
     </select>
 
     <select id="selectJobPostAplc">
@@ -64,7 +67,10 @@
         FROM tblAplcHstr A
         JOIN tblResume B ON A.resumeNo = B.resumeNo
         JOIN tblUser C  ON B.userId = C.userId AND C.userIsActive = 'Y'
-        WHERE A.jobPostNo = #{jobPostNo};
+        WHERE A.jobPostNo = #{jobPostNo}
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
     </select>
 
     <select id="selectJobPostDetail">

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * Created on 2024-12-27 by 최기환
  */
 @Controller
-@RequestMapping("/mypage/company")
+@RequestMapping("/company/mypage")
 public class JobPostController {
     @GetMapping("/job-post")
     public String jobPost(@RequestParam(required = false) Integer post, Model model) {
@@ -18,10 +18,13 @@ public class JobPostController {
         return "/gihwan/job-post";
     }
 
-
-
     @GetMapping("/post-list")
     public String postList(){
         return "/gihwan/mypage-job-post-list";
+    }
+
+    @GetMapping
+    public String mypageMain(){
+        return "/gihwan/mypage-main";
     }
 }

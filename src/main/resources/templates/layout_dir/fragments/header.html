@@ -8,7 +8,7 @@
             <div id="header-left-menu-recruitment" class="header-menu">
                 ≣ <a href="/view/users/job-post/list">채용</a>
                 <div id="header-dropdown" class="none">
-                    <div class="header-dropdown-menu">
+                    <div class="header-dropdown-menu" th:attr="data-value='개발'">
                         개발
                         <div class="header-sub-dropdown none">
                             <div class="header-sub-dropdown-menu">프론트엔드</div>
@@ -33,16 +33,16 @@
                             <div class="header-sub-dropdown-menu">데이터베이스 개발</div>
                         </div>
                     </div>
-                    <div class="header-dropdown-menu">
-                        경영·비즈니스
+                    <div class="header-dropdown-menu" th:attr="data-value='경영'">
+                        경영
                         <div class="header-sub-dropdown none">
                             <div class="header-sub-dropdown-menu">기획</div>
                             <div class="header-sub-dropdown-menu">전략</div>
                             <div class="header-sub-dropdown-menu">운영</div>
                         </div>
                     </div>
-                    <div class="header-dropdown-menu">
-                        마케팅·광고
+                    <div class="header-dropdown-menu" th:attr="data-value='광고'">
+                        광고
                         <div class="header-sub-dropdown none">
                             <div class="header-sub-dropdown-menu">디지털 마케팅</div>
                             <div class="header-sub-dropdown-menu">브랜드 관리</div>
@@ -51,7 +51,7 @@
                             <div class="header-sub-dropdown-menu">광고 기획</div>
                         </div>
                     </div>
-                    <div class="header-dropdown-menu">
+                    <div class="header-dropdown-menu" th:attr="data-value='디자인'">
                         디자인
                         <div class="header-sub-dropdown none">
                             <div class="header-sub-dropdown-menu">UI/UX 디자인</div>
@@ -61,7 +61,7 @@
                             <div class="header-sub-dropdown-menu">제품 디자인</div>
                         </div>
                     </div>
-                    <div class="header-dropdown-menu">
+                    <div class="header-dropdown-menu" th:attr="data-value='영업'">
                         영업
                         <div class="header-sub-dropdown none">
                             <div class="header-sub-dropdown-menu">B2B 영업</div>
@@ -71,8 +71,8 @@
                             <div class="header-sub-dropdown-menu">신규 거래처 발굴</div>
                         </div>
                     </div>
-                    <div class="header-dropdown-menu">
-                        고객서비스·리테일
+                    <div class="header-dropdown-menu" th:attr="data-value='고객서비스'">
+                        고객서비스
                         <div class="header-sub-dropdown none">
                             <div class="header-sub-dropdown-menu">고객 상담</div>
                             <div class="header-sub-dropdown-menu">매장 운영</div>
@@ -81,8 +81,8 @@
                             <div class="header-sub-dropdown-menu">고객 불만 처리</div>
                         </div>
                     </div>
-                    <div class="header-dropdown-menu">
-                        엔지니어링·설계
+                    <div class="header-dropdown-menu" th:attr="data-value='설계'">
+                        설계
                         <div class="header-sub-dropdown none">
                             <div class="header-sub-dropdown-menu">기계 설계</div>
                             <div class="header-sub-dropdown-menu">전기 설계</div>
@@ -91,8 +91,8 @@
                             <div class="header-sub-dropdown-menu">제품 엔지니어링</div>
                         </div>
                     </div>
-                    <div class="header-dropdown-menu">
-                        제조·생산
+                    <div class="header-dropdown-menu" th:attr="data-value='제조'">
+                        제조
                         <div class="header-sub-dropdown none">
                             <div class="header-sub-dropdown-menu">공정 관리</div>
                             <div class="header-sub-dropdown-menu">생산 계획</div>
@@ -101,7 +101,7 @@
                             <div class="header-sub-dropdown-menu">설비 운영</div>
                         </div>
                     </div>
-                    <div class="header-dropdown-menu">
+                    <div class="header-dropdown-menu" th:attr="data-value='의료'">
                         의료·제약·바이오
                         <div class="header-sub-dropdown none">
                             <div class="header-sub-dropdown-menu">임상 시험</div>

@@ -213,7 +213,7 @@
         </div>
         <!-- 저장 버튼을 버튼 컨테이너로 감쌉니다 -->
         <div class="button-container">
-            <button type="button" id="savePortfolio">저장</button>
+            <button type="button" id="savePotfolio">저장</button>
         </div>
     </section>
 
@@ -350,13 +350,13 @@
             sendData('/api/users/resume/military', data);
         });
 
-        document.getElementById('savePortfolio').addEventListener('click', function () {
+        document.getElementById('savePotfolio').addEventListener('click', function () {
             const data = {
                 resumeNo: resumeNo,
                 gubn: document.getElementById('gubn').value,
                 potfolioFilename: document.getElementById('potfolioFilename').value
             };
-            sendData('/api/users/resume/portfolio', data);
+            sendData('/api/users/resume/potfolio', data);
         });
 
         document.getElementById('saveIntro').addEventListener('click', function () {

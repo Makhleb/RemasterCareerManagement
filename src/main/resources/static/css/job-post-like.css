@@ -130,22 +130,24 @@ section {
 }
 
 #star {
-    width: 25px;
-    height: 25px;
+    font-size: 19px;
+    /*width: 25px;*/
+    /*height: 25px;*/
     margin-left: 30px;
-    background-size: 60px 60px;
-    background-repeat: no-repeat;
-    background-position: center;
+    /*background-size: 60px 60px;*/
+    /*background-repeat: no-repeat;*/
+    /*background-position: center;*/
     cursor: pointer;
 }
 
-
 .uncolorstar {
-    background-image: url('/images/uncolorstar.png');
+    color: black;
+    /*background-image: url('/images/uncolorstar.png');*/
 }
 
 .colorstar {
-    background-image: url('/images/colorstar.png');
+    color : #ffd43b;
+    /*background-image: url('/images/colorstar.png');*/
 }
 
 #request {

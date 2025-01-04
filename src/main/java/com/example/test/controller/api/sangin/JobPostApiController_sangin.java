@@ -1,8 +1,11 @@
 package com.example.test.controller.api.sangin;
 
 import com.example.test.dto.*;
+import com.example.test.security.rim.SecurityUtil;
 import com.example.test.service.sangin.JobPostService_sangin;
 import com.example.test.vo.JobPostDetailVo;
+import groovy.util.logging.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,18 +18,20 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/api/users/job-post")
+@RequiredArgsConstructor
+@Slf4j
 public class JobPostApiController_sangin {
 
     @Autowired
     JobPostService_sangin jobPostService;
 
-    //private final SecurityUtil securityUtil;
+    private final SecurityUtil securityUtil;
 
     @GetMapping("/list/matching")
     @ResponseBody
     public ResponseEntity<Object> jobPostList2() {
-        //String userId =  securityUtil.getCurrentUserId();
-        String userId = "test1";
+        String userId =  securityUtil.getCurrentUserId();
+//        String userId = "test1";
 
         List<JobPostDetailVo> jobPostList = jobPostService.getJobPostMatching(userId);
         if (jobPostList != null && !jobPostList.isEmpty()) {
@@ -39,8 +44,8 @@ public class JobPostApiController_sangin {
     @ResponseBody
     public ResponseEntity<Object> jobPostList1(@RequestParam(value = "keyword", required = false) String keyword) {
 
-//      String userId =  securityUtil.getCurrentUserId();
-        String userId = "test1";
+      String userId =  securityUtil.getCurrentUserId();
+//        String userId = "test1";
         List<JobPostDetailVo> jobPostList = jobPostService.getJobPostAll(userId, keyword);
         if (jobPostList != null && !jobPostList.isEmpty()) {
             return ResponseEntity.ok(jobPostList);
@@ -53,13 +58,9 @@ public class JobPostApiController_sangin {
     @ResponseBody
     public ResponseEntity<Object> jobPostDetail(@PathVariable("jobPostNo") Integer jobPostNo) {
         System.out.println("api/detail.......");
-        //      String userId =  securityUtil.getCurrentUserId();
-        String userId = "test1";
+              String userId =  securityUtil.getCurrentUserId();
+//        String userId = "test1";
         JobPostDetailVo jobPost = jobPostService.getJobPost(userId, jobPostNo);
-        List<JobPostSkillDTO> skillList = jobPostService.getJobPostSkill(jobPostNo);
-        List<BenefitDTO> benefitList = jobPostService.getJobPostBenefit(jobPostNo);
-        jobPost.setSkillList(skillList);
-        jobPost.setBenefitList(benefitList);
         //기술스택도 같이 전달해야하는데 어떻게 전달할까나~~
         //vo를 하나 만들까??
         if (jobPost != null) {
@@ -72,8 +73,8 @@ public class JobPostApiController_sangin {
     @GetMapping("/resume/list")
     @ResponseBody
     public ResponseEntity<Object> ResumeList() {
-        //      String userId =  securityUtil.getCurrentUserId();
-        String userId = "test1";
+              String userId =  securityUtil.getCurrentUserId();
+//        String userId = "test1";
         List<ResumeDTO> resumeList = jobPostService.getResumeList(userId);
         if (resumeList != null && !resumeList.isEmpty()) {
             return ResponseEntity.ok(resumeList);
@@ -84,7 +85,7 @@ public class JobPostApiController_sangin {
     @PostMapping("/resume/regist")
     @ResponseBody
     public ResponseEntity<Object> ResumeRegist(@RequestBody AplcHstrDTO aplcHstrDTO) {
-
+        //axios에서 resumeNo 랑 jobPostNo 를 dataset으로 받아올거임
         System.out.println("api/resume/regist......." + aplcHstrDTO);
         int result = jobPostService.registAplcHstr(aplcHstrDTO);
         if (result == 1) {
