@@ -74,47 +74,14 @@ public class AuthController {
 
     @PostMapping("/login")
     public Map<String, String> login(@RequestBody LoginDTO dto, HttpServletResponse response) {
-        // 1. 로그인 검증 및 JWT 토큰 생성
         String token = authService.login(dto);
-        log.info("Generated JWT token: {}", token);
-        
-        // 2. HttpOnly 쿠키에 JWT 저장
-        Cookie cookie = new Cookie("JWT_TOKEN", token);
-        cookie.setHttpOnly(true);  // XSS 방지
-        cookie.setPath("/");
-        // cookie.setMaxAge(3600);
-
-        
-        response.addCookie(cookie);
-        log.info("Set JWT cookie for user: {}", dto.getUserId());
-
-        Map<String, String> responseData = new HashMap<>();
-        responseData.put("message", "로그인 성공");
-
-        // JWT 토큰에서 권한 정보 추출
-        Claims claims = jwtUtil.getAllClaimsFromToken(token);
-        String role = (String) claims.get("role");
-        String type = role.equals("ROLE_COMPANY") ? "company" : "user";
-
-        responseData.put("role", role);
-        responseData.put("type", type);
-
-        return responseData;
-
+        return authService.handleLoginSuccess(token, dto.getUserId(), response);
     }
 
     @PostMapping("/company/login")
-    public void companyLogin(@RequestBody LoginDTO dto, HttpServletResponse response) {
+    public Map<String, String> companyLogin(@RequestBody LoginDTO dto, HttpServletResponse response) {
         String token = authService.companyLogin(dto);
-        log.info("Generated JWT token for company: {}", token);
-        
-        Cookie cookie = new Cookie("JWT_TOKEN", token);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        // cookie.setMaxAge(3600);
-        
-        response.addCookie(cookie);
-        log.info("Set JWT cookie for company: {}", dto.getUserId());
+        return authService.handleLoginSuccess(token, dto.getUserId(), response);
     }
 
     @GetMapping("/me")

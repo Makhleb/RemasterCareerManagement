@@ -57,13 +57,15 @@ window.auth = {
         try {
             const response = await API.auth.logout();
             console.log('로그아웃 응답:', response);
-            console.log('로그아웃 응답 데이터:', response.data);
-            if (response.data.status === 'SUCCESS') {
-                this.clearUserInfo();  // 캐시 초기화
+            // response가 비어있어도 200 상태코드면 성공으로 처리
+            if (response === '' || response === null || response.status === 'SUCCESS') {
+                this.clearUserInfo();
                 location.href = '/login';
+                return true;
             }
         } catch (error) {
             console.error('로그아웃 실패:', error);
+            return false;
         }
     },
 
