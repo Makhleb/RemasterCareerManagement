@@ -186,6 +186,12 @@
                     .then(() => {
                         target.classList.toggle("colorstar");
                         target.classList.toggle("uncolorstar");
+
+                        if (target.classList.contains("colorstar")) {
+                            alert("북마크가 추가되었습니다.");
+                        } else {
+                            alert("북마크가 취소되었습니다.");
+                        }
                     })
                     .catch(error => {
                         console.error("스크랩 상태 변경 실패:", error);

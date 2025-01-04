@@ -16,7 +16,7 @@ public class ResumeDetailDTO {
     private LicenseDTO licenses;
     private List<ResumeSkillDTO> skills;
     private MilitaryDTO military;
-    private PotfolioDTO portfolios;
+    private PotfolioDTO potfolios;
     private IntroduceDTO intro;
 
 }
