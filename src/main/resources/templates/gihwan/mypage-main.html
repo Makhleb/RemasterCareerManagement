@@ -21,7 +21,7 @@
         <div>
             <div class="row-flex between-center">
                 <div>공고 목록</div>
-                <div class="text-btn" onclick="location.href='/mypage/company/post-list'">더보기 >></div>
+                <div class="text-btn" onclick="location.href='/company/mypage/post-list'">더보기 >></div>
             </div>
             <hr>
             <div id="post-list" class="column-flex">
@@ -67,7 +67,7 @@
                         $('#post-list').append(
                             `<div class="post-item-container">
                                 <div class="row-flex between-center post-item">
-                                    <div style="flex:2">${item.title}</div>
+                                    <div style="flex:2; cursor:pointer;" onclick="location.href='/view/users/job-post/detail/${item.jobPostNo}'">${item.title}</div>
                                     <div class="item-default-end text-btn" onclick="viewList(event)" data-value="${index}">
                                         <span style="margin-right: 3px">지원자 목록</span>
                                         <img id="arrow" src="/images/black_down_arrow.png" alt="화살표이미지">
@@ -93,7 +93,7 @@
                                         <div style="flex:1; text-align: end">${alpcInfo.aplcHstrDate.substring(0, 10)}</div>
                                     </div>`
                             })
-                            appendInfo += `<div class="more-user-view" onclick="location.href='/mypage/company/post-list'">이력서 더보기</div>`
+                            appendInfo += `<div class="more-user-view" onclick="location.href='/company/mypage/post-list'">이력서 더보기</div>`
                             $('.user-list[data-value="' + index + '"]').append(appendInfo);
                         } else {
                             $('.post-item .text-btn[data-value="' + index + '"]').css('visibility', 'hidden');
@@ -109,7 +109,7 @@
          * 공고 수정
          */
         function updatePost(jobPostNo) {
-            location.href = '/mypage/company/job-post?post=' + jobPostNo;
+            location.href = '/company/mypage/job-post?post=' + jobPostNo;
         }
 
         /**
