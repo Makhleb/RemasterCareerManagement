@@ -122,13 +122,13 @@
         function fetchJobPosts(keyword = '') {
             axios.get(`/api/users/job-post/list/all`, { params: { keyword } })
                 .then(response => {
-                    const data = response.data;
+                    const data = response;
                     section5Container.innerHTML = '';
                     if (data.length === 0) {
                         section5Container.innerHTML = '<div>검색 결과가 없습니다.</div>';
                         return;
                     }
-                    data.forEach(item => {
+                    data.data.forEach(item => {
                         const postDiv = document.createElement('div');
                         postDiv.classList.add('section5_post');
                         postDiv.dataset.jobPostNo = item.jobPostNo;
