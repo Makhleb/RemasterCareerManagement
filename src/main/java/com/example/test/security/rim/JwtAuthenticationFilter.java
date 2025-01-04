@@ -51,6 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     CustomUserDetails userDetails = CustomUserDetails.builder()
                         .username(username)
                         .role(role)
+                        .name((String) claims.get("name"))
                         .build();
 
                     // Authentication 객체 생성 및 SecurityContext에 설정
@@ -85,5 +86,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
         return null;
+    }
+
+    private boolean isPublicUrl(String url) {
+        return 
+            url.equals("/") ||
+            url.equals("/login") ||
+            url.equals("/signup") ||
+            url.equals("/api/auth/login") ||
+            url.equals("/api/auth/signup") ||
+            url.equals("/api/auth/logout") ||
+            url.startsWith("/js/") ||
+            url.startsWith("/css/") ||
+            url.startsWith("/images/") ||
+            url.startsWith("/fonts/") ||
+            url.startsWith("/favicon");
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return path.startsWith("/js/") ||
+               path.startsWith("/css/") ||
+               path.startsWith("/images/") ||
+               path.startsWith("/fonts/") ||
+               path.startsWith("/favicon");
     }
 } 

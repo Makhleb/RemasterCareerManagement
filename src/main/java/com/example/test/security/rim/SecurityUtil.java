@@ -65,11 +65,22 @@ public class SecurityUtil {
     public String getCurrentUserRole() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
-            return "ROLE_GUEST";  // 인증 객체가 없는 경우
+            return "ROLE_GUEST";
         }
 
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        return userDetails.getRole();
+        // Principal이 String인 경우 (anonymousUser) 처리
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof String) {
+            return "ROLE_GUEST";
+        }
+
+        // CustomUserDetails로 캐스팅
+        if (principal instanceof CustomUserDetails) {
+            CustomUserDetails userDetails = (CustomUserDetails) principal;
+            return userDetails.getRole();
+        }
+
+        return "ROLE_GUEST";
     }
 
     /**
