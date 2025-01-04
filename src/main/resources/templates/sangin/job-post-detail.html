@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="/css/job-post-detail.css">
 </head>
 <body layout:fragment="content" th:attr="data-job-post-no=${jobPostNo}">
-<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=ec73bdedd8e289fad432b9637995ce93&libraries=services"></script>
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=6ee51326275034decdba00c5aa8cd3f0&libraries=services"></script>
+
 <section id="job-post-detail"></section>
 <div id="resume-modal" class="modal">
     <div class="modal-content">
@@ -124,7 +125,8 @@
             });
 
             const mapContainer = document.getElementById("map"); // 지도를 표시할 div
-            const postAddress = data.postAddress; // 공고 상세에서 가져온 주소
+            alert("test " + data.postAddress)
+            const postAddress = data.postAddressDetail; // 공고 상세에서 가져온 주소
 
 // 지도 초기화
             const mapOptions = {
@@ -251,7 +253,8 @@
                 throw error;
             });
     }
-//     map 해보겠습니다~
+
+    //     map 해보겠습니다~
 </script>
 </body>
 </html>
