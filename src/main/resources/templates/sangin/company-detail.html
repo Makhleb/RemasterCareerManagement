@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <title>기업상세정보</title>
     <link rel="stylesheet" href="/css/company-detail.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body layout:fragment="content" th:attr="data-company-id=${companyId}">
 <section>
@@ -123,10 +124,10 @@
 <!--                            <div id="star" class="colorstar"></div>-->
                         </div>
                         <div id="request">
-                            <span>${jobPost.postAddress}</span>
-                            <span>${jobPost.jobHistory}년 이상</span>
-                            <span>${jobPost.workTypeName}</span>
-                            <span>${jobPost.jobSalary}만</span>
+                            <span><i class="fa-solid fa-location-dot"></i>&nbsp;&nbsp;${jobPost.postAddress}</span>
+                            <span><i class="fa-solid fa-user-tie"></i>&nbsp;&nbsp;${jobPost.jobHistory}년 이상</span>
+                            <span><i class="fa-solid fa-clock"></i>&nbsp;&nbsp;${jobPost.workTypeName}</span>
+                            <span><i class="fa-solid fa-money-bill-wave"></i>&nbsp;&nbsp;${jobPost.jobSalary}만</span>
                         </div>
                     </div>
                     <div id="post-box2">
