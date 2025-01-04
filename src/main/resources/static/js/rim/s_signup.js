@@ -57,13 +57,9 @@
                 const checkbox = document.getElementById(`terms${currentTermType}`);
                 checkbox.checked = true;
                 
-                // 전체 동의 상태 업데이트
-                const allChecked = [...document.querySelectorAll('.required-terms')]
-                    .every(box => box.checked);
-                document.getElementById('termsAll').checked = allChecked;
-                
                 // 모달 닫기
-                document.getElementById('termsModal').style.display = "none";
+                const modal = document.getElementById('termsModal');
+                modal.style.display = "none";
             }
         }
 
@@ -304,31 +300,6 @@
             }
         });
 
-        // 전체 동의 체크박스 처리 수정
-        document.getElementById('termsAll').addEventListener('change', function() {
-            const checkboxes = document.querySelectorAll('.terms-checkbox');
-            checkboxes.forEach(checkbox => {
-                // 비활성화된 체크박스는 체크하지 않음
-
-
-
-
-
-                if (!checkbox.disabled) {
-                    checkbox.checked = this.checked;
-                }
-            });
-        });
-
-        // 개별 체크박스 변경 시 전체 동의 체크박스 상태 업데이트
-        document.querySelectorAll('.required-terms').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                const allChecked = [...document.querySelectorAll('.required-terms')]
-                    .every(box => box.checked);
-                document.getElementById('termsAll').checked = allChecked;
-            });
-        });
-
         // 모달 닫기 기능
         document.querySelector('.close').addEventListener('click', function() {
             document.getElementById('termsModal').style.display = "none";
@@ -342,13 +313,16 @@
             }
         });
 
-        // JavaScript에서 이벤트 리스너 추가
+        // 약관 보기 버튼 클릭 이벤트
         document.querySelectorAll('.terms-view').forEach(button => {
             button.addEventListener('click', function() {
                 const termType = this.getAttribute('data-term-type');
                 showTerms(parseInt(termType));
             });
         });
+
+        // 모달의 동의 버튼에 이벤트 리스너 추가
+        document.querySelector('.modal-footer .rim-btn').addEventListener('click', agreeToTerms);
 
         // 체크박스 직접 클릭 방지
         document.querySelectorAll('.required-terms').forEach(checkbox => {
@@ -401,12 +375,12 @@
 
                 if (error.response.data.code === 'VALIDATION_ERROR') {
                     // 유효성 검사 에러 처리
-                    Object.entries(error.data || {}).forEach(([field, message]) => {
+                    Object.entries(error.response.data.data || {}).forEach(([field, message]) => {
                         showError(field, message);
                     });
                 } else {
                     // 기타 에러 처리
-                    alert(error.message || '회원가입 중 오류가 발생했습니다.');
+                    alert(error.response.data.message || '회원가입 중 오류가 발생했습니다.');
                 }
             }
         });

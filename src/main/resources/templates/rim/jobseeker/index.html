@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout_dir/layout/main_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>구직자 메인페이지</title>
+    <link rel="stylesheet" href="/css/rim/jobseeker/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<th:block layout:fragment="content">
+    <div class="main-container">
+        <!-- 상단 아이콘 메뉴 -->
+        <div class="menu-icons">
+            <a href="/jobseeker/posts" class="menu-icon">
+                <i class="fas fa-briefcase"></i>
+                <span>채용공고</span>
+            </a>
+            <a href="/jobseeker/resume" class="menu-icon">
+                <i class="fas fa-file-alt"></i>
+                <span>이력서관리</span>
+            </a>
+            <a href="/jobseeker/applications" class="menu-icon">
+                <i class="fas fa-clipboard-list"></i>
+                <span>지원현황</span>
+            </a>
+            <a href="/jobseeker/bookmarks" class="menu-icon">
+                <i class="fas fa-bookmark"></i>
+                <span>북마크</span>
+            </a>
+        </div>
+
+        <!-- 대시보드 섹션 -->
+        <section class="dashboard-section">
+            <div id="dashboardContainer" class="dashboard-container">
+                <!-- JavaScript로 동적 렌더링 -->
+            </div>
+        </section>
+
+        <!-- 맞춤 추천 공고 -->
+        <section class="recommended-posts">
+            <div class="section-header">
+                <h2><span class="username"></span>님을 위한 맞춤 추천 공고</h2>
+            </div>
+            <div class="posts-grid" id="recommendedPosts">
+                <!-- JavaScript로 동적 렌더링 -->
+            </div>
+        </section>
+
+        <!-- 광고 배너 -->
+        <div class="ad-banner">
+            <p>광고 영역</p>
+        </div>
+
+        <!-- TOP 10 기업 -->
+        <section class="top-companies">
+            <div class="section-header">
+                <h2>기업 TOP 10</h2>
+                <div class="filter-buttons">
+                    <button class="active" data-sort="rating">별점 높은 순</button>
+                    <button data-sort="interest">관심 기업 수 많은 순</button>
+                </div>
+            </div>
+            <div class="companies-slider-container">
+                <button id="slideLeft" class="slide-button">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="companies-slider" id="topCompanies">
+                    <!-- JavaScript로 동적 렌더링 -->
+                </div>
+                <button id="slideRight" class="slide-button">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- 인기 채용공고 -->
+        <section class="popular-posts">
+            <h2>주목받는 채용공고</h2>
+            <div class="posts-container" id="popularPosts">
+                <!-- JavaScript로 동적 렌더링 -->
+            </div>
+        </section>
+
+        <!-- 관심 기업 마감임박 공고 -->
+        <section class="deadline-posts">
+            <h2>관심 기업 마감임박 공고</h2>
+            <div class="posts-container" id="deadlinePosts">
+                <!-- JavaScript로 동적 렌더링 -->
+            </div>
+        </section>
+    </div>
+
+    <script src="/js/rim/common/jobPost.js"></script>
+    <script src="/js/rim/jobseeker/index.js"></script>
+</th:block>
+</body>
+</html>

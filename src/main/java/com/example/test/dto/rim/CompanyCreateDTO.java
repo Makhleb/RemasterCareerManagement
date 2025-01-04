@@ -46,6 +46,10 @@ public class CompanyCreateDTO {
     @Pattern(regexp = "^[A-Za-z0-9+_.-]+@(.+)$", message = "올바른 이메일 형식이 아닙니다")
     private String companyEmail;
 
+    @NotBlank(message = "대표자명은 필수입니다.")
+    @Pattern(regexp = "^[가-힣]{2,4}$", message = "대표자명은 한글 2~4자여야 합니다.")
+    private String companyRepresentative;
+
     // 선택 필드들
     private String companyWebsite;
     private Date companyBirth;

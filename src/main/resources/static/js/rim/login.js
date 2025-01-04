@@ -2,6 +2,8 @@ const loginForm = document.getElementById('loginForm');
 const tabButtons = document.querySelectorAll('.tab-button');
 const loginType = document.getElementById('loginType');
 
+let testValue = null;
+
 // 탭 전환 처리
 tabButtons.forEach(button => {
     button.addEventListener('click', () => {
@@ -48,11 +50,16 @@ loginForm.addEventListener('submit', async (e) => {
             ? API.auth.companyLogin(formData)
             : API.auth.login(formData));
 
-        console.log('로그인 응답:', response);
+        testValue = response;
 
         // 성공 시 메인 페이지로 이동
         if (response.status === 200) {
-            location.href = '/';
+            if(testValue.data.data.type === 'user'){
+                location.href = "/jobseeker";
+            }else{
+                location.href = "/company";
+            }
+            // location.href = '/';
         }
     } catch (error) {
         console.error('로그인 에러:', error);
