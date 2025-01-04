@@ -239,36 +239,36 @@ function renderJobPostCard(post) {
     };
     
     return `
-    <div class="job-post-card">
-        <div class="company-header">
-            <img src="${post.companyImage}" 
-                 alt="${post.companyName}" 
-                 class="company-logo"
-                 onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(post.companyName)}&size=40&background=random'">
-            <p class="company-name">${post.companyName}</p>
-                 <h3 class="post-title">${post.title || '제목 없음'}</h3>
-             
-        </div>
-        <div class="post-info" style="background-image: url('${post.postThumbnail}')">
-            <div class="post-overlay">
-                <div class="post-tags">
-                    <span class="post-tag">💸연봉 ${post.jobSalary || '정보 없음'}만원</span>
+            <div class="job-post-card">
+                <div class="company-header">
+                    <img src="${post.companyImage}" 
+                        alt="${post.companyName}" 
+                        class="company-logo"
+                        onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(post.companyName)}&size=40&background=random'">
+                    <p class="company-name">${post.companyName}</p>
+                        <h3 class="post-title">${post.title || '제목 없음'}</h3>
+                    
                 </div>
-                <div class="bottom-tags">
-                    <div class="tag-group">
-                        ${skill}
-                        ${benefit}
+                <div class="post-info" style="background-image: url('${post.postThumbnail}')">
+                    <div class="post-overlay">
+                        <div class="post-tags">
+                            <span class="post-tag">💸연봉 ${post.jobSalary || '정보 없음'}만원</span>
+                        </div>
+                        <div class="bottom-tags">
+                            <div class="tag-group">
+                                ${skill}
+                                ${benefit}
+                            </div>
+                            <span class="post-tag date-tag">${formatDate(post.endDate)} 
+                                <button class="scrap-btn" onclick="handleScrap(${post.jobPostNo}, event)">
+                                    <i class="fas fa-bookmark"></i>
+                                </button>
+                            </span>
+                        </div>
                     </div>
-                    <span class="post-tag date-tag">${formatDate(post.endDate)} 
-                        <button class="scrap-btn" onclick="handleScrap(${post.jobPostNo}, event)">
-                            <i class="fas fa-bookmark"></i>
-                        </button>
-                    </span>
                 </div>
             </div>
-        </div>
-    </div>
-`;
+        `;
 }
 
 // 스크랩 처리 함수

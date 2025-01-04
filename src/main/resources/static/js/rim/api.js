@@ -1,165 +1,10 @@
-// API 엔드포인트 상수
-const API_ENDPOINTS = {
-    MAIN: {
-        DATA: '/api/main/data',
-        POPULAR_POSTS: '/api/main/popular-posts',
-        TOP_COMPANIES: '/api/main/top-companies',
-        MOST_SCRAPED: '/api/main/most-scraped'
-    }
-};
+//테스트  value
+window.test = {
+    value : null
+}
 
-// API 요청 객체
-window.API = {
-    // 기존 auth 관련 API 유지
-    auth: {
-        // 로그인
-        login: async (data) => {
-            return await axios.post('/api/auth/login', data);
-        },
-        // 기업 로그인
-        companyLogin: async (data) => {
-            return await axios.post('/api/auth/company/login', data);
-        },
-        // 로그아웃
-        logout: async () => {
-            return await axios.post('/api/auth/logout');
-        },
-        // 현재 사용자 정보 조회
-        me: async () => {
-            return await axios.get('/api/auth/me');
-        },
-        // 회원가입
-        signup: async (data) => {
-            return await axios.post('/api/auth/signup', data);
-        },
-        // 기업 회원가입
-        companySignup: async (data) => {
-            return await axios.post('/api/auth/company/signup', data);
-        },
-        // 아이디 중복 체크
-        checkDuplicate: async (userId) => {
-            return await axios.post('/api/auth/check-duplicate', { userId });
-        },
-        // 기업 아이디 중복 체크
-        checkCompanyDuplicate: async (companyId) => {
-            return await axios.post('/api/auth/company/check-duplicate', { companyId });
-        }
-    },
-
-    // 메인 페이지 관련 API 추가
-    main: {
-        // 메인 페이지 전체 데이터 조회
-        getData: async () => {
-            try {
-                const response = await axios.get(API_ENDPOINTS.MAIN.DATA);
-                return response.data;
-            } catch (error) {
-                console.error('메인 데이터 조회 실패:', error);
-                throw error;
-            }
-        },
-
-        // 인기 채용공고 조회
-        getPopularPosts: async () => {
-            try {
-                const response = await axios.get(API_ENDPOINTS.MAIN.POPULAR_POSTS);
-                return response.data;
-            } catch (error) {
-                console.error('인기 채용공고 조회 실패:', error);
-                throw error;
-            }
-        },
-
-        // TOP 10 기업 조회
-        getTopCompanies: async () => {
-            try {
-                const response = await axios.get(API_ENDPOINTS.MAIN.TOP_COMPANIES);
-                return response.data;
-            } catch (error) {
-                console.error('TOP 10 기업 조회 실패:', error);
-                throw error;
-            }
-        }
-    },
-    // 파일 업로드 관련 API 추가
-    file: {
-        upload: async (file, fileGubn, fileRefId) => {
-            const formData = new FormData();
-            formData.append('file', file);
-            
-            const fileDto = {
-                fileGubn: fileGubn,
-                fileRefId: fileRefId,
-                fileName: file.name,
-                fileExt: file.type,
-                instId: fileRefId
-            };
-            
-            // FormData에 fileDto를 Blob으로 추가
-            formData.append('fileDto', new Blob([JSON.stringify(fileDto)], {
-                type: 'application/json'
-            }));
-
-            try {
-                const response = await axios.post('/api/common/file', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
-                return response.data;
-            } catch (error) {
-                console.error('파일 업로드 실패:', error);
-                throw error;
-            }
-        },
-
-        // 파일 수정
-        update: async (file, fileGubn, fileRefId) => {
-            const formData = new FormData();
-            formData.append('file', file);
-            
-            const fileDto = {
-                fileGubn: fileGubn,
-                fileRefId: fileRefId,
-                fileName: file.name,
-                fileExt: file.type,
-                updtId: fileRefId
-            };
-            
-            formData.append('fileDto', new Blob([JSON.stringify(fileDto)], {
-                type: 'application/json'
-            }));
-
-            try {
-                const response = await axios.put('/api/common/file', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
-                return response.status === 200;
-            } catch (error) {
-                console.error('파일 수정 실패:', error);
-                return false;
-            }
-        },
-
-        // 파일 삭제
-        delete: async (fileGubn, fileRefId) => {
-            try {
-                const response = await axios.delete('/api/common/file', {
-                    params: {
-                        gubn: fileGubn,
-                        id: fileRefId
-                    }
-                });
-                return response.status === 200;
-            } catch (error) {
-                console.error('파일 삭제 실패:', error);
-                return false;
-            }
-        }
-    }
-};
+// withCredentials: true 설정으로 쿠키 자동 전송
+axios.defaults.withCredentials = true;
 
 // 기본 설정
 axios.defaults.headers.common['Content-Type'] = 'application/json';
@@ -255,7 +100,163 @@ axios.interceptors.response.use(
     }
 );
 
+// API 엔드포인트 상수
+const API_ENDPOINTS = {
+    MAIN: {
+        DATA: '/api/main/data',
+        POPULAR_POSTS: '/api/main/popular-posts',
+        TOP_COMPANIES: '/api/main/top-companies',
+        MOST_SCRAPED: '/api/main/most-scraped'
+    }
+};
 
-// withCredentials: true 설정으로 쿠키 자동 전송
-axios.defaults.withCredentials = true;
+// API 요청 객체
+window.API = {
+    // 기존 auth 관련 API 유지
+    auth: {
+        // 로그인
+        login: async (data) => {
+            return await axios.post('/api/auth/login', data);
+        },
+        // 기업 로그인
+        companyLogin: async (data) => {
+            return await axios.post('/api/auth/company/login', data);
+        },
+        // 로그아웃
+        logout: async () => {
+            return await axios.post('/api/auth/logout');
+        },
+        // 현재 사용자 정보 조회
+        me: async () => {
+            return await axios.get('/api/auth/me');
+        },
+        // 회원가입
+        signup: async (data) => {
+            return await axios.post('/api/auth/signup', data);
+        },
+        // 기업 회원가입
+        companySignup: async (data) => {
+            return await axios.post('/api/auth/company/signup', data);
+        },
+        // 아이디 중복 체크
+        checkDuplicate: async (userId) => {
+            return await axios.post('/api/auth/check-duplicate', { userId });
+        },
+        // 기업 아이디 중복 체크
+        checkCompanyDuplicate: async (companyId) => {
+            return await axios.post('/api/auth/company/check-duplicate', { companyId });
+        }
+    },
+    // 메인 페이지 관련 API 추가
+    main: {
+        // 메인 페이지 전체 데이터 조회
+        getData: async () => {
+            try {
+                const response = await axios.get(API_ENDPOINTS.MAIN.DATA);
+                return response.data;
+            } catch (error) {
+                console.error('메인 데이터 조회 실패:', error);
+                throw error;
+            }
+        },
 
+        // 인기 채용공고 조회
+        getPopularPosts: async () => {
+            try {
+                const response = await axios.get(API_ENDPOINTS.MAIN.POPULAR_POSTS);
+                return response.data;
+            } catch (error) {
+                console.error('인기 채용공고 조회 실패:', error);
+                throw error;
+            }
+        },
+
+        // TOP 10 기업 조회
+        getTopCompanies: async () => {
+            try {
+                const response = await axios.get(API_ENDPOINTS.MAIN.TOP_COMPANIES);
+                return response.data;
+            } catch (error) {
+                console.error('TOP 10 기업 조회 실패:', error);
+                throw error;
+            }
+        }
+    },
+    // 파일 업로드 관련 API 추가
+    file: {
+        
+        upload: async (file, fileGubn, fileRefId) => {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const fileDto = {
+                fileGubn: fileGubn,
+                fileRefId: fileRefId,
+                fileName: file.name,
+                fileExt: file.type,
+                instId: fileRefId
+            };
+
+            // FormData에 fileDto를 Blob으로 추가
+            formData.append('fileDto', new Blob([JSON.stringify(fileDto)], {
+                type: 'application/json'
+            }));
+
+            try {
+                const response = await axios.post('/api/common/file', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+                return response.data;
+            } catch (error) {
+                console.error('파일 업로드 실패:', error);
+                throw error;
+            }
+        },
+
+        update: async (file, fileGubn, fileRefId) => {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const fileDto = {
+                fileGubn: fileGubn,
+                fileRefId: fileRefId,
+                fileName: file.name,
+                fileExt: file.type,
+                updtId: fileRefId
+            };
+
+            formData.append('fileDto', new Blob([JSON.stringify(fileDto)], {
+                type: 'application/json'
+            }));
+
+            try {
+                const response = await axios.put('/api/common/file', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+                return response.status === 200;
+            } catch (error) {
+                console.error('파일 수정 실패:', error);
+                return false;
+            }
+        },
+
+        delete: async (fileGubn, fileRefId) => {
+            try {
+                const response = await axios.delete('/api/common/file', {
+                    params: {
+                        gubn: fileGubn,
+                        id: fileRefId
+                    }
+                });
+                return response.status === 200;
+            } catch (error) {
+                console.error('파일 삭제 실패:', error);
+                return false;
+            }
+        }
+    }
+};
