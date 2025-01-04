@@ -17,22 +17,18 @@ window.auth = {
 
     // 현재 로그인한 사용자 정보 조회
     async getCurrentUser() {
-        // 1. 캐시된 정보가 있으면 API 호출 없이 바로 반환
-        if (this._userInfo) {
-            return this._userInfo;
-        }
-
-        // 2. 캐시가 없으면 API 호출
         try {
             const response = await API.auth.me();
             if (response.status === 'SUCCESS') {
-                // 3. API 응답을 캐시에 저장
-                this._userInfo = response.data;
-                return this._userInfo;
+                return response.data;
             }
             return null;
         } catch (error) {
             if (error.response?.status === 401) {
+                // 인증 실패 시 로그인 페이지로 리다이렉트
+                if (!this.isPublicPage()) {
+                    location.href = '/login';
+                }
                 return null;
             }
             console.error('사용자 정보 조회 실패:', error);
@@ -56,10 +52,8 @@ window.auth = {
     async logout() {
         try {
             const response = await API.auth.logout();
-            console.log('로그아웃 응답:', response);
-            // response가 비어있어도 200 상태코드면 성공으로 처리
             if (response === '' || response === null || response.status === 'SUCCESS') {
-                this.clearUserInfo();
+                // 로그아웃 성공 시 로그인 페이지로 이동
                 location.href = '/login';
                 return true;
             }
@@ -69,10 +63,6 @@ window.auth = {
         }
     },
 
-    // 사용자 정보 캐시 초기화
-    clearUserInfo() {
-        this._userInfo = null;
-    }
 }; 
 
 

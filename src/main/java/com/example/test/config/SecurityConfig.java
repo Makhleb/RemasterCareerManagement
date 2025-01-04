@@ -48,7 +48,7 @@ public class SecurityConfig {
         
         http.formLogin(auth -> auth.disable());
 
-        // 쿠키 설정
+        // 세션 설정 - JWT를 사용하므로 STATELESS 유지
         http.sessionManagement(session -> 
             session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );

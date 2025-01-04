@@ -115,33 +115,37 @@
         LIMIT 10
     </select>
 
-    <!-- 구직자 대시보드 -->
+    <!-- 구직자 대시보드 통계 조회 -->
     <select id="findJobSeekerDashboard" resultMap="dashboardResultMap">
         SELECT 
+            COUNT(CASE WHEN h.passYn = 'W' THEN 1 END) as waitingCount,
+            COUNT(CASE WHEN h.passYn = 'Y' THEN 1 END) as passCount,
+            COUNT(CASE WHEN h.passYn = 'N' THEN 1 END) as failCount,
             COUNT(*) as totalCount,
-            SUM(CASE WHEN ah.passYn = 'Y' THEN 1 ELSE 0 END) as passCount,
-            SUM(CASE WHEN ah.passYn = 'N' THEN 1 ELSE 0 END) as failCount,
-            SUM(CASE WHEN ah.passYn = 'W' THEN 1 ELSE 0 END) as waitingCount
-        FROM tblAplcHstr ah
-        JOIN tblResume r ON ah.resumeNo = r.resumeNo
+            COALESCE(
+                ROUND(COUNT(CASE WHEN h.passYn = 'Y' THEN 1 END) * 100.0 / 
+                      NULLIF(COUNT(*), 0), 1),
+                0
+            ) as passRate
+        FROM tblAplcHstr h
+        JOIN tblResume r ON h.resumeNo = r.resumeNo
         WHERE r.userId = #{userId}
     </select>
 
     <!-- 최근 지원 내역 조회 -->
     <select id="findRecentApplications" resultMap="applicationResultMap">
         SELECT 
-            ah.jobPostNo,
-            jp.title as postTitle,
-            c.companyName,
-            ah.aplcHstrDate,
-            ah.passYn,
-            ah.readYn
-        FROM tblAplcHstr ah
-        JOIN tblResume r ON ah.resumeNo = r.resumeNo
-        JOIN tblJobPost jp ON ah.jobPostNo = jp.jobPostNo
-        JOIN tblCompany c ON jp.companyId = c.companyId
+            h.jobPostNo,
+            h.passYn,
+            h.aplcHstrDate as applyDate,
+            j.title as postTitle,
+            c.companyName
+        FROM tblAplcHstr h
+        JOIN tblResume r ON h.resumeNo = r.resumeNo
+        JOIN tblJobPost j ON h.jobPostNo = j.jobPostNo
+        JOIN tblCompany c ON j.companyId = c.companyId
         WHERE r.userId = #{userId}
-        ORDER BY ah.aplcHstrDate DESC
+        ORDER BY h.aplcHstrDate DESC
         LIMIT 5
     </select>
 
