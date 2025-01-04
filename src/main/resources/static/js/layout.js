@@ -55,34 +55,4 @@ headerDropdownMenus.forEach((menu) => {
 });
 // dropdown 끝
 
-// 상단 돋보기 모달버전
-const headerRightSearch = document.querySelector("#header-right-search");
-const headerModal = document.querySelector("#header-modal");
-const headerCloseBtn = document.querySelector("#header-close-btn");
 
-// 모달창 열기
-headerRightSearch.addEventListener("click", () => {
-    headerModal.style.display = "flex"; // 모달창 보이기
-});
-
-// 모달창 닫기
-headerCloseBtn.addEventListener("click", () => {
-    headerModal.style.display = "none"; // 모달창 숨기기
-});
-
-// 검색 기능
-const headerSearchInput = document.querySelector("#header-search-input");
-const headerModalSearchButton = document.querySelector("#header-modal-search");
-
-headerModalSearchButton.addEventListener("click", () => {
-    const keyword = headerSearchInput.value.trim();
-    headerModalSearchButton.addEventListener("click", () => {
-        const keyword = headerSearchInput.value.trim();
-        if (keyword) {
-            window.location.href = `/view/users/job-post/list?keyword=${encodeURIComponent(keyword)}`;
-        } else {
-            alert("검색어를 입력하세요.");
-        }
-    });
-
-});
