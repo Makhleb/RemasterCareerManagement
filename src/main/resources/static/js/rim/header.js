@@ -1,9 +1,9 @@
-document.addEventListener('DOMContentLoaded', async function() {
+document.addEventListener('DOMContentLoaded', async function () {
     try {
         const user = await auth.getCurrentUser();
-        console.log('user>>>',user)
+        console.log('user>>>', user)
         const headerRight = document.querySelector('.header-right');
-        
+
         if (user && user.type !== 'guest') {
             // 로그인 상태
             headerRight.innerHTML = `
@@ -71,15 +71,11 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         headerModalSearchButton.addEventListener("click", () => {
             const keyword = headerSearchInput.value.trim();
-            headerModalSearchButton.addEventListener("click", () => {
-                const keyword = headerSearchInput.value.trim();
-                if (keyword) {
-                    window.location.href = `/view/users/job-post/list?keyword=${encodeURIComponent(keyword)}`;
-                } else {
-                    alert("검색어를 입력하세요.");
-                }
-            });
-
+            if (keyword) {
+                window.location.href = `/view/users/job-post/list?keyword=${encodeURIComponent(keyword)}`;
+            } else {
+                alert("검색어를 입력하세요.");
+            }
         });
     } catch (error) {
         console.error('사용자 정보 로드 실패:', error);
