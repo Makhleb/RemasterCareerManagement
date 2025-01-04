@@ -59,6 +59,11 @@ section {
     align-items: center;
     display: flex;
 }
+.section2_option:focus {
+    outline: none; /* 기본 포커스 스타일 제거 */
+    border: 1px solid #ddd; /* 동일한 두께의 테두리 설정 */
+}
+
 
 .section2_option {
     box-sizing: border-box;
@@ -278,7 +283,7 @@ section {
 }
 
 .section5_footer {
-    margin-top: 10px;
+    margin-top:5px;
     margin-left: 20px;
     margin-right: 20px;
     display: flex;
