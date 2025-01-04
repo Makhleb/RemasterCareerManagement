@@ -59,9 +59,9 @@ public interface ResumeDao {
     /**
      * 포트폴리오 저장
      *
-     * @param portfolioDTO 포트폴리오 정보 DTO
+     * @param potfolioDTO 포트폴리오 정보 DTO
      */
-    void insertPortfolioInfo(PotfolioDTO portfolioDTO);
+    void insertPotfolioInfo(PotfolioDTO potfolioDTO);
 
     /**
      * 자기소개서 저장
@@ -109,7 +109,7 @@ public interface ResumeDao {
     LicenseDTO selectLicensesByResumeNo(int resumeNo);
     List<ResumeSkillDTO> selectSkillsByResumeNo(int resumeNo);
     MilitaryDTO selectMilitaryByResumeNo(int resumeNo);
-    PotfolioDTO selectPortfoliosByResumeNo(int resumeNo);
+    PotfolioDTO selectPotfoliosByResumeNo(int resumeNo);
     IntroduceDTO selectIntroByResumeNo(int resumeNo);
 
 

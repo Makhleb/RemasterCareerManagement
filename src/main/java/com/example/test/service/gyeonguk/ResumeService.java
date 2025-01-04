@@ -78,10 +78,10 @@ public class ResumeService {
     /**
      * 포트폴리오 저장
      *
-     * @param portfolioDTO 포트폴리오 정보 DTO
+     * @param potfolioDTO 포트폴리오 정보 DTO
      */
-    public void savePortfolioInfo(PotfolioDTO portfolioDTO) {
-        resumeDao.insertPortfolioInfo(portfolioDTO);
+    public void savePotfolioInfo(PotfolioDTO potfolioDTO) {
+        resumeDao.insertPotfolioInfo(potfolioDTO);
     }
 
     /**
@@ -112,8 +112,8 @@ public class ResumeService {
         System.out.println(detail.getSkills()+"............");
         detail.setMilitary(resumeDao.selectMilitaryByResumeNo(resumeNo));
         System.out.println(detail.getMilitary()+"............");
-        detail.setPortfolios(resumeDao.selectPortfoliosByResumeNo(resumeNo));
-        System.out.println(detail.getPortfolios()+"............");
+        detail.setPotfolios(resumeDao.selectPotfoliosByResumeNo(resumeNo));
+        System.out.println(detail.getPotfolios()+"............");
         detail.setIntro(resumeDao.selectIntroByResumeNo(resumeNo));
         System.out.println(detail.getIntro()+"............");
         return detail;

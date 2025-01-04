@@ -118,12 +118,20 @@
                        <h3>활동 정보</h3>
                             <p>
                                 활동 구분: ${detail.activities && detail.activities.activityType
-                                ? escapeHtml(mapCodeToName('ACT_TYPE', detail.activities.activityType))
-                                : '등록되지 않았습니다.'}<br>
-                                활동 기관명: ${detail.activities.activityCenterName ? escapeHtml(detail.activities.activityCenterName) : '등록되지 않았습니다.'}<br>
-                                시작 년월: ${detail.activities.startDate ? new Date(detail.activities.startDate).toLocaleDateString() : '등록되지 않았습니다.'}<br>
-                                종료 년월: ${detail.activities.endDate ? new Date(detail.activities.endDate).toLocaleDateString() : '등록되지 않았습니다.'}<br>
-                                주요 활동 내용: ${detail.activities.activityContent ? escapeHtml(detail.activities.activityContent) : '등록되지 않았습니다.'}
+                                                    ? escapeHtml(mapCodeToName('ACT_TYPE', detail.activities.activityType))
+                                                    : '등록되지 않았습니다.'}<br>
+                                활동 기관명: ${detail.activities && detail.activities.activityCenterName
+                                                    ? escapeHtml(detail.activities.activityCenterName)
+                                                    : '등록되지 않았습니다.'}<br>
+                                시작 년월: ${detail.activities && detail.activities.startDate
+                                                    ? new Date(detail.activities.startDate).toLocaleDateString()
+                                                    : '등록되지 않았습니다.'}<br>
+                                종료 년월: ${detail.activities && detail.activities.endDate
+                                                    ? new Date(detail.activities.endDate).toLocaleDateString()
+                                                    : '등록되지 않았습니다.'}<br>
+                                주요 활동 내용: ${detail.activities && detail.activities.activityContent
+                                                    ? escapeHtml(detail.activities.activityContent)
+                                                    : '등록되지 않았습니다.'}
                             </p>
                         <h3>학력</h3>
                             <p>

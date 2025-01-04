@@ -115,7 +115,7 @@
         </insert>
 
         <!-- 포트폴리오 저장 -->
-        <insert id="insertPortfolioInfo" parameterType="com.example.test.dto.PotfolioDTO">
+        <insert id="insertPotfolioInfo" parameterType="com.example.test.dto.PotfolioDTO">
             INSERT INTO tblPotfolio (
             resumeNo,
             gubn,
@@ -209,7 +209,7 @@
         SELECT * FROM tblMilitary WHERE resumeNo = #{resumeNo}
     </select>
 
-    <select id="selectPortfoliosByResumeNo" parameterType="int" resultType="com.example.test.dto.PotfolioDTO">
+    <select id="selectPotfoliosByResumeNo" parameterType="int" resultType="com.example.test.dto.PotfolioDTO">
         SELECT * FROM tblPotfolio WHERE resumeNo = #{resumeNo}
     </select>
 

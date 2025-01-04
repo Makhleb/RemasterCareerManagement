@@ -98,12 +98,12 @@ public class ResumeRegistApiController {
     /**
      * 포트폴리오 저장
      *
-     * @param portfolioDTO 포트폴리오 데이터 DTO
+     * @param potfolioDTO 포트폴리오 데이터 DTO
      * @return 저장 결과 메시지
      */
-    @PostMapping("/portfolio")
-    public String savePortfolioInfo(@RequestBody PotfolioDTO portfolioDTO) {
-        resumeService.savePortfolioInfo(portfolioDTO);
+    @PostMapping("/potfolio")
+    public String savePortfolioInfo(@RequestBody PotfolioDTO potfolioDTO) {
+        resumeService.savePotfolioInfo(potfolioDTO);
         return "포트폴리오가 저장되었습니다.";
     }
 
