@@ -140,7 +140,7 @@ public class MainDTO {
         private List<String> skillCodes;  // 기술스택 (랜덤 2개)
         private List<String> benefits;    // 복리후생 (랜덤 1개)
         private int scrapCount;
-        private boolean isScraped;
+        private int isScraped;  // 0 또는 1로 저장
         private String postThumbnail;
     }
 

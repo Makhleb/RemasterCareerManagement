@@ -1,19 +1,19 @@
 package com.example.test.service.rim;
 
 import com.example.test.dao.rim.MainDao;
+import com.example.test.dao.sangin.UsersLikeDao_sangin;
 import com.example.test.dto.CompanyDTO;
 import com.example.test.dto.rim.main.*;
 import com.example.test.security.rim.SecurityUtil;
 import com.example.test.service.common.FileService;
+import com.example.test.vo.JobPostDetailVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +23,7 @@ public class MainService {
     private final FileService fileService;
     private final MainDao mainDao;
     private final SecurityUtil securityUtil;
+    private final UsersLikeDao_sangin usersLikeDao;
 
     // 기본 썸네일 이미지 배열 추가
     private static final String[] DEFAULT_THUMBNAILS = {
@@ -37,6 +38,12 @@ public class MainService {
     public MainDTO getMainPageData() {
         MainDTO response = new MainDTO();
         String userType = securityUtil.getCurrentUserRole();
+        String userId = null;
+
+        // ROLE_USER인 경우에만 userId를 가져옵니다
+        if ("ROLE_USER".equals(userType)) {
+            userId = securityUtil.getCurrentUserId();
+        }
 
         log.info("userType: " + userType);
 
@@ -46,6 +53,12 @@ public class MainService {
         
         // 게스트 섹션 데이터 조회
         MainDTO.GuestSectionDTO guestData = getGuestSection();
+        
+        // ROLE_USER인 경우에만 스크랩 상태를 설정
+        if (userId != null) {
+            setScrapStatus(guestData.getPopularPosts(), userId);
+            setScrapStatus(guestData.getScrapedPosts(), userId);
+        }
         
         switch (userType) {
             case "ROLE_GUEST":
@@ -57,7 +70,7 @@ public class MainService {
                 response.setGuestSection(guestData);
                 
                 // 구직자 전용 데이터 설정
-                MainDTO.JobSeekerSectionDTO seekerData = getJobSeekerSection(securityUtil.getCurrentUserId());
+                MainDTO.JobSeekerSectionDTO seekerData = getJobSeekerSection(userId);
                 
                 // guest 데이터를 JobSeekerSection에도 통합
                 seekerData.setPopularPosts(guestData.getPopularPosts());
@@ -203,5 +216,24 @@ public class MainService {
 
     public MainDTO.CompanyRatingDTO getCompanyRating(String companyId) {
         return mainDao.findCompanyRating(companyId);
+    }
+
+    private void setScrapStatus(List<MainDTO.JobPostDTO> posts, String userId) {
+        if (userId == null || posts == null || posts.isEmpty()) {
+            return;
+        }
+
+        // 현재 사용자의 스크랩한 공고 목록
+        List<JobPostDetailVo> scrapedPosts = usersLikeDao.jobPostLike(userId);
+        
+        // jobPostNo만 추출하여 Set으로 변환 (검색 성능 향상을 위해)
+        Set<Integer> scrapedPostNos = scrapedPosts.stream()
+            .map(JobPostDetailVo::getJobPostNo)
+            .collect(Collectors.toSet());
+        
+        // 각 게시물의 스크랩 여부를 설정합니다 (0 또는 1로 설정)
+        posts.forEach(post -> {
+            post.setIsScraped(scrapedPostNos.contains(post.getJobPostNo()) ? 1 : 0);
+        });
     }
 } 

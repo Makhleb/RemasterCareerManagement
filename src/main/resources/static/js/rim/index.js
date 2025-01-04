@@ -88,6 +88,7 @@ window.common = {
             this.renderTopCompanies(guestData.topCompanies || []);
             this.renderTrendingPosts(guestData.scrapedPosts || []);
             this.initCompanyFilter();
+            
         },
 
         // 기업 필터 초기화
@@ -147,65 +148,69 @@ window.common = {
             container.innerHTML = posts.map(this.renderJobPostCard).join('');
         },
 
-        // 카드 렌더링 헬퍼 함수들
-        renderJobPostCard(post) {
-    if (!post) return '';
-    
-            // 복리후생 태그 생성 (첫 번째 항목만)
-            const benefit = post.benefits && post.benefits[0] 
-                ? `<span class="post-tag benefit-tag small">💝${post.benefits[0]}</span>` 
-                : '';
-            
-            // 기술스택 태그 생성 (최대 2개)
-            const skillTags = post.skillCodes && post.skillCodes
-                .slice(0, 2)
-                .map(skill => `<span class="post-tag skill-tag small">💻${skill}</span>`)
-                .join('') || '';
+    // 카드 렌더링 헬퍼 함수 수정
+    renderJobPostCard(post) {
+        if (!post) return '';
         
-    const ddayClass = post.dday <= 0 ? 'deadline-near' : 'deadline-passed';
-    const ddayText = post.dday <= 0 ? `D${post.dday}` : '마감';
-            
-            // 날짜 형식 변환
-            const formatDate = (dateString) => {
-                if (!dateString) return '';
-                const date = new Date(dateString);
-                const month = date.getMonth() + 1;
-                const day = date.getDate();
-                const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'][date.getDay()];
-                return `~${month}.${day}(${dayOfWeek})`;
-            };
-    
-    return `
-        <div class="job-post-card">
-                    <div class="company-header">
+        // 복리후생 태그 생성 (첫 번째 항목만)
+        const benefit = post.benefits && post.benefits[0] 
+            ? `<span class="post-tag benefit-tag small">💝${post.benefits[0]}</span>` 
+            : '';
+        
+        // 기술스택 태그 생성 (최대 2개)
+        const skillTags = post.skillCodes && post.skillCodes
+            .slice(0, 2)
+            .map(skill => `<span class="post-tag skill-tag small">💻${skill}</span>`)
+            .join('') || '';
+
+        const ddayClass = post.dday <= 0 ? 'deadline-near' : 'deadline-passed';
+        const ddayText = post.dday <= 0 ? `D${post.dday}` : '마감';
+        
+        // 날짜 형식 변환
+        const formatDate = (dateString) => {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'][date.getDay()];
+            return `~${month}.${day}(${dayOfWeek})`;
+        };
+
+        // 스크랩 버튼 클래스 설정
+        const scrapBtnClass = post.isScraped ? 'scrap-btn active colorstar' : 'scrap-btn uncolorstar';
+        const bookmarkClass = post.isScraped ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark';
+
+        return `
+            <div class="job-post-card">
+                <div class="company-header">
                     <img src="${post.companyImage}" 
-                         alt="${post.companyName}" 
-                         class="company-logo"
-                         onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(post.companyName)}&size=40&background=random'">
-                        <p class="company-name">${post.companyName}</p>
-                        <h3 class="post-title">${post.title || '제목 없음'}</h3>
-                    </div>
-                    <div class="post-info" style="background-image: url('${post.postThumbnail}')">
-                        <div class="post-overlay">
-                            <div class="post-tags">
-                                <span class="post-tag">💸연봉 ${post.jobSalary || '정보 없음'}만원</span>
-                            </div>
-                            <div class="bottom-tags">
-                                <div class="tag-group">
-                                    ${skillTags}
-                                    ${benefit}
+                        alt="${post.companyName}" 
+                        class="company-logo"
+                        onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(post.companyName)}&size=40&background=random'">
+                    <p class="company-name">${post.companyName}</p>
+                    <h3 class="post-title">${post.title || '제목 없음'}</h3>
                 </div>
-                                <span class="post-tag date-tag">${formatDate(post.endDate)} 
-                    <button class="scrap-btn" onclick="handleScrap(${post.jobPostNo}, event)">
-                        <i class="fas fa-bookmark"></i>
-                    </button>
-                                </span>
+                <div class="post-info" style="background-image: url('${post.postThumbnail}')">
+                    <div class="post-overlay">
+                        <div class="post-tags">
+                            <span class="post-tag">💸연봉 ${post.jobSalary || '정보 없음'}만원</span>
+                        </div>
+                        <div class="bottom-tags">
+                            <div class="tag-group">
+                                ${skillTags}
+                                ${benefit}
                             </div>
+                            <span class="post-tag date-tag">${formatDate(post.endDate)} 
+                                <button class="${scrapBtnClass}" onclick="handleScrap(${post.jobPostNo}, event)">
+                                    <i class="${bookmarkClass}"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    `;
-        },
+        `;
+    },
 
         renderCompanyCard(company) {
     if (!company) return '';
@@ -311,10 +316,58 @@ window.common = {
     }
 };
 
-function isLoggedIn() {
-    return ['ROLE_USER', 'ROLE_COMPANY'].includes(window.userType);
-}
+// 전역 스크랩 핸들러 함수 수정
+window.handleScrap = async function(jobPostNo, event) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    try {
+        // 로그인 상태 확인
+        const response = await axios.get('/api/auth/me');
+        const isLoggedIn = response.data && response.data.role === 'ROLE_USER';
+        
+        if (!isLoggedIn) {
+            if (confirm('로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?')) {
+                window.location.href = '/login';
+            }
+            return;
+        }
+        
+        const button = event.target.closest('.scrap-btn');
+        const icon = button.querySelector('i');
+        const isScraped = button.classList.contains('active');
 
+        // 스크랩 API 호출
+        const url = isScraped
+            ? `/api/users/like/jpl/remove?jobPostNo=${jobPostNo}`
+            : `/api/users/like/jpl/add?jobPostNo=${jobPostNo}`;
+            
+        const response2 = await axios.get(url);
+        
+        if (response2 === '굿!') {
+            // UI 업데이트
+            button.classList.toggle('active');
+            button.classList.toggle('uncolorstar');
+            
+            icon.className = isScraped 
+                ? 'fas fa-bookmark' 
+                : 'fas fa-bookmark active';
+            
+            // 알림 메시지
+            const message = isScraped ? '스크랩이 취소되었습니다.' : '스크랩되었습니다.';
+            alert(message);
+        }
+    } catch (error) {
+        console.error('스크랩 처리 중 오류:', error);
+        if (error.response?.status === 401) {
+            if (confirm('로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?')) {
+                window.location.href = '/login';
+            }
+        } else {
+            alert('스크랩 처리 중 오류가 발생했습니다.');
+        }
+    }
+};
 // 페이지 로드 시 초기화
 document.addEventListener('DOMContentLoaded', () => {
     window.common.init();

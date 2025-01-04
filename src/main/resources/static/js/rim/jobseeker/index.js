@@ -361,7 +361,16 @@ window.jobseeker = {
             container.innerHTML = this.renderResumePrompt();
             return;
         }
-        container.innerHTML = posts.map(window.common.guestSection.renderJobPostCard).join('');
+        container.innerHTML = posts.map(post => {
+            const card = window.common.guestSection.renderJobPostCard(post);
+            return post.isScraped ? card.replace(
+                'class="scrap-btn"',
+                'class="scrap-btn active"'
+            ).replace(
+                'class="fas fa-bookmark"',
+                'class="fas fa-bookmark active"'
+            ) : card;
+        }).join('');
     },
 
     // 이벤서 등록 유도 메시지 렌더링
@@ -379,6 +388,7 @@ window.jobseeker = {
         `;
     },
 
+
     // 마감 임박 공고 렌더링
     renderDeadlinePosts(posts) {
         const container = document.getElementById('deadlinePosts');
@@ -388,7 +398,16 @@ window.jobseeker = {
             container.innerHTML = this.renderEmptyState('마감 임박한 채용공고가 없습니다.');
             return;
         }
-        container.innerHTML = posts.map(window.common.guestSection.renderJobPostCard).join('');
+        container.innerHTML = posts.map(post => {
+            const card = window.common.guestSection.renderJobPostCard(post);
+            return post.isScraped ? card.replace(
+                'class="scrap-btn"',
+                'class="scrap-btn active"'
+            ).replace(
+                'class="fas fa-bookmark"',
+                'class="fas fa-bookmark active"'
+            ) : card;
+        }).join('');
     },
 
     // 이벤트 리스너 초기화
@@ -460,7 +479,7 @@ window.jobseeker = {
         window.common.guestSection.initializeSlider();
     },
 
-    // 인기 채용공고 렌더링 메서드 추가
+    // 인기 채용공고 렌더링
     renderPopularPosts(posts) {
         const container = document.getElementById('popularPosts');
         if (!container) return;
@@ -469,10 +488,19 @@ window.jobseeker = {
             container.innerHTML = this.renderEmptyState('인기 채용공고가 없습니다.');
             return;
         }
-        container.innerHTML = posts.map(window.common.guestSection.renderJobPostCard).join('');
+        container.innerHTML = posts.map(post => {
+            const card = window.common.guestSection.renderJobPostCard(post);
+            return post.isScraped ? card.replace(
+                'class="scrap-btn"',
+                'class="scrap-btn active"'
+            ).replace(
+                'class="fas fa-bookmark"',
+                'class="fas fa-bookmark active"'
+            ) : card;
+        }).join('');
     },
 
-    // 주목받는 채용공고 렌더링 메서드 추가
+    // 주목받는 채용공고 렌더링
     renderTrendingPosts(posts) {
         const container = document.getElementById('trendingPosts');
         if (!container) return;
@@ -481,7 +509,16 @@ window.jobseeker = {
             container.innerHTML = this.renderEmptyState('주목받는 채용공고가 없습니다.');
             return;
         }
-        container.innerHTML = posts.map(window.common.guestSection.renderJobPostCard).join('');
+        container.innerHTML = posts.map(post => {
+            const card = window.common.guestSection.renderJobPostCard(post);
+            return post.isScraped ? card.replace(
+                'class="scrap-btn"',
+                'class="scrap-btn active"'
+            ).replace(
+                'class="fas fa-bookmark"',
+                'class="fas fa-bookmark active"'
+            ) : card;
+        }).join('');
     },
 
     // 인기 스킬 렌더링
@@ -510,6 +547,8 @@ window.jobseeker = {
             </div>
         `;
     }
+
+
 };
 
 // 페이지 로드 시 초기화
