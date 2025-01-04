@@ -7,7 +7,9 @@ import com.example.test.exception.AuthException;
 import com.example.test.security.rim.SecurityUtil;
 import com.example.test.service.rim.AuthService;
 import com.example.test.dto.rim.CompanyCreateDTO;
+import com.example.test.util.rim.JwtUtil;
 import groovy.util.logging.Slf4j;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,7 @@ public class AuthController {
 
     private final AuthService authService;
     private final SecurityUtil securityUtil;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/signup")
     public String signup(@Valid @RequestBody UserCreateDTO dto) {
@@ -70,33 +73,15 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public void login(@RequestBody LoginDTO dto, HttpServletResponse response) {
-        // 1. 로그인 검증 및 JWT 토큰 생성
+    public Map<String, String> login(@RequestBody LoginDTO dto, HttpServletResponse response) {
         String token = authService.login(dto);
-        log.info("Generated JWT token: {}", token);
-        
-        // 2. HttpOnly 쿠키에 JWT 저장
-        Cookie cookie = new Cookie("JWT_TOKEN", token);
-        cookie.setHttpOnly(true);  // XSS 방지
-        cookie.setPath("/");
-        // cookie.setMaxAge(3600);
-        
-        response.addCookie(cookie);
-        log.info("Set JWT cookie for user: {}", dto.getUserId());
+        return authService.handleLoginSuccess(token, dto.getUserId(), response);
     }
 
     @PostMapping("/company/login")
-    public void companyLogin(@RequestBody LoginDTO dto, HttpServletResponse response) {
+    public Map<String, String> companyLogin(@RequestBody LoginDTO dto, HttpServletResponse response) {
         String token = authService.companyLogin(dto);
-        log.info("Generated JWT token for company: {}", token);
-        
-        Cookie cookie = new Cookie("JWT_TOKEN", token);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        // cookie.setMaxAge(3600);
-        
-        response.addCookie(cookie);
-        log.info("Set JWT cookie for company: {}", dto.getUserId());
+        return authService.handleLoginSuccess(token, dto.getUserId(), response);
     }
 
     @GetMapping("/me")

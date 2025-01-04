@@ -8,14 +8,22 @@ import com.example.test.dto.rim.LoginDTO;
 import com.example.test.dto.rim.UserCreateDTO;
 import com.example.test.exception.AuthException;
 import com.example.test.util.rim.JwtUtil;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.test.exception.BusinessException;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
 
     private final UserDao userDao;
@@ -116,7 +124,33 @@ public class AuthService {
 
         return jwtUtil.generateToken(company);
     }
+    public Map<String, String> handleLoginSuccess(String token, String userId, HttpServletResponse response) {
+        log.info("Generated JWT token for {}: {}", userId, token);
 
+        // 쿠키 설정
+        Cookie cookie = new Cookie("JWT_TOKEN", token);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
+        log.info("Set JWT cookie for {}", userId);
+
+        // 응답 데이터 생성
+        Map<String, String> responseData = new HashMap<>();
+        responseData.put("message", "로그인 성공");
+
+        // JWT 토큰에서 권한 정보 추출
+        Claims claims = jwtUtil.getAllClaimsFromToken(token);
+        String role = (String) claims.get("role");
+        String type = role.equals("ROLE_COMPANY") ? "company" : "user";
+
+
+        log.info("Set JWT cookie for {}", userId);
+        responseData.put("role", role);
+        responseData.put("type", type);
+
+        return responseData;
+    }
     /**
      * 일반 회원 정보 조회
      */

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout_dir/layout/main_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>기업상세정보</title>
+    <link rel="stylesheet" href="/css/company-detail.css">
+</head>
+<body layout:fragment="content" th:attr="data-company-id=${companyId}">
+<section>
+    <div id="section1">
+        <!-- 섹션 1 동적 생성 -->
+    </div>
+    <div id="section2">
+        <div id="main-container">
+            <div id="fakeTag">
+                <img th:src="@{/images/기업상세정보뽀대용.png}" alt="뽀대이미지" id="fake-img">
+                <span id="fake-text">Career</span>
+            </div>
+            <div id="data">
+                <div id="data-text">전체 리뷰 통계</div>
+                <div id="data-options">
+                    <span>차트</span>
+                    <span>리뷰</span>
+                    <span>메뉴</span>
+                    <span>뭐넣지</span>
+                </div>
+                <div id="data-option1">
+                    차트
+                </div>
+                <div id="data-option2">
+                    <div id="review-list-box">
+                        <!-- 리뷰 동적 생성 -->
+                    </div>
+                </div>
+            </div>
+            <div id="post-list-box">
+                <div id="post-list-text">공고 목록</div>
+                <div id="post-list">
+                    <!-- 채용공고가 동적으로 생성된다 -->
+                </div>
+            </div>
+        </div>
+        <div id="aside-bar">
+        </div>
+    </div>
+</section>
+<div id="background-color"></div>
+<script>
+    const section1 = document.querySelector("#section1");
+    const companyId = document.body.dataset.companyId;
+    const reviewListBox = document.querySelector("#review-list-box");
+    const postList = document.querySelector("#post-list");
+
+    axios.get(`/api/users/company/detail/${companyId}`)
+        .then(response => {
+            const data = response.data;
+            console.log("data", data);
+
+            // Section 1 동적 생성
+            section1.innerHTML = `
+            <div id="company-logo"><img src="${data.companyImage}" alt="Company Logo"></div>
+            <div id="company-details">
+                <div id="company-detail1">${data.companyName}</div>
+                <div id="company-detail2">
+                    <div id="detail2_con1">
+                        <div class="company-fake" style="border-right: 1px #ddd solid; padding: 0 10px 0 0;">포털 및 기타 인터넷 정보매개 서비스업</div>
+                        <div class="company-fake" style="border-right: 1px #ddd solid; padding: 0 10px;">중견기업</div>
+                        <div class="company-fake" style="border-right: 1px #ddd solid; padding: 0 10px;">${data.companyEmployee}명</div>
+                        <div class="company-fake" style="border-right: 1px #ddd solid; padding: 0 10px;">창립일 ${data.companyBirth}</div>
+                        <div class="company-fake" style="padding: 0 10px;">대표 ${data.companyPresident}</div>
+                    </div>
+                    <div id="company-like">
+                        <div id="heart" class="${data.isBookmarked === 1 ? 'colorheart' : 'uncolorheart'}">
+                        </div>
+                        <div id="heart-text">
+                            관심기업
+                        </div>
+                    </div>
+
+                </div>
+                <div id="company-detail3">
+                    <div id="company-bestCulture">
+                        <img src="/images/엄지.png" alt="엄지">
+                        <div>직원들이 뽑은 BEST 기업문화</div>
+                    </div>
+                    <div id="company-cultures">
+                        <div>자유로운 연차</div>
+                        <div>평균 연령 50대</div>
+                        <div>자유로운 출근</div>
+                        <div>프리한 복장 가능</div>
+                        <div>일하면서 성장</div>
+                    </div>
+                </div>
+            </div>`;
+
+            addBookmarkEventListeners();
+            console.log("@@@@@@@@@@@@@" + data.jobPosts);
+            // 공고 목록 동적 생성
+            postList.innerHTML = '';
+            data.jobPosts.forEach(jobPost => {
+
+                postList.innerHTML += `
+                <div class="job-post">
+                    <div id="post-box1">
+                        <div id="box1-con">
+                            <div id="post-name"><a href="/view/users/job-post/detail/${jobPost.jobPostNo}">${jobPost.title}</a></div>
+<!--                            <div id="star" class="colorstar"></div>-->
+                        </div>
+                        <div id="request">
+                            <span>${jobPost.postAddress}</span>
+                            <span>${jobPost.jobHistory}년 이상</span>
+                            <span>${jobPost.workTypeName}</span>
+                            <span>${jobPost.jobSalary}만</span>
+                        </div>
+                    </div>
+                    <div id="post-box2">
+                        <span id="box2-text">현재 지원자</span>
+                        <span id="applicant-num">${jobPost.aplcHstrCount} 명</span>
+                    </div>
+                    <div id="post-box3">
+                        <span id="regist-btn">입사지원</span>
+                        <span id="enddate">${jobPost.endDate ? `~${new Date(jobPost.endDate).toLocaleDateString()}` : '마감일 없음'}</span>
+
+                    </div>
+                </div>`;
+            });
+
+            // 리뷰 동적 생성
+            data.scores.forEach(score => {
+                reviewListBox.innerHTML += `
+                <div class="review">
+                    <div class="name-score">
+                        <div class="userId">${score.userId}</div>
+                        <div class="score">${'★'.repeat(score.score)}</div>
+                    </div>
+                    <div class="comment">댓글..</div>
+                </div>`;
+            });
+        })
+        .catch(error => console.error("Error fetching job post details:", error));
+
+    // 북마크 클릭 이벤트 추가
+    function addBookmarkEventListeners() {
+        const cl = document.querySelector("#company-like");
+        const heart = document.querySelector("#heart");
+
+        cl.addEventListener("click", () => {
+            const tf = heart.classList.contains("colorheart");
+            // 북마크 상태 변경 요청
+            toggleBookmark(companyId, tf)
+                .then(() => {
+                    if (tf) {
+                        heart.classList.remove("colorheart");
+                        heart.classList.add("uncolorheart");
+                        alert("북마크가 취소되었습니다");
+                    } else {
+                        heart.classList.remove("uncolorheart");
+                        heart.classList.add("colorheart");
+                        alert("북마크가 추가되었습니다");
+                    }
+                })
+                .catch(() => {
+                    alert("북마크 작업 중 오류가 발생했습니다.");
+                });
+        });
+    }
+
+    // 북마크 추가/삭제 요청 함수
+    function toggleBookmark(companyId, tf) {
+        const url = tf
+            ? `/api/users/like/cl/remove?companyId=${companyId}`
+            : `/api/users/like/cl/add?companyId=${companyId}`;
+
+        // GET 요청 보내기
+        return axios.get(url)
+            .then(response => {
+                console.log(response.data); // 서버 응답 메시지 확인
+            })
+            .catch(error => {
+                console.error("Error in toggleBookmark:", error);
+                throw error;
+            });
+    }
+
+
+</script>
+</body>
+</html>

@@ -1,9 +1,9 @@
-document.addEventListener('DOMContentLoaded', async function() {
+document.addEventListener('DOMContentLoaded', async function () {
     try {
         const user = await auth.getCurrentUser();
-        console.log('user>>>',user)
+        console.log('user>>>', user)
         const headerRight = document.querySelector('.header-right');
-        
+
         if (user && user.type !== 'guest') {
             // 로그인 상태
             headerRight.innerHTML = `
@@ -17,7 +17,10 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             // 로그아웃 이벤트 리스너
             document.querySelector('#header-right-logout').addEventListener('click', async () => {
-                await auth.logout();
+                const isLoggedOut = await auth.logout();
+                if (!isLoggedOut) {
+                    alert('로그아웃 처리 중 오류가 발생했습니다. 다시 시도해주세요.');
+                }
             });
 
             // 마이페이지 이벤트 리스너
@@ -46,6 +49,34 @@ document.addEventListener('DOMContentLoaded', async function() {
                 location.href = '/company/signup';
             });
         }
+
+        // 상단 돋보기 모달버전
+        const headerRightSearch = document.querySelector("#header-right-search");
+        const headerModal = document.querySelector("#header-modal");
+        const headerCloseBtn = document.querySelector("#header-close-btn");
+
+// 모달창 열기
+        headerRightSearch.addEventListener("click", () => {
+            headerModal.style.display = "flex"; // 모달창 보이기
+        });
+
+// 모달창 닫기
+        headerCloseBtn.addEventListener("click", () => {
+            headerModal.style.display = "none"; // 모달창 숨기기
+        });
+
+// 검색 기능
+        const headerSearchInput = document.querySelector("#header-search-input");
+        const headerModalSearchButton = document.querySelector("#header-modal-search");
+
+        headerModalSearchButton.addEventListener("click", () => {
+            const keyword = headerSearchInput.value.trim();
+            if (keyword) {
+                window.location.href = `/view/users/job-post/list?keyword=${encodeURIComponent(keyword)}`;
+            } else {
+                alert("검색어를 입력하세요.");
+            }
+        });
     } catch (error) {
         console.error('사용자 정보 로드 실패:', error);
     }

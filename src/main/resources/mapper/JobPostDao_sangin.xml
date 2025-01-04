@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test.dao.sangin.JobPostDao_sangin">
+    <select id="getJobPostAll" resultType="com.example.test.vo.JobPostDetailVo">
+        SELECT
+        jp.*,
+        c.companyName,
+        gb.name AS educationName,
+        CASE
+        WHEN EXISTS (
+        SELECT 1
+        FROM tblJpl jpl
+        WHERE jpl.userId = #{userId}
+        AND jpl.jobPostNo = jp.jobPostNo
+        ) THEN 1
+        ELSE 0
+        END AS isScraped
+        FROM tblJobPost jp
+        JOIN tblCompany c
+        ON jp.companyId = c.companyId
+        LEFT JOIN tblGubn gb
+        ON jp.educationCode = gb.code
+        WHERE gb.groupCode = 'EDUCATION'
+        AND jp.postViewYn = 'Y'
+        <if test="keyword != null and keyword != ''">
+            AND (
+            jp.title LIKE CONCAT('%', #{keyword}, '%')
+            OR jp.jobHistory LIKE CONCAT('%', #{keyword}, '%')
+            OR jp.jobSalary LIKE CONCAT('%', #{keyword}, '%')
+            OR jp.postAddress LIKE CONCAT('%', #{keyword}, '%')
+            OR jp.postAddressDetail LIKE CONCAT('%', #{keyword}, '%')
+            OR jp.content LIKE CONCAT('%', #{keyword}, '%')
+            )
+        </if>
+        ORDER BY RAND();
+
+    </select>
+    <select id="getJobPostMatching" resultType="com.example.test.vo.JobPostDetailVo">
+        SELECT
+        jp.*,
+        c.companyName,
+        gb.name AS educationName,
+        COUNT(DISTINCT rs.skillCode) AS matchingSkillCount
+        FROM tblJobPost jp
+        JOIN tblCompany c ON jp.companyId = c.companyId
+        LEFT JOIN tblGubn gb ON jp.educationCode = gb.code
+        JOIN tblJobPostSkill jps ON jp.jobPostNo = jps.jobPostNo
+        JOIN (
+        SELECT
+        rs.skillCode
+        FROM tblResume r
+        JOIN tblResumeSkill rs ON r.resumeNo = rs.resumeNo
+        WHERE r.userId = #{userId}
+        AND r.viewYn = 'Y'
+        ) AS rs ON rs.skillCode = jps.skillCode
+        WHERE jp.postViewYn = 'Y'
+        GROUP BY jp.jobPostNo
+        ORDER BY matchingSkillCount DESC, RAND()
+    </select>
+
+    <select id="getJobPost" resultType="com.example.test.vo.JobPostDetailVo">
+        SELECT
+        jp.*,
+        c.companyName,
+        gb.name AS educationName,
+        CASE
+        WHEN EXISTS (
+        SELECT 1
+        FROM tblJpl jpl
+        WHERE jpl.userId = #{userId}
+        AND jpl.jobPostNo = jp.jobPostNo
+        ) THEN 1
+        ELSE 0
+        END AS isScraped
+        FROM tblJobPost jp
+        JOIN tblCompany c
+        ON jp.companyId = c.companyId
+        LEFT JOIN tblGubn gb
+        ON jp.educationCode = gb.code
+        WHERE gb.groupCode = 'EDUCATION'
+        AND jp.jobPostNo = #{jobPostNo};
+
+    </select>
+
+    <select id="getJobPostSkill" resultType="com.example.test.dto.JobPostSkillDTO">
+        select * from tblJobPostSkill WHERE jobPostNo = #{jobPostNo}
+    </select>
+
+    <select id="getJobPostBenefit" resultType="com.example.test.dto.BenefitDTO">
+        select * from tblBenefit WHERE jobPostNo = #{jobPostNo}
+    </select>
+
+    <select id="getResumeList" resultType="com.example.test.dto.ResumeDTO">
+        select * from tblResume where userId = #{userId}
+    </select>
+    <insert id="registAplcHstr">
+        insert into tblAplcHstr (jobPostNo, resumeNo, aplcHstrDate, passYn) Values (#{jobPostNo},#{resumeNo},now(),'W')
+    </insert>
+
+</mapper>

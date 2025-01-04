@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout_dir/layout/main_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>관심기업</title>
+    <link rel="stylesheet" href="/css/company-like.css">
+</head>
+<body layout:fragment="content">
+<section>
+    <div id="section1">
+        스크랩/관심기업
+    </div>
+    <div id="section2">
+        <div id="section2_box1">
+            <a href="/view/users/like/jpl" id="scrap_post">스크랩</a>
+            <div id="post_num"></div>
+        </div>
+        <div id="section2_box2">
+            <div id="bookmark_com">관심기업</div>
+            <div id="com_num"></div>
+        </div>
+    </div>
+    <!-- 기업 상세 정보 반복 -->
+    <div id="section3">
+        <!-- 스크립트로 동적으로 추가됩니다 -->
+    </div>
+    <div id="section4">
+
+    </div>
+</section>
+<script>
+    // section2 DOM 요소 가져오기
+    const postNumElement = document.querySelector("#post_num");
+    const comNumElement = document.querySelector("#com_num");
+    const section3 = document.querySelector("#section3");
+
+    // 스크랩 및 북마크 개수 가져오기
+    axios.get("/api/users/like/summary")
+        .then(response => {
+            const {jplCount, clCount} = response.data;
+
+            // section2 업데이트
+            postNumElement.textContent = jplCount || 0;
+            comNumElement.textContent = clCount || 0;
+        })
+        .catch(error => {
+            console.error("Error fetching user summary:", error);
+            alert("스크랩 및 북마크 데이터를 불러오는 중 오류가 발생했습니다.");
+        });
+
+    // section3 데이터 가져오기 및 렌더링
+    axios.get("/api/users/like/cl")
+        .then(response => {
+            const data = response.data;
+
+            section3.innerHTML = "";
+
+            // 데이터를 반복해서 렌더링
+            data.forEach(item => {
+                // 동적으로 com_detail 요소 생성
+                const comDetail = document.createElement("div");
+                comDetail.classList.add("com_detail");
+                comDetail.dataset.companyId = item.companyId; // companyId 저장
+
+                // jobPosts 순회하며 공고 리스트 미리 생성
+                let jobPostsHTML = "";
+                item.jobPosts.forEach(post => {
+                    jobPostsHTML += `<div class="job_post">${post.title}</div>`;
+                });
+
+                // 기업 상세 정보 HTML 구조
+                comDetail.innerHTML = `
+                    <div id="detail_upper">
+                        <div id="com_logo">
+                            <img src="/static/images/colorstar.png" alt="회사로고">
+                        </div>
+                        <div id="heart" class="colorheart"></div>
+                    </div>
+                    <div id="detail_lower">
+                        <div id="com_name"><a href="/view/users/company/detail/${item.companyId}">${item.companyName}</a></div>
+                        <div id="job_post_list">
+                            ${jobPostsHTML || "<div class='job_post'></div>"}
+                        </div>
+                    </div>
+                `;
+
+                // com_detail을 section3에 추가
+                section3.appendChild(comDetail);
+            });
+
+            // 북s마크 이벤트 바인딩
+            addBookmarkEventListeners();
+        })
+        .catch(error => {
+            console.error("Error fetching company data:", error);
+            alert("관심 기업 데이터를 불러오는 중 오류가 발생했습니다.");
+        });
+
+    // 북마크 클릭 이벤트 추가
+    function addBookmarkEventListeners() {
+        const hearts = document.querySelectorAll("#heart");
+
+        hearts.forEach(heart => {
+            heart.addEventListener("click", () => {
+                const comDetail = heart.closest(".com_detail");
+                const companyId = comDetail.dataset.companyId; // companyId 가져오기
+                const tf = heart.classList.contains("colorheart");
+
+                // 북마크 상태 변경 요청
+                toggleBookmark(companyId, tf)
+                    .then(() => {
+                        if (tf) {
+                            heart.classList.remove("colorheart");
+                            heart.classList.add("uncolorheart");
+                            alert("북마크가 취소되었습니다");
+                        } else {
+                            heart.classList.remove("uncolorheart");
+                            heart.classList.add("colorheart");
+                            alert("북마크가 추가되었습니다");
+                        }
+                    })
+                    .catch(() => {
+                        alert("북마크 작업 중 오류가 발생했습니다.");
+                    });
+            });
+        });
+    }
+
+    // 북마크 추가/삭제 요청 함수
+    function toggleBookmark(companyId, tf) {
+        const url = tf
+            ? `/api/users/like/cl/remove?companyId=${companyId}`
+            : `/api/users/like/cl/add?companyId=${companyId}`;
+
+        // GET 요청 보내기
+        return axios.get(url)
+            .then(response => {
+                console.log(response.data); // 서버 응답 메시지 확인
+            })
+            .catch(error => {
+                console.error("Error in toggleBookmark:", error);
+                throw error;
+            });
+    }
+</script>
+</body>
+</html>

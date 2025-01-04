@@ -5,6 +5,7 @@
     padding: 20px;
     border-radius: 8px;
     margin-bottom: 30px;
+    cursor: pointer;
 }
 
 .banner-icons {
@@ -387,11 +388,13 @@ section h2 {
 /* 날짜 태그 특별 스타일 */
 .post-tag.date-tag {
     position: absolute;
-    bottom: 15px;
+    bottom: 235px;
+    color: #333;
     right: 40px;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(255, 255, 255, 0.73);
     margin-left: auto;  /* 우측 정렬 */
     display: flex;
+    font-weight: 600;
     align-items: center;
 }
 
@@ -410,7 +413,7 @@ section h2 {
 .tag-group {
     position: absolute;
     bottom: 15px;
-    left: 15px;
+    right: 43px;
     display: flex;
     gap: 4px;
 }
@@ -423,7 +426,33 @@ section h2 {
     right: 0;
     padding: 15px;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: flex-end;
     width: 100%;
+}
+
+.company-header {
+    padding: 15px;
+    background: white;
+    height: 104px;
+    flex-shrink: 0;
+    border-top: none;
+}
+
+.company-header .company-name {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 3px;
+    margin: 0;
+}
+
+.company-header .post-title {
+    font-size: 1rem;
+    color: #333;
+    margin: 8px 0 2px 0;  /* 상단 여백 줄이고 하단 여백 추가 */
+    display: -webkit-box;
+    -webkit-line-clamp: 1;  /* 1줄로 제한 */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

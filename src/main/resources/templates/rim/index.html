@@ -91,8 +91,8 @@
             right: 0;
             height: 8px;
             background: linear-gradient(90deg, 
-                #6a9ba3, 
-                #dba464
+                #dba464,
+                #6a9ba3
             );
             border-radius: 8px 8px 0 0;
         }
@@ -100,11 +100,10 @@
         .company-header {
             padding: 15px;
             background: white;
-            height: 85px;
+            height: 104px;
             flex-shrink: 0;
             border-top: none;
         }
-
         .company-logo {
             height: 30px;
             width: auto;
@@ -140,7 +139,6 @@
 
         .bottom-tags {
             display: flex;
-            justify-content: space-between;
             align-items: center;
             margin-top: auto;
             width: 100%;
@@ -177,8 +175,8 @@
             background: none;
             border: none;
             cursor: pointer;
-            color: rgba(255, 255, 255, 0.18);
-            font-size: 0.8rem;
+            color: rgba(220, 220, 220, 0.76);
+            font-size: 1rem;
             padding: 0.25rem;
             margin-left: 8px;
             display: flex;
@@ -280,45 +278,11 @@
         </section>
 
         <!-- 비로그인 시 안내 배너 -->
-        <div class="guest-banner" id="guestBanner">
-
-            <div class="banner-text">로그인하시면 더 많은 서비스를 이용할 수 있습니다.</div>
-        </div>
-        
-
-
-        <!-- 대시보드 섹션 -->
-        <section class="dashboard-section">
-            <div id="dashboardContainer" class="dashboard-container">
-                <div class="dashboard-header">
-                </div>
-                <div class="dashboard-content">
-                    <!-- 지원 현황 통계 -->
-                    <div class="stats-container">
-                        <div class="stat-item">
-                            <span class="stat-label">진행 중</span>
-                            <span class="stat-value waiting"></span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">합격</span>
-                            <span class="stat-value accepted"></span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">불합격</span>
-                            <span class="stat-value rejected"></span>
-                        </div>
-                    </div>
-                    
-                    <!-- 최근 지원 목록 -->
-                    <div class="recent-applications">
-                        <h3>최근 지원 내역</h3>
-                        <div class="applications-list">
-                            <!-- JavaScript로 동적 렌더링 -->
-                        </div>
-                    </div>
-                </div>
+        <a href="/login" style="text-decoration: none;">
+            <div class="guest-banner" id="guestBanner">
+                <div class="banner-text">로그인하시면 더 많은 서비스를 이용할 수 있습니다.</div>
             </div>
-        </section>
+        </a>
 
         <div id="deadlinePosts" class="deadline-posts-container">
             <!-- 마감 임박 공고 데이터가 여기에 렌더링됩니다. -->

@@ -161,7 +161,7 @@ public class JwtUtil {
     /**
      * 토큰에서 모든 클레임 추출
      */
-    private Claims getAllClaimsFromToken(String token) {
+    public Claims getAllClaimsFromToken(String token) {
         return Jwts.parserBuilder()
             .setSigningKey(getSigningKey())
             .build()
