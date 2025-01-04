@@ -6,6 +6,8 @@
     <meta charset="UTF-8">
     <title>관심기업</title>
     <link rel="stylesheet" href="/css/company-like.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 </head>
 <body layout:fragment="content">
 <section>
@@ -67,7 +69,7 @@
                 // jobPosts 순회하며 공고 리스트 미리 생성
                 let jobPostsHTML = "";
                 item.jobPosts.forEach(post => {
-                    jobPostsHTML += `<div class="job_post">${post.title}</div>`;
+                    jobPostsHTML += `<div class="job_post"> <i class="fa-solid fa-circle" style="font-size: 7px; vertical-align: middle;"></i>&nbsp;&nbsp;${post.title}</div>`;
                 });
 
                 // 기업 상세 정보 HTML 구조
@@ -79,7 +81,7 @@
                         <div id="heart" class="colorheart"></div>
                     </div>
                     <div id="detail_lower">
-                        <div id="com_name"><a href="/view/users/company/detail/${item.companyId}">${item.companyName}</a></div>
+                        <div id="com_name"><a href="/view/users/company/detail/${item.companyId}"><i class="fa-solid fa-building"></i>&nbsp;&nbsp;${item.companyName}</a></div>
                         <div id="job_post_list">
                             ${jobPostsHTML || "<div class='job_post'></div>"}
                         </div>
