@@ -213,20 +213,45 @@ window.common = {
     },
 
         renderCompanyCard(company) {
-    if (!company) return '';
-    
-    return `
-        <div class="company-card">
-            <img src="${company.companyImage}" 
-                 alt="${company.companyName}"
-                 onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(company.companyName)}&background=random'">
-            <h3>${company.companyName || '회사명 없음'}</h3>
-            <div class="company-stats">
-                <span class="rating">★ ${(company.avgRating || 0).toFixed(1)}</span>
-            </div>
-        </div>
-    `;
-        },
+            if (!company) return '';
+            
+            // 정렬 기준에 따라 다른 카드 내용 표시
+            const sortType = document.querySelector('.filter-buttons button.active')?.dataset.sort;
+            
+            return `
+                <div class="company-card">
+                    <div class="company-info">
+                        <img src="${company.companyImage}" 
+                             alt="${company.companyName}"
+                             onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(company.companyName)}&background=random'">
+                        <div class="company-details">
+                            <h3>${company.companyName || '회사명 없음'}</h3>
+                            <div class="company-stats">
+                                ${sortType === 'rating' ? `
+                                    <span class="rating">
+                                        평균 별점 <i class="fas fa-star"></i> 
+                                        ${(company.avgRating || 0).toFixed(1)}
+                                    </span>
+                                    <span class="jobs-count">
+                                        <i class="fas fa-briefcase"></i>
+                                        채용 ${company.activeJobCount || 0}건
+                                    </span>
+                                ` : `
+                                    <span class="like-count">
+                                        <i class="fas fa-heart"></i>
+                                        관심기업 ${company.likeCount || 0}
+                                    </span>
+                                    <span class="jobs-count">
+                                        <i class="fas fa-briefcase"></i>
+                                        채용 ${company.activeJobCount || 0}건
+                                    </span>
+                                `}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        },  
 
 // 슬라이더 초기화
         initializeSlider() {

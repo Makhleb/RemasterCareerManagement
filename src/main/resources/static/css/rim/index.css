@@ -137,7 +137,7 @@ section h2 {
 .post-title {
     font-size: 16px;
     font-weight: 600;
-    margin-bottom: 10px;
+    margin:0;
     color: #333;
     /* 2줄 이상일 경우 말줄임표 처리 */
     display: -webkit-box;
@@ -158,24 +158,109 @@ section h2 {
 .companies-slider-container {
     position: relative;
     overflow: hidden;
-    padding: 0 40px;  /* 좌우 버튼 공간 */
+    padding: 0 40px;
+    margin: 0 -10px;
 }
 
 /* 기업 슬라이더 */
 .companies-slider {
     display: flex;
     transition: transform 0.3s ease;
-    gap: 20px;
+    gap: 15px;
+    padding: 0 10px;
 }
 
 /* 기업 카드 */
 .company-card {
-    padding: 10px;
-    border: 1px solid #bababa;
-    border-radius: 20px;
-    flex: 0 0 calc(20% - 16px); /* 5개씩 표시 */
-    min-width: 200px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    margin: 10px;
+    width: 180px;
+    flex-shrink: 0;
 }
+
+.company-card:hover {
+    transform: none;
+}
+
+.company-info {
+    display: flex;
+    align-items: center;
+}
+
+.company-info img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+.company-details {
+    flex: 1;
+}
+
+.company-details h3 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.company-stats {
+    display: flex;
+    gap: 12px;
+    font-size: 14px;
+    align-items: center;
+}
+
+.rating {
+    color: #d3a200;
+}
+
+.like-count {
+    color: #ff4757;
+}
+
+.jobs-count {
+    color: #666;
+}
+
+.company-stats i {
+    margin-right: 4px;
+}
+
+.company-jobs {
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.recent-jobs {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.job-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 6px;
+}
+
+.job-title {
+    color: #333;
+    font-weight: 500;
+}
+
+.job-career {
+    color: #666;
+}
+
 /* 슬라이드 버튼 */
 .slide-button {
     position: absolute;
@@ -196,11 +281,11 @@ section h2 {
 }
 
 #slideLeft {
-    left: 0;
+    left: 10px;
 }
 
 #slideRight {
-    right: 0;
+    right: 10px;
 }
 
 /* 슬라이드 버튼 아이콘 */
@@ -452,8 +537,9 @@ section h2 {
 }
 
 .company-header .company-name {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color: #666;
+    font-weight: 500;
     margin-top: 3px;
     margin: 0;
 }
@@ -461,10 +547,28 @@ section h2 {
 .company-header .post-title {
     font-size: 1rem;
     color: #333;
-    margin: 8px 0 2px 0;  /* 상단 여백 줄이고 하단 여백 추가 */
+    margin: 0;  /* 상단 여백 줄이고 하단 여백 추가 */
     display: -webkit-box;
     -webkit-line-clamp: 1;  /* 1줄로 제한 */
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+.like-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.colorheart i {
+    color: #ff4b4b;
+}
+
+.uncolorheart i {
+    color: #666;
+}
+
+.company-card {
+    box-shadow: none;
 }

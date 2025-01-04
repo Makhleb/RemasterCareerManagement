@@ -336,34 +336,28 @@
     </select>
 
     <!-- TOP 10 기업 조회 -->
-    <select id="findTopCompanies" resultMap="companyResultMap">
+    <select id="findTopCompanies" resultType="com.example.test.dto.CompanyDTO">
         SELECT 
             c.companyId,
             c.companyName,
             c.companyImage,
-            c.companyAddress,
-            c.companyWebsite,
-            c.companyEmployee,
-            c.companyProfit,
             COALESCE(AVG(cs.score), 0) as avgRating,
-            COUNT(DISTINCT cs.userId) as reviewCount,
-            COUNT(DISTINCT l.userId) as likeCount
-        FROM tblCompany c
-        LEFT JOIN tblCompanyScore cs ON c.companyId = cs.companyId
-        LEFT JOIN tblLike l ON c.companyId = l.companyId AND l.likeType = 'C'
-        WHERE c.companyIsActive = 'Y'
+            COUNT(DISTINCT l.userId) as likeCount,
+            (SELECT COUNT(*) 
+             FROM tblJobPost jp 
+             WHERE jp.companyId = c.companyId 
+             AND jp.endDate BETWEEN CURDATE() AND '9999-12-31') as activeJobCount
+        FROM 
+            tblCompany c
+            LEFT JOIN tblCompanyScore cs ON c.companyId = cs.companyId
+            LEFT JOIN tblLike l ON c.companyId = l.companyId AND l.likeType = 'C'
         GROUP BY 
-            c.companyId,
-            c.companyName,
-            c.companyImage,
-            c.companyAddress,
-            c.companyWebsite,
-            c.companyEmployee,
-            c.companyProfit
+            c.companyId, c.companyName, c.companyImage
         ORDER BY 
-            avgRating DESC,
-            reviewCount DESC,
-            likeCount DESC
+            CASE 
+                WHEN #{sortType} = 'rating' THEN AVG(cs.score)
+                ELSE COUNT(DISTINCT l.userId)
+            END DESC
         LIMIT 10
     </select>
 
