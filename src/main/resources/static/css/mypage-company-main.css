@@ -1,0 +1,172 @@
+*{
+    --base: #B7673C;
+    --point: #FF8000;
+    --nav: #3A5154;
+    --line: #929AA2;
+    --text: #1D2625;
+    --side: #e9ecef;
+    color: #333;
+}
+
+.main-content button{
+    font-size: 16px;
+}
+
+.container {
+    width: 1400px;
+    font-size: 16px;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+}
+
+.flex-container{
+    display: flex;
+    justify-content: center;
+}
+
+aside {
+    height: 100%;
+    width: 100%;
+}
+aside .aside-title {
+    padding-left: 30px;
+    padding-top: 50px;
+}
+
+aside ul {
+    list-style-type: none;
+    padding-left: 30px;
+}
+aside a {
+    display: block;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+    padding: 25px 0;
+}
+
+aside a:hover {
+    color: var(--point);
+}
+
+aside li ul {
+    padding-left: 20px;
+}
+
+.main-content{
+    width: 100%;
+}
+
+.main-title {
+    height: 100px;
+    display: flex;
+    align-items: flex-end;
+    font-size: 30px;
+    font-weight: bold;
+    padding-left: 25px;
+}
+
+.column-flex{
+    display: flex;
+    flex-direction: column;
+}
+
+.row-flex{
+    display: flex;
+    flex-direction: row;
+}
+
+.between-center{
+    justify-content: space-between;
+    align-items: center;
+}
+
+.content-section{
+    box-sizing: border-box;
+    padding: 20px 25px;
+}
+
+.post-item{
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.post-column{
+    background-color: #e2e2e2;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.item-btn{
+    padding: 5px 20px;
+    border: none;
+    font-weight: bold;
+    background-color: #B7673C;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+;
+}
+.text-btn{
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.edit-btn{
+    height: 30px;
+    align-self: end;
+    margin: 7px 20px;
+}
+.item-default-end{
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+.btn-box{
+    gap:5px;
+}
+.loading-bar {
+    margin-left: 30px;
+    display: inline;
+    width: 80%;
+    height: 20px;
+    background-color: #d3d3d3;
+    position: relative;
+    overflow: hidden;
+}
+.progress {
+    width: 50%;
+    height: 100%;
+    background-color: #4caf50;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.column-item{
+    flex: 1;
+    font-weight: bold;
+}
+
+.user-list{
+    padding: 10px;
+    background-color: #f1f1f1;
+    border-radius: 10px;
+    gap: 20px;
+}
+
+.more-user-view{
+    cursor: pointer;
+    text-align: center;
+    color: #707780;
+}
+
+#arrow{
+    width: 25px;
+    height: 15px;
+}
+
+#post-list{
+    gap: 15px;
+}

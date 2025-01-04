@@ -19,8 +19,8 @@ public interface JobPostDao {
     int insertJobPostSkill(@Param("postNo") int postNo,@Param("list") List<JobPostSkillDTO> jobPostSkillDTOList);
     int insertBenefit(@Param("postNo") int postNo, @Param("list") List<BenefitDTO> benefitDTOList);
 
-    List<JobPostAplcWrapDto> selectAll(String companyId);
-    List<AplcHstrResponseDto> selectJobPostAplc(@Param("jobPostNo") int jobPostNo);
+    List<JobPostAplcWrapDto> selectAll(@Param("companyId")String companyId, @Param("limit") Integer limit);
+    List<AplcHstrResponseDto> selectJobPostAplc(@Param("jobPostNo") int jobPostNo, @Param("limit") Integer limit);
 
     JobPostDTO selectJobPostDetail(@Param("jobPostNo") int jobPostNo);
     List<BenefitDTO> selectBenefit(@Param("jobPostNo") int jobPostNo);

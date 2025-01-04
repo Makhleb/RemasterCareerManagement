@@ -39,10 +39,10 @@ public class JobPostService {
         return insertedNo;
     }
 
-    public List<JobPostAplcWrapDto> selectAllJobPost(String companyId) {
-        List<JobPostAplcWrapDto> daoResult = jobPostDao.selectAll(companyId);
+    public List<JobPostAplcWrapDto> selectAllJobPost(String companyId, Integer limit) {
+        List<JobPostAplcWrapDto> daoResult = jobPostDao.selectAll(companyId, limit);
         for (JobPostAplcWrapDto listItem : daoResult) {
-            listItem.setAlpcList(jobPostDao.selectJobPostAplc(listItem.getJobPostNo()));
+            listItem.setAlpcList(jobPostDao.selectJobPostAplc(listItem.getJobPostNo(), limit));
             String fileValue = fileService.loadImage("POST_THUMBNAIL", String.valueOf(listItem.getJobPostNo()));
             listItem.setPostThumbnail(fileValue);
         }
@@ -61,9 +61,6 @@ public class JobPostService {
     }
 
     public boolean updatePost(JobPostWrapDto jobPostWrapDto){
-        System.out.println("............."+ jobPostWrapDto.getJobPost());
-        System.out.println("............."+ jobPostWrapDto.getJobPostSkills());
-        System.out.println("............."+ jobPostWrapDto.getBenefits());
         int jobPostNo = jobPostWrapDto.getJobPost().getJobPostNo();
         int result = jobPostDao.updateJobPost(jobPostWrapDto.getJobPost());
         jobPostDao.deleteBenefit(jobPostNo);
