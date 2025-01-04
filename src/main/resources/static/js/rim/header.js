@@ -17,7 +17,10 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             // 로그아웃 이벤트 리스너
             document.querySelector('#header-right-logout').addEventListener('click', async () => {
-                await auth.logout();
+                const isLoggedOut = await auth.logout();
+                if (!isLoggedOut) {
+                    alert('로그아웃 처리 중 오류가 발생했습니다. 다시 시도해주세요.');
+                }
             });
 
             // 마이페이지 이벤트 리스너

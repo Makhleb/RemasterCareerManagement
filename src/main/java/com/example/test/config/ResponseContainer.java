@@ -32,6 +32,12 @@ public class ResponseContainer implements ResponseBodyAdvice<Object> {
                                 Class<? extends HttpMessageConverter<?>> selectedConverterType,
                                 ServerHttpRequest request,
                                 ServerHttpResponse response) {
+
+        // void 반환 타입 처리 수정
+        if (returnType.getParameterType().equals(void.class) || body == null) {
+            return ApiResponse.success(null);
+        }
+
         // String 타입일 경우 특별 처리
         if (body instanceof String) {
             // StringHttpMessageConverter가 사용될 때는 String을 반환해야 함
