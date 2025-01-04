@@ -1,10 +1,13 @@
 package com.example.test.controller.api.gihwan;
 
 import com.example.test.dto.JobPostDTO;
+import com.example.test.dto.response.PostCompactResponseDto;
+import com.example.test.dto.response.PostMatchingResponseDto;
 import com.example.test.dto.wrapper.JobPostAplcWrapDto;
 import com.example.test.dto.wrapper.JobPostWrapDto;
 import com.example.test.security.rim.SecurityUtil;
 import com.example.test.service.gihwan.JobPostService;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,6 +34,17 @@ public class JobPostApiController {
         String compnayId = securityUtil.getCurrentUserId();
         jobPostWrapDto.getJobPost().setCompanyId(compnayId);
         return jobPostService.postJobPost(jobPostWrapDto);
+    }
+
+    @GetMapping("/compact-job-post")
+    public List<PostCompactResponseDto> compactList(){
+        String companyId = securityUtil.getCurrentUserId();
+        return jobPostService.getCompactList(companyId);
+    }
+
+    @GetMapping("/post-matching/{postNo}")
+    public List<PostMatchingResponseDto> matchingList(@PathVariable int postNo){
+        return jobPostService.getMatchingList(postNo);
     }
 
     @GetMapping("/aplc-list")

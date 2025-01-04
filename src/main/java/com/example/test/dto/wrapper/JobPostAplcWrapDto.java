@@ -1,6 +1,6 @@
 package com.example.test.dto.wrapper;
 
-import com.example.test.dto.AplcHstrResponseDto;
+import com.example.test.dto.response.AplcHstrResponseDto;
 import lombok.Data;
 
 import java.util.Date;

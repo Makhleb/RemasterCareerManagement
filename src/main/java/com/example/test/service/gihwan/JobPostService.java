@@ -2,6 +2,8 @@ package com.example.test.service.gihwan;
 
 import com.example.test.dao.gihwan.JobPostDao;
 import com.example.test.dto.JobPostDTO;
+import com.example.test.dto.response.PostCompactResponseDto;
+import com.example.test.dto.response.PostMatchingResponseDto;
 import com.example.test.dto.wrapper.JobPostAplcWrapDto;
 import com.example.test.dto.wrapper.JobPostWrapDto;
 import com.example.test.service.common.FileService;
@@ -73,5 +75,13 @@ public class JobPostService {
 
     public boolean deleteJobPost(int jobPostNo) {
         return jobPostDao.deleteJobPost(jobPostNo) != 0;
+    }
+
+    public List<PostCompactResponseDto> getCompactList(String companyId) {
+        return jobPostDao.selectCompactPost(companyId);
+    }
+
+    public List<PostMatchingResponseDto> getMatchingList(int postNo) {
+        return jobPostDao.selectPostMatching(postNo);
     }
 }

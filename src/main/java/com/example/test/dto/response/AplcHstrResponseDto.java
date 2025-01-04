@@ -1,10 +1,8 @@
-package com.example.test.dto;
+package com.example.test.dto.response;
 
 import lombok.Data;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * Created on 2025-01-02 by 최기환
