@@ -125,7 +125,6 @@
             });
 
             const mapContainer = document.getElementById("map"); // 지도를 표시할 div
-            alert("test " + data.postAddress)
             const postAddress = data.postAddressDetail; // 공고 상세에서 가져온 주소
 
 // 지도 초기화
@@ -231,7 +230,7 @@
         }
     });
 
-    // 모달 외부 클릭 시 닫기
+    // 모달 외부 클릭 시 닫기ｓ
     window.addEventListener("click", event => {
         if (event.target === modal) {
             modal.style.display = "none";
