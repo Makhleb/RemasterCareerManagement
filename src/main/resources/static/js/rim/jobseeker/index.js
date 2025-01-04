@@ -69,8 +69,22 @@ function initEventListeners() {
     });
 }
 
+// 상태 클래스 반환
+function getStatusClass(status) {
+    switch(status) {
+        case 'W': return 'waiting';
+        case 'Y': return 'accepted';
+        case 'N': return 'rejected';
+        default: return 'waiting';
+    }
+}
+
+
+
+
+
 // 페이지 로드 시 초기화
 document.addEventListener('DOMContentLoaded', () => {
     initJobSeekerPage();
     initEventListeners();
-}); 
+});

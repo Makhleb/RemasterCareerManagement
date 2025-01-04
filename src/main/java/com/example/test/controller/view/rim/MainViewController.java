@@ -15,7 +15,14 @@ public class MainViewController {
 
     @GetMapping
     public String index() {
+
+        if(securityUtil.getUserType().equals("user")) {
+            return "redirect:/jobseeker";
+        }else if(securityUtil.getUserType().equals("company")) {
+            return "redirect:/company";
+        }else{
             return "rim/index";
+        }
     }
 
     @GetMapping("/jobseeker")

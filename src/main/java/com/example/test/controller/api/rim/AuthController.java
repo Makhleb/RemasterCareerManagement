@@ -94,12 +94,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     public void logout(HttpServletResponse response) {
-        // 쿠키 삭제
-        Cookie cookie = new Cookie("JWT_TOKEN", null);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
-        
-        response.addCookie(cookie);
-        SecurityContextHolder.clearContext();
+        authService.logout(response);  // 서비스로 위임
+        SecurityContextHolder.clearContext();  // 시큐리티 컨텍스트 클리어
     }
 } 

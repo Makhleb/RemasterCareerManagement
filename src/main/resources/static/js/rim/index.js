@@ -1,6 +1,5 @@
-// DOM 요소 업데이트
+// DOM 요소들을 전역으로 선언
 const DOM = {
-    guestBanner: document.getElementById('guestBanner'),
     popularPosts: document.getElementById('popularPosts'),
     topCompanies: document.getElementById('topCompanies'),
     trendingPosts: document.getElementById('trendingPosts'),
@@ -8,8 +7,28 @@ const DOM = {
     trendingFilterButtons: document.querySelectorAll('.trending-posts .filter-buttons button'),
     prevButton: document.getElementById('slideLeft'),
     nextButton: document.getElementById('slideRight'),
-    companiesSlider: document.getElementById('topCompanies')
+    companiesSlider: document.getElementById('topCompanies'),
+    searchInput: document.getElementById('mainSearch'),
+    searchIcon: document.getElementById('searchIcon')
 };
+
+// 검색 함수 정의
+function performSearch() {
+    const keyword = DOM.searchInput.value.trim();
+    if (keyword) {
+        window.location.href = `/view/users/job-post/list?keyword=${encodeURIComponent(keyword)}`;
+    }
+}
+
+// 검색 이벤트 리스너
+DOM.searchInput.addEventListener('keyup', function(event) {
+    if (event.key === 'Enter') {
+        performSearch();
+    }
+});
+
+
+DOM.searchIcon.addEventListener('click', performSearch);
 
 // 전역 변수로 데이터 저장
 let mainPageData = null;
@@ -48,19 +67,16 @@ async function initMainPage() {
         if (userSection.guest) {
             // 비회원
             renderGuestSection(userSection.guest);
-            toggleGuestBanner(true);
-        } 
+        }
         else if (userSection.jobSeeker) {
             // 일반회원
             renderJobSeekerSection(userSection.jobSeeker);
-            toggleGuestBanner(false);
-        } 
+        }
         else if (userSection.company) {
             // 기업회원
             renderCompanySection(userSection.company);
-            toggleGuestBanner(false);
         }
-        
+
     } catch (error) {
         console.error('메인 페이지 로딩 실패:', error);
     }
@@ -275,7 +291,7 @@ function renderJobPostCard(post) {
 async function handleScrap(jobPostNo, event) {
     event.preventDefault();
     event.stopPropagation();
-    
+
     try {
         const response = await fetch('/api/scrap/job-post', {
             method: 'POST',
@@ -284,15 +300,15 @@ async function handleScrap(jobPostNo, event) {
             },
             body: JSON.stringify({ jobPostNo })
         });
-        
+
         const data = await response.json();
-        
+
         if (response.status === 401) {
             alert('로그인이 필요한 서비스입니다.');
             window.location.href = '/login';
             return;
         }
-        
+
         if (data.success) {
             const btn = event.target.closest('.scrap-btn');
             btn.classList.toggle('active');
@@ -379,11 +395,6 @@ function initializeSlider() {
 // 주목받는 채용공고 섹션 렌더링
 function renderTrendingPosts(posts) {
     DOM.trendingPosts.innerHTML = posts.map(renderJobPostCard).join('');
-}
-
-// 게스트 배너 토글
-function toggleGuestBanner(show) {
-    DOM.guestBanner.style.display = show ? 'block' : 'none';
 }
 
 

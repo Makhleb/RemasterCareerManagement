@@ -20,7 +20,6 @@ public class MainService {
     private final MainDao mainDao;
     private final SecurityUtil securityUtil;
 
-
     // 기본 썸네일 이미지 배열 추가
     private static final String[] DEFAULT_THUMBNAILS = {
         "/images/default-job-post-thumbnails/job-post-thumbnail1.png",

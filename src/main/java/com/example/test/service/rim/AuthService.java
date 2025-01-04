@@ -173,4 +173,16 @@ public class AuthService {
     public boolean isCompanyUser(String userId) {
         return companyDao.existsById(userId);
     }
+
+    /**
+     * 로그아웃 처리
+     */
+    public void logout(HttpServletResponse response) {
+        // JWT 토큰 쿠키 삭제
+        Cookie cookie = new Cookie("JWT_TOKEN", null);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);  // 즉시 만료
+        response.addCookie(cookie);
+    }
 } 

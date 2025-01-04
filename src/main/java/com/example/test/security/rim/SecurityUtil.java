@@ -65,7 +65,7 @@ public class SecurityUtil {
     public String getCurrentUserRole() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
-            throw AuthException.unauthorized();
+            return "ROLE_GUEST";  // 인증 객체가 없는 경우
         }
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
