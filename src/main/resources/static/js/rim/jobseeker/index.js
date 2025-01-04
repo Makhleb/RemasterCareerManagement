@@ -8,31 +8,52 @@ window.jobseeker = {
         companyFilterButtons: document.querySelectorAll('.top-companies .filter-buttons button')
     },
 
+    // 유틸리티 함수들
+    utils: {
+        getStatusClass(status) {
+            switch (status) {
+                case 'W': return 'status-waiting';  // 대기중
+                case 'Y': return 'status-pass';     // 합격
+                case 'N': return 'status-fail';     // 불합격
+                default: return 'status-default';   // 기본
+            }
+        },
+
+        getStatusText(status) {
+            switch (status) {
+                case 'W': return '대기중';
+                case 'Y': return '합격';
+                case 'N': return '불합격';
+                default: return '확인중';
+            }
+        },
+
+        formatDate(dateString) {
+            const date = new Date(dateString);
+            return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+        }
+    },
+
     // 페이지 초기화
     async init() {
         try {
-            // API.main.getData() 사용
             const response = await API.main.getData();
             console.log('메인 데이터:', response);
             
-            // 구직자 섹션 데이터 추출
             const jobSeekerData = response.userSection?.jobSeeker;
             if (!jobSeekerData) {
                 console.error('구직자 데이터가 없습니다');
                 return;
             }
             
-            // 각 섹션 렌더링
             this.renderDashboard(jobSeekerData.dashboard);
             this.renderRecommendedPosts(jobSeekerData.recommendedPosts);
             this.renderDeadlinePosts(jobSeekerData.deadlinePosts);
             
-            // 공통 기능 사용 (TopCompanies 렌더링)
             if (jobSeekerData.topCompanies) {
                 window.common.guestSection.renderTopCompanies(jobSeekerData.topCompanies);
             }
             
-            // 이벤트 리스너 등록
             this.initEventListeners();
             
         } catch (error) {
@@ -69,28 +90,28 @@ window.jobseeker = {
                 </div>
             </div>
 
-            <div class="recent-applications">
-                <h3>최근 지원 내역</h3>
-                <div class="applications-list">
-                    ${dashboardData.recentApplications && dashboardData.recentApplications.length > 0
-        ? dashboardData.recentApplications.map(app => `
-                            <div class="application-item">
-                                <div class="application-info">
-                                    <div class="company-name">${app.companyName}</div>
-                                    <div class="post-title">${app.postTitle}</div>
-                                    <div class="apply-date">${new Date(app.applyDate).toLocaleDateString()}</div>
+                <div class="recent-applications">
+                    <h3>최근 지원 내역</h3>
+                    <div class="applications-list">
+                        ${dashboardData.recentApplications && dashboardData.recentApplications.length > 0
+                            ? dashboardData.recentApplications.map(app => `
+                                <div class="application-item">
+                                    <div class="application-info">
+                                        <div class="company-name">${app.companyName}</div>
+                                        <div class="post-title">${app.postTitle}</div>
+                                        <div class="apply-date">${this.utils.formatDate(app.applyDate)}</div>
+                                    </div>
+                                    <span class="application-status status-${this.utils.getStatusClass(app.passYn)}">
+                                        ${this.utils.getStatusText(app.passYn)}
+                                    </span>
                                 </div>
-                                <span class="application-status status-${getStatusClass(app.passYn)}">
-                                    ${getStatusText(app.passYn)}
-                                </span>
-                            </div>
-                        `).join('')
-        : '<div class="no-data">최근 지원 내역이 없습니다.</div>'
-    }
+                            `).join('')
+                            : '<div class="no-data">최근 지원 내역이 없습니다.</div>'
+                        }
+                    </div>
                 </div>
             </div>
-        </div>
-    `;
+        `;
 
         this.elements.dashboardContainer.innerHTML = dashboardHtml;
     },

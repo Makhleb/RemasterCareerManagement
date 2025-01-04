@@ -1,8 +1,10 @@
 package com.example.test.dao.rim;
 
 import com.example.test.dto.CompanyDTO;
-import com.example.test.dto.rim.main.*;
+import com.example.test.dto.rim.main.MainDTO;
+import com.example.test.dto.rim.main.MainDTO.*;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 @Mapper
@@ -17,32 +19,33 @@ public interface MainDao {
     List<JobPostDTO> findMostScrapedPosts();
     
     // 구직자 대시보드
-    DashboardDTO.ApplicationStatsDTO findJobSeekerDashboard(String userId);
+    DashboardDTO.StatsDTO findJobSeekerDashboard(@Param("userId") String userId);
     
     // 최근 지원 내역
-    List<ApplicationDTO> findRecentApplications(String userId);
+    List<DashboardDTO.ApplicationDTO> findRecentApplications(@Param("userId") String userId);
     
     // 기업 프로필
-    CompanyProfileDTO findCompanyProfile(String companyId);
+    CompanyProfileDTO findCompanyProfile(@Param("companyId") String companyId);
     
     // 채용 현황 통계
-    RecruitmentStatsDTO findRecruitmentStats(String companyId);
+    RecruitmentStatsDTO findRecruitmentStats(@Param("companyId") String companyId);
     
     // 진행중인 공고
-    List<JobPostDTO> findActivePosts(String companyId);
+    List<JobPostDTO> findActivePosts(@Param("companyId") String companyId);
     
     // 추천 인재
-    List<CandidateDTO> findRecommendedCandidates(String companyId);
+    List<CandidateDTO> findRecommendedCandidates(@Param("companyId") String companyId);
     
     // 기업 평점 정보
-    CompanyRatingDTO findCompanyRating(String companyId);
+    CompanyRatingDTO findCompanyRating(@Param("companyId") String companyId);
     
     // 맞춤 추천 공고
-    List<JobPostDTO> findRecommendedPosts(String userId);
+    List<JobPostDTO> findRecommendedPosts(@Param("userId") String userId);
     
     // 마감 임박 공고
-    List<JobPostDTO> findDeadlinePosts(String userId);
+    List<JobPostDTO> findDeadlinePosts(@Param("userId") String userId);
     
     // 인기 기술스택 TOP 3
     List<PopularSkillDTO> findPopularSkills();
-} 
+    
+}

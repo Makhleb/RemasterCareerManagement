@@ -6,6 +6,7 @@ import com.example.test.dto.rim.main.*;
 import com.example.test.security.rim.SecurityUtil;
 import com.example.test.service.common.FileService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MainService {
     
     private final FileService fileService;
@@ -30,51 +32,59 @@ public class MainService {
         "/images/default-job-post-thumbnails/job-post-thumbnail4.png",
         "/images/default-job-post-thumbnails/job-post-thumbnail5.png"
     };
-    
+
     // 기존 메인 페이지 전체 데이터 조회 메서드
-    public MainResponseDTO getMainPageData() {
-        MainResponseDTO response = new MainResponseDTO();
+    public MainDTO getMainPageData() {
+        MainDTO response = new MainDTO();
+        String userType = securityUtil.getCurrentUserRole();
         
-        // 공통 섹션 설정
-        response.setCommon(getCommonSection());
+        log.info("userType: " + userType);
+        
+        response.setUserType(userType);
+        response.setCommonSection(getCommonSection());
         response.setPopularSkills(getPopularSkills());
         
-        // 사용자 타입별 섹션 설정
-        UserTypeDTO userSection = new UserTypeDTO();
-        String userType = securityUtil.getUserType();
+        // 게스트 섹션 데이터 조회
+        MainDTO.GuestSectionDTO guestData = getGuestSection();
         
         switch (userType) {
-            case "guest":
-                userSection.setGuest(getGuestSection());
+            case "ROLE_GUEST":
+                response.setGuestSection(guestData);
                 break;
                 
-            case "user":
-                // 구직자의 경우 guest 섹션도 함께 제공
-                GuestSectionDTO guestData = getGuestSection();
-                JobSeekerSectionDTO seekerData = getJobSeekerSection(securityUtil.getCurrentUserId());
+            case "ROLE_USER":
+                // 구직자는 게스트 섹션도 함께 표시
+                response.setGuestSection(guestData);
                 
-                // guest 데이터를 JobSeekerSection에 통합
+                // 구직자 전용 데이터 설정
+                MainDTO.JobSeekerSectionDTO seekerData = getJobSeekerSection(securityUtil.getCurrentUserId());
+                
+                // guest 데이터를 JobSeekerSection에도 통합
                 seekerData.setPopularPosts(guestData.getPopularPosts());
+                seekerData.setTopCompanies(guestData.getTopCompanies());
                 seekerData.setScrapedPosts(guestData.getScrapedPosts());
-                // topCompanies는 이미 있으므로 제외
                 
+                MainDTO.UserSectionDTO userSection = new MainDTO.UserSectionDTO();
                 userSection.setJobSeeker(seekerData);
+                response.setUserSection(userSection);
                 break;
                 
-            case "company":
-                userSection.setCompany(getCompanySection(securityUtil.getCurrentUserId()));
+            case "ROLE_COMPANY":
+                // 기업은 게스트 섹션 표시하지 않음
+                MainDTO.UserSectionDTO companySection = new MainDTO.UserSectionDTO();
+                companySection.setCompany(getCompanySection(securityUtil.getCurrentUserId()));
+                response.setUserSection(companySection);
                 break;
         }
         
-        response.setUserSection(userSection);
         return response;
     }
 
-    private CommonSectionDTO getCommonSection() {
-        CommonSectionDTO commonSection = new CommonSectionDTO();
+    private MainDTO.CommonSectionDTO getCommonSection() {
+        MainDTO.CommonSectionDTO commonSection = new MainDTO.CommonSectionDTO();
         
         // 메뉴 아이콘 설정
-        List<CommonSectionDTO.MenuIconDTO> menuIcons = new ArrayList<>();
+        List<MainDTO.CommonSectionDTO.MenuIconDTO> menuIcons = new ArrayList<>();
         menuIcons.add(createMenuIcon("jobs", "채용공고", "briefcase", "/jobs", false));
         menuIcons.add(createMenuIcon("resume", "이력서관리", "file-text", "/resume", true));
         menuIcons.add(createMenuIcon("applications", "지원현황", "clipboard-list", "/applications", true));
@@ -85,47 +95,47 @@ public class MainService {
         return commonSection;
     }
     
-    private GuestSectionDTO getGuestSection() {
-        GuestSectionDTO guestSection = new GuestSectionDTO();
+    private MainDTO.GuestSectionDTO getGuestSection() {
+        MainDTO.GuestSectionDTO guestSection = new MainDTO.GuestSectionDTO();
         
         // 인기 공고 조회 시 썸네일 처리
-        List<JobPostDTO> popularPosts = mainDao.findPopularPosts();
+        List<MainDTO.JobPostDTO> popularPosts = mainDao.findPopularPosts();
         processJobPostThumbnails(popularPosts);
         guestSection.setPopularPosts(popularPosts);
         
         guestSection.setTopCompanies(mainDao.findTopCompanies());
         
         // 스크랩 많은 공고 조회 시 썸네일 처리
-        List<JobPostDTO> scrapedPosts = mainDao.findMostScrapedPosts();
+        List<MainDTO.JobPostDTO> scrapedPosts = mainDao.findMostScrapedPosts();
         processJobPostThumbnails(scrapedPosts);
         guestSection.setScrapedPosts(scrapedPosts);
         
         return guestSection;
     }
     
-    private JobSeekerSectionDTO getJobSeekerSection(String userId) {
-        JobSeekerSectionDTO seekerSection = new JobSeekerSectionDTO();
+    private MainDTO.JobSeekerSectionDTO getJobSeekerSection(String userId) {
+        MainDTO.JobSeekerSectionDTO seekerSection = new MainDTO.JobSeekerSectionDTO();
         
         // 대시보드 설정
-        DashboardDTO dashboard = new DashboardDTO();
+        MainDTO.DashboardDTO dashboard = new MainDTO.DashboardDTO();
         dashboard.setStats(mainDao.findJobSeekerDashboard(userId));  // DTO로 직접 매핑
         dashboard.setRecentApplications(mainDao.findRecentApplications(userId));
         seekerSection.setDashboard(dashboard);
         
         // 추천 공고 썸네일 처리
-        List<JobPostDTO> recommendedPosts = mainDao.findRecommendedPosts(userId);
+        List<MainDTO.JobPostDTO> recommendedPosts = mainDao.findRecommendedPosts(userId);
         processJobPostThumbnails(recommendedPosts);
         seekerSection.setRecommendedPosts(recommendedPosts);
         
         seekerSection.setTopCompanies(mainDao.findTopCompanies());
         
         // 스크랩 많은 공고 썸네일 처리
-        List<JobPostDTO> scrapedPosts = mainDao.findMostScrapedPosts();
+        List<MainDTO.JobPostDTO> scrapedPosts = mainDao.findMostScrapedPosts();
         processJobPostThumbnails(scrapedPosts);
         seekerSection.setScrapedPosts(scrapedPosts);
         
         // 마감 임박 공고 썸네일 처리
-        List<JobPostDTO> deadlinePosts = mainDao.findDeadlinePosts(userId);
+        List<MainDTO.JobPostDTO> deadlinePosts = mainDao.findDeadlinePosts(userId);
         processJobPostThumbnails(deadlinePosts);
         seekerSection.setDeadlinePosts(deadlinePosts);
         
@@ -133,7 +143,7 @@ public class MainService {
     }
     
     // 썸네일 처리 공통 메서드
-    private void processJobPostThumbnails(List<JobPostDTO> posts) {
+    private void processJobPostThumbnails(List<MainDTO.JobPostDTO> posts) {
         if (posts == null) return;
         
         posts.forEach(post -> {
@@ -150,8 +160,8 @@ public class MainService {
         });
     }
     
-    private CompanySectionDTO getCompanySection(String companyId) {
-        CompanySectionDTO companySection = new CompanySectionDTO();
+    private MainDTO.CompanySectionDTO getCompanySection(String companyId) {
+        MainDTO.CompanySectionDTO companySection = new MainDTO.CompanySectionDTO();
         
         companySection.setProfile(mainDao.findCompanyProfile(companyId));
         companySection.setStats(mainDao.findRecruitmentStats(companyId));
@@ -162,9 +172,9 @@ public class MainService {
         return companySection;
     }
     
-    private CommonSectionDTO.MenuIconDTO createMenuIcon(String id, String name, 
+    private MainDTO.CommonSectionDTO.MenuIconDTO createMenuIcon(String id, String name, 
             String icon, String link, boolean requireLogin) {
-        CommonSectionDTO.MenuIconDTO menuIcon = new CommonSectionDTO.MenuIconDTO();
+        MainDTO.CommonSectionDTO.MenuIconDTO menuIcon = new MainDTO.CommonSectionDTO.MenuIconDTO();
         menuIcon.setId(id);
         menuIcon.setName(name);
         menuIcon.setIcon(icon);
@@ -173,7 +183,7 @@ public class MainService {
         return menuIcon;
     }
 
-    public List<PopularSkillDTO> getPopularSkills() {
+    public List<MainDTO.PopularSkillDTO> getPopularSkills() {
         return mainDao.findPopularSkills();
     }
 
@@ -183,5 +193,15 @@ public class MainService {
         return DEFAULT_THUMBNAILS[randomIndex];
     }
 
+    public MainDTO.CompanyProfileDTO getCompanyProfile(String companyId) {
+        return mainDao.findCompanyProfile(companyId);
+    }
 
+    public MainDTO.RecruitmentStatsDTO getRecruitmentStats(String companyId) {
+        return mainDao.findRecruitmentStats(companyId);
+    }
+
+    public MainDTO.CompanyRatingDTO getCompanyRating(String companyId) {
+        return mainDao.findCompanyRating(companyId);
+    }
 } 

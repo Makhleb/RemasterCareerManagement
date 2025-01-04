@@ -155,37 +155,8 @@ window.API = {
     // 메인 페이지 관련 API 추가
     main: {
         // 메인 페이지 전체 데이터 조회
-        getData: async () => {
-            try {
-                const response = await axios.get(API_ENDPOINTS.MAIN.DATA);
-                return response.data;
-            } catch (error) {
-                console.error('메인 데이터 조회 실패:', error);
-                throw error;
-            }
-        },
-
-        // 인기 채용공고 조회
-        getPopularPosts: async () => {
-            try {
-                const response = await axios.get(API_ENDPOINTS.MAIN.POPULAR_POSTS);
-                return response.data;
-            } catch (error) {
-                console.error('인기 채용공고 조회 실패:', error);
-                throw error;
-            }
-        },
-
-        // TOP 10 기업 조회
-        getTopCompanies: async () => {
-            try {
-                const response = await axios.get(API_ENDPOINTS.MAIN.TOP_COMPANIES);
-                return response.data;
-            } catch (error) {
-                console.error('TOP 10 기업 조회 실패:', error);
-                throw error;
-            }
-        }
+        getData: () => axios.get('/api/main/data')
+            .then(response => response.data)
     },
     // 파일 업로드 관련 API 추가
     file: {
