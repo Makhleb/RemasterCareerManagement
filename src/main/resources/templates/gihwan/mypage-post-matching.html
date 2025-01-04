@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout_dir/layout/company_mypage_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>기술스택 매칭</title>
+    <link rel="stylesheet" href="/css/mypage-post-matching.css">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="main-title">기술스택 매칭</div>
+    <hr>
+    <div>
+        <div id="matching-title" class="row-flex">
+            <div class="row-flex">
+                <label>
+                    <span class="select-side">공고 선택</span>
+                    <select name="job-post" id="job-post-select" onchange="postMatching()">
+                        <option value="">공고를 선택해주세요</option>
+                    </select>
+                </label>
+            </div>
+            <label>
+                <span class="select-side">정렬 순서:</span>
+                <select name="order" id="order-by-select" onchange="matchingSort(this)">
+                    <option value="PERCENT" selected>일치순</option>
+                    <option value="DATE">최신순</option>
+                </select>
+            </label>
+        </div>
+        <div id="matching-content" class="column-flex">
+        </div>
+    </div>
+    <script>
+        let matchList = null;
+
+        window.onload = function () {
+            axios.get('/api/companies/job-post/compact-job-post')
+                .then(function (response) {
+                    if (response.data.length > 0) {
+                        response.data.forEach(function (item) {
+                            let option = $('<option>', {
+                                value: item.jobPostNo,
+                                text: item.title
+                            }).attr('data-count', item.skillCnt);
+                            $('#job-post-select').append(option);
+                        });
+                        $('#job-post-select').prop('selectedIndex', 1);
+
+                        postMatching($('#job-post-select'));
+                    } else {
+                        alert("공고가 존재하지 않습니다. 공고를 등록해주세요");
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+        }
+
+        /**
+         * 공고 변경시 재렌더링 이벤트
+         */
+        function postMatching() {
+            if ($('#job-post-select').val() === "") {
+                $('#matching-content').empty();
+            } else {
+                axios.get('/api/companies/job-post/post-matching/' + $('#job-post-select').val())
+                    .then(function (response) {
+                        $('#order-by-select').val('PERCENT');
+                        matchList = response.data;
+                        matchingListAppend(matchList);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    })
+            }
+
+        }
+
+        /**
+         *
+         * @param element 정렬 조건명
+         */
+        function matchingSort(element) {
+            if($('#job-post-select').val() === ""){
+                return;
+            }
+
+            if (element.value === 'PERCENT') {
+                matchList.sort((a, b) => b.skillCnt - a.skillCnt);
+            } else if (element.value === 'DATE') {
+                matchList.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
+            }
+
+            matchingListAppend(matchList);
+        }
+
+        /**
+         * 매칭 결과 요소 화면 추가 함수
+         * @param matchList 추가할 객체 리스트
+         */
+        function matchingListAppend(matchList) {
+            let totalCnt = $('#job-post-select').find('option:selected').attr('data-count');
+            const currentYear = new Date().getFullYear();
+
+            $('#matching-content').empty();
+            matchList.forEach(function (item, index) {
+                let age = currentYear - item.userBirth.substring(0, 4);
+                let gender = item.userGender === 'M' ? '남성' : '여성';
+                let persent = Math.floor(item.skillCnt / totalCnt * 100);
+
+                $('#matching-content').append(`
+                        <div class="match-item row-flex between-center">
+                            <div class="column-flex flex-two-div">
+                                <div>
+                                    <span>${item.userName}</span>
+                                    <span class="margin-x-small">|</span>
+                                    <span>${item.title}</span>
+                                </div>
+                                <div>
+                                    <span>${gender}:&nbsp</span>
+                                    <span>${age}세</span>
+                                    <span class="margin-x-small">|</span>
+                                    <span>희망연봉:&nbsp</span>
+                                    <span>${item.wishSalary}</span>
+                                </div>
+
+                            </div>
+                            <div class="column-flex flex-two-div">
+                                <div class="row-flex between-center" style="width: 100%;align-items: center;">
+                                    <div>
+                                        <span class="percent">${persent}</span>
+                                        <span>%</span>
+                                    </div>
+                                    <div class="loading-bar">
+                                        <div class="progress" style="width: ${persent}%"></div>
+                                    </div>
+                                </div>
+                                <div class="row-flex between-center" style="gap: 5px; align-items: center; width: 100%">
+                                    <div>주요 기술 &nbsp&nbsp</div>
+                                    <div class="grid-four-column" data-value="${index}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="flex:0.5; text-align: right">${item.createDate.substring(0, 10)}</div>
+                        </div>
+                        `)
+
+                item.skillCodes.split(',').forEach(function (skill) {
+                    $('.grid-four-column[data-value="' + index + '"]').append(`
+                                <div class="skill-item">${skill}</div>
+                            `);
+                })
+            })
+        }
+    </script>
+</div>
+</body>
+
+</html>

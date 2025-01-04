@@ -30,33 +30,27 @@
         <div style="margin-top: 50px;">
             <div class="row-flex between-center">
                 <div>기술스택 매칭</div>
-                <div class="text-btn">더보기 >></div>
+                <div class="text-btn" onclick="location.href='/company/mypage/post-matching'">더보기 >></div>
             </div>
             <hr>
             <div class="column-flex">
                 <div class="row-flex between-center post-column">
-                    <div class="column-item">백엔드 개발자 모집” 공고 관련 이력서</div>
+                    <div class="column-item" id="example-post">"백엔드 개발자 모집” 공고 관련 이력서</div>
                     <div class="column-item">기술스택 일치율</div>
                 </div>
-                <div class="column-flex post-item">
-                    <div class="row-flex between-center">
-                        <div style="flex:1">구직자명</div>
-                        <div style="flex:2">이력서 제목</div>
-                        <div class="row-flex" style="flex:2; align-items: center;">
-                            <span class="percent">00</span>
-                            <span>%</span>
-                            <div class="loading-bar">
-                                <div class="progress"></div>
-                            </div>
-                        </div>
-                        <div style="flex:1; text-align: right">YYYY-MM-DD</div>
-                    </div>
+                <div class="resume-list column-flex">
                 </div>
             </div>
         </div>
     </div>
     <script>
         window.onload = function () {
+            auth.getCurrentUser().then(response => {
+                $('#company-name').text(response.name);
+            }).catch(error => {
+                console.error('사용자 정보 조회 실패:', error);
+            });
+
             //기존 조회 리스트에서 리미트 3 추가
             axios.get('/api/companies/job-post/aplc-list?limit=3')
                 .then(function (response) {
@@ -99,6 +93,54 @@
                             $('.post-item .text-btn[data-value="' + index + '"]').css('visibility', 'hidden');
                         }
                     })
+                    matchingCompact();
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+        }
+
+        /**
+         * 첫번째 이력서 요청 함수
+         */
+        function matchingCompact() {
+            axios.get('/api/companies/job-post/compact-job-post?limit=1')
+                .then(function (response) {
+                    console.log(response);
+                    let postInfo = response.data[0];
+                    $('#example-post').text(`"${postInfo.title}"  공고 관련 이력서`);
+
+                    matchingUserList(postInfo.jobPostNo, postInfo.skillCnt);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+        }
+
+        function
+        matchingUserList(jobPostNo, totalCnt) {
+            axios.get('/api/companies/job-post/post-matching/' + jobPostNo + '?limit=3')
+                .then(function (response) {
+                    console.log(response);
+                    response.data.forEach(function (data) {
+                        let percent = Math.floor(data.skillCnt / totalCnt * 100);
+
+                        $('.resume-list').append(`
+                        <div class="row-flex between-center">
+                            <div style="flex:1">${data.userName}</div>
+                            <div style="flex:2">${data.title}</div>
+                            <div class="row-flex" style="flex:2; align-items: center;">
+                                <span class="percent">${percent}</span>
+                                <span>%</span>
+                                <div class="loading-bar">
+                                    <div class="progress" style="width: ${percent}%"></div>
+                                </div>
+                            </div>
+                            <div style="flex:1; text-align: right">${data.createDate.substring(0, 10)}</div>
+                        </div>
+                        `)
+                    })
+
                 })
                 .catch(function (error) {
                     console.log(error);

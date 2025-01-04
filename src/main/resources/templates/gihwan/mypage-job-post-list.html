@@ -47,7 +47,7 @@
                                     <div class="post-type">
                                         <span class="work-type">${item.workTypeCode}</span>
                                         <span> | </span>
-                                        <span class="job-history">${item.jobHistory}</span>
+                                        <span class="job-history">${item.jobHistory !== 0 ? item.jobHistory + " 연차" : "신입"} </span>
                                         <span> | </span>
                                         <span class="job-type">${item.workCode}</span>
                                     </div>
