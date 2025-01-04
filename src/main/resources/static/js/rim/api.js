@@ -80,6 +80,32 @@ window.API = {
                 throw error;
             }
         }
+    },
+    // 파일 업로드 관련 API 추가
+    file: {
+        upload: async (file, fileGubn, fileRefId) => {
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            const fileDto = {
+                fileGubn: fileGubn,    // 예: 'company', 'jobpost' 등
+                fileRefId: fileRefId,  // 예: 회사ID나 공고ID
+                fileName: file.name,
+                fileSize: file.size,
+                fileType: file.type
+            };
+            
+            formData.append('fileDto', new Blob([JSON.stringify(fileDto)], {
+                type: 'application/json'
+            }));
+
+            const response = await fetch('/api/common/file', {
+                method: 'POST',
+                body: formData
+            });
+            
+            return response.ok;
+        }
     }
 };
 
