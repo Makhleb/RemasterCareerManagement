@@ -296,7 +296,7 @@ section {
     align-items: center;
     justify-content: center;
     border: 1px #ddd solid;
-    padding: 5px;
+    padding: 2px 5px;
     border-radius: 5px;
     font-weight: bold;
 }
@@ -320,11 +320,12 @@ section {
 }
 
 .uncolorstar {
-    background-image: url('/images/uncolorstar.png');
+    /*background-image: url('/images/uncolorstar.png');*/
 }
 
 .colorstar {
-    background-image: url('/images/colorstar.png');
+    color : #ffd43b;
+    /*background-image: url('/images/colorstar.png');*/
 }
 
 

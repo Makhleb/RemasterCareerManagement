@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test.dao.rim.AuthDao">
+
+
+    <select id="existsById" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM tblUser
+        WHERE userId = #{userId}
+        AND userIsActive = 'Y'
+    </select>
+
+    <update id="updatePassword">
+        UPDATE tblUser
+        SET userPw = #{password},
+            userModifyDate = NOW()
+        WHERE userId = #{userId}
+    </update>
+
+    <select id="findUserByIdEmailAndPhone" resultType="string">
+        SELECT userId
+        FROM tblUser
+        WHERE userId = #{userId}
+        AND userEmail = #{email}
+        AND userPhone = #{phone}
+        AND userIsActive = 'Y'
+    </select>
+</mapper> 
