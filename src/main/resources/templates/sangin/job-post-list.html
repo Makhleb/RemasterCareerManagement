@@ -208,7 +208,7 @@
             input.placeholder = "검색어를 입력하세요";
             input.classList.add("section2_option");
 
-            input.addEventListener("input", () => {
+            input.addEventListener("click", () => {
                 const value = input.value.trim();
                 keywordDisplay.textContent = value ? value : "검색 조건 없음";
                 fetchJobPosts(value);
