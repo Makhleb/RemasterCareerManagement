@@ -365,7 +365,7 @@
                 if ($('#image-upload')[0].files[0]) {
                     imageUpload(getFormData(response.data));
                 } else {
-                    location.href = "/mypage/company/post-list";
+                    location.href = "/company/mypage/post-list";
                 }
             })
             .catch(function (error) {
@@ -470,7 +470,7 @@
                 console.log(response.data);
                 if (response.data) {
                     alert("이미지 저장 완료");
-                    location.href = "/mypage/company/post-list";
+                    location.href = "/company/mypage/post-list";
                 }
             })
             .catch(error => {
