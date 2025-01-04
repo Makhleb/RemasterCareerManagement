@@ -18,10 +18,13 @@ public class JobPostController {
         return "/gihwan/job-post";
     }
 
-
-
     @GetMapping("/post-list")
     public String postList(){
         return "/gihwan/mypage-job-post-list";
+    }
+
+    @GetMapping("/main")
+    public String mypageMain(){
+        return "/gihwan/mypage-main";
     }
 }

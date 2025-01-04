@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout_dir/layout/company_mypage_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>페이지제목</title>
+    <link rel="stylesheet" href="/css/mypage-company-main.css">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row-flex">
+        <div class="main-title">
+            <span id="company-name">???</span>
+            <span>님 반갑습니다.</span>
+        </div>
+        <button class="item-btn edit-btn">정보 수정</button>
+    </div>
+    <hr>
+    <div class="content-section">
+        <div>
+            <div class="row-flex between-center">
+                <div>공고 목록</div>
+                <div class="text-btn" onclick="location.href='/mypage/company/post-list'">더보기 >></div>
+            </div>
+            <hr>
+            <div id="post-list" class="column-flex">
+            </div>
+        </div>
+        <div style="margin-top: 50px;">
+            <div class="row-flex between-center">
+                <div>기술스택 매칭</div>
+                <div class="text-btn">더보기 >></div>
+            </div>
+            <hr>
+            <div class="column-flex">
+                <div class="row-flex between-center post-column">
+                    <div class="column-item">백엔드 개발자 모집” 공고 관련 이력서</div>
+                    <div class="column-item">기술스택 일치율</div>
+                </div>
+                <div class="column-flex post-item">
+                    <div class="row-flex between-center">
+                        <div style="flex:1">구직자명</div>
+                        <div style="flex:2">이력서 제목</div>
+                        <div class="row-flex" style="flex:2; align-items: center;">
+                            <span class="percent">00</span>
+                            <span>%</span>
+                            <div class="loading-bar">
+                                <div class="progress"></div>
+                            </div>
+                        </div>
+                        <div style="flex:1; text-align: right">YYYY-MM-DD</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        window.onload = function () {
+            //기존 조회 리스트에서 리미트 3 추가
+            axios.get('/api/companies/job-post/aplc-list?limit=3')
+                .then(function (response) {
+                    let postList = response.data;
+                    console.log(postList);
+
+                    postList.forEach(function (item, index) {
+                        $('#post-list').append(
+                            `<div class="post-item-container">
+                                <div class="row-flex between-center post-item">
+                                    <div style="flex:2">${item.title}</div>
+                                    <div class="item-default-end text-btn" onclick="viewList(event)" data-value="${index}">
+                                        <span style="margin-right: 3px">지원자 목록</span>
+                                        <img id="arrow" src="/images/black_down_arrow.png" alt="화살표이미지">
+                                    </div>
+                                    <div class="btn-box item-default-end">
+                                        <button class="item-btn" onclick="updatePost(${item.jobPostNo})">수정</button>
+                                        <button class="item-btn" onclick="deletePost(${item.jobPostNo})">삭제</button>
+                                    </div>
+                                </div>
+                                <div class="user-list column-flex" data-value="${index}" style="display: none">
+                                </div>
+                            </div>`
+                        )
+
+                        if (item.alpcList.length !== 0) {
+                            let appendInfo = ""
+
+                            item.alpcList.forEach(function (alpcInfo) {
+                                appendInfo +=
+                                    `<div class="row-flex between-center">
+                                        <div style="flex:1">${alpcInfo.userName}</div>
+                                        <div style="flex:4">${alpcInfo.title}</div>
+                                        <div style="flex:1; text-align: end">${alpcInfo.aplcHstrDate.substring(0, 10)}</div>
+                                    </div>`
+                            })
+                            appendInfo += `<div class="more-user-view" onclick="location.href='/mypage/company/post-list'">이력서 더보기</div>`
+                            $('.user-list[data-value="' + index + '"]').append(appendInfo);
+                        } else {
+                            $('.post-item .text-btn[data-value="' + index + '"]').css('visibility', 'hidden');
+                        }
+                    })
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+        }
+
+        /**
+         * 공고 수정
+         */
+        function updatePost(jobPostNo) {
+            location.href = '/mypage/company/job-post?post=' + jobPostNo;
+        }
+
+        /**
+         * 공고 삭제
+         */
+        function deletePost(jobPostNo) {
+            if (confirm("정말 삭제하시겠습니까?")) {
+                axios.delete('/api/companies/job-post/' + jobPostNo)
+                    .then(function (response) {
+                        console.log(response);
+                        alert("삭제 완료");
+                        location.reload();
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    })
+            }
+        }
+
+        function viewList(event) {
+            let postItem = $(event.target).closest('.post-item-container').find('.user-list');
+
+            if (postItem.attr('style').includes('display: none')) {
+                postItem.show();
+            } else {
+                postItem.hide();
+            }
+        }
+    </script>
+</div>
+</body>
+
+</html>

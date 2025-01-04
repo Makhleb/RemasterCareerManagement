@@ -2,6 +2,8 @@ package com.example.test.dto;
 
 import lombok.Data;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -14,5 +16,5 @@ public class AplcHstrResponseDto {
     private String userName;
     private String title;
     private char passYn;
-    private Date aplcHstrDate;
+    private LocalDateTime aplcHstrDate;
 }

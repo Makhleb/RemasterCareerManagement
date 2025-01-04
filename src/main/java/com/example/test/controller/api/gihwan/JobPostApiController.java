@@ -34,9 +34,9 @@ public class JobPostApiController {
     }
 
     @GetMapping("/aplc-list")
-    public List<JobPostAplcWrapDto> getJobPosts() {
+    public List<JobPostAplcWrapDto> getJobPosts(@RequestParam(required = false) Integer limit) {
         String companyId = securityUtil.getCurrentUserId();
-        return jobPostService.selectAllJobPost(companyId);
+        return jobPostService.selectAllJobPost(companyId, limit);
     }
 
     @GetMapping("/detail/{detailNo}")

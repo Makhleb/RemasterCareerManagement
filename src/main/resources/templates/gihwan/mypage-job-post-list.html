@@ -54,7 +54,7 @@
                                 </div>
                                 <div class="text-button" onclick="viewList(event)" data-value="${index}">
                                     <span>지원자 목록</span>
-                                    <img src="/images/black_down_arrow.png" alt="아래 화살표">
+                                    <img id="arrow" src="/images/black_down_arrow.png" alt="아래 화살표">
                                 </div>
                                 <button class="post-button resume">공고에 맞는<br>이력서 추천</button>
                             </div>
@@ -107,16 +107,22 @@
                 console.log(error);
             })
     }
+
+    /**
+     * 공고 삭제
+     */
     function deletePost(jobPostNo) {
-        axios.delete('/api/companies/job-post/' + jobPostNo)
-            .then(function (response) {
-                console.log(response);
-                alert("삭제 완료");
-                location.reload();
-            })
-            .catch(function (error) {
-                console.log(error);
-            })
+        if (confirm("정말 삭제하시겠습니까?")) {
+            axios.delete('/api/companies/job-post/' + jobPostNo)
+                .then(function (response) {
+                    console.log(response);
+                    alert("삭제 완료");
+                    location.reload();
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+        }
     }
 
     /**
