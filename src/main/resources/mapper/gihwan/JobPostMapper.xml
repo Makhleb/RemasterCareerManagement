@@ -80,6 +80,9 @@
         AND deleteYn = 'N'
         GROUP BY jobPostNo
         ORDER BY jobPostNo DESC
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
     </select>
 
 <!--
@@ -105,6 +108,9 @@ ON R.resumeNo = RS.resumeNo AND R.viewYn = 'Y' 로 바꿔주세요
         JOIN tblUser U
         ON R.userId = U.userId
         ORDER BY RS.skillCnt DESC
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
     </select>
 
     <select id="selectJobPostDetail">

@@ -37,14 +37,14 @@ public class JobPostApiController {
     }
 
     @GetMapping("/compact-job-post")
-    public List<PostCompactResponseDto> compactList(){
+    public List<PostCompactResponseDto> compactList(@RequestParam(required = false) Integer limit){
         String companyId = securityUtil.getCurrentUserId();
-        return jobPostService.getCompactList(companyId);
+        return jobPostService.getCompactList(companyId, limit);
     }
 
     @GetMapping("/post-matching/{postNo}")
-    public List<PostMatchingResponseDto> matchingList(@PathVariable int postNo){
-        return jobPostService.getMatchingList(postNo);
+    public List<PostMatchingResponseDto> matchingList(@PathVariable int postNo, @RequestParam(required = false) Integer limit){
+        return jobPostService.getMatchingList(postNo, limit);
     }
 
     @GetMapping("/aplc-list")

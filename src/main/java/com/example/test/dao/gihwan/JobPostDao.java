@@ -23,8 +23,8 @@ public interface JobPostDao {
 
     List<JobPostAplcWrapDto> selectAll(@Param("companyId")String companyId, @Param("limit") Integer limit);
     List<AplcHstrResponseDto> selectJobPostAplc(@Param("jobPostNo") int jobPostNo, @Param("limit") Integer limit);
-    List<PostCompactResponseDto> selectCompactPost(@Param("companyId") String companyId);
-    List<PostMatchingResponseDto> selectPostMatching(@Param("postNo") int postNo);
+    List<PostCompactResponseDto> selectCompactPost(@Param("companyId") String companyId, @Param("limit") Integer limit);
+    List<PostMatchingResponseDto> selectPostMatching(@Param("postNo") int postNo, @Param("limit") Integer limit);
 
     JobPostDTO selectJobPostDetail(@Param("jobPostNo") int jobPostNo);
     List<BenefitDTO> selectBenefit(@Param("jobPostNo") int jobPostNo);

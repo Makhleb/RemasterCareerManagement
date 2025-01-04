@@ -77,11 +77,11 @@ public class JobPostService {
         return jobPostDao.deleteJobPost(jobPostNo) != 0;
     }
 
-    public List<PostCompactResponseDto> getCompactList(String companyId) {
-        return jobPostDao.selectCompactPost(companyId);
+    public List<PostCompactResponseDto> getCompactList(String companyId, Integer limit) {
+        return jobPostDao.selectCompactPost(companyId, limit);
     }
 
-    public List<PostMatchingResponseDto> getMatchingList(int postNo) {
-        return jobPostDao.selectPostMatching(postNo);
+    public List<PostMatchingResponseDto> getMatchingList(int postNo, Integer limit) {
+        return jobPostDao.selectPostMatching(postNo, limit);
     }
 }
