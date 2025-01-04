@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test.dao.gyeonguk.ResumeDao">
+
+
+
+        <!-- 이력서 제목 및 인적사항 저장 -->
+        <insert id="insertPersonalInfo" parameterType="com.example.test.dto.ResumeDTO" useGeneratedKeys="true" keyProperty="resumeNo">
+            INSERT INTO tblResume (
+            userId,
+            title,
+            addressDetail,
+            address,
+            zonecode,
+            headshot,
+            wishArea,
+            wishSalary,
+            wishTime,
+            workCode
+            ) VALUES (
+            #{userId},
+            #{title},
+            #{addressDetail},
+            #{address},
+            #{zonecode},
+            #{headshot},
+            #{wishArea},
+            #{wishSalary},
+            #{wishTime},
+            #{workCode}
+            )
+        </insert>
+
+        <!-- 활동 정보 저장 -->
+        <insert id="insertActivityInfo" parameterType="com.example.test.dto.ActivityDTO">
+            INSERT INTO tblActivity (
+            resumeNo,
+            activityType,
+            activityOrder,
+            startDate,
+            endDate,
+            activityCenterName,
+            activityContent
+            ) VALUES (
+            #{resumeNo},
+            #{activityType},
+            #{activityOrder},
+            #{startDate},
+            #{endDate},
+            #{activityCenterName},
+            #{activityContent}
+            )
+        </insert>
+
+        <!-- 학력 저장 -->
+        <insert id="insertEducationInfo" parameterType="com.example.test.dto.EducationDTO">
+            INSERT INTO tblEducation (
+            resumeNo,
+            educationCode,
+            schoolName,
+            specialty,
+            enterDate,
+            graduateDate
+            ) VALUES (
+            #{resumeNo},
+            #{educationCode},
+            #{specialty},
+            #{schoolName},
+            #{enterDate},
+            #{graduateDate}
+            )
+        </insert>
+
+
+        <!-- 자격증 저장 -->
+        <insert id="insertLicenseInfo" parameterType="com.example.test.dto.LicenseDTO">
+            INSERT INTO tblLicense (
+            resumeNo,
+            licenseName,
+            licenseCenterName,
+            passDate
+            ) VALUES (
+            #{resumeNo},
+            #{licenseName},
+            #{licenseCenterName},
+            #{passDate}
+            )
+        </insert>
+
+        <!-- 여러 스킬을 한 번에 저장 -->
+        <insert id="insertSkills" parameterType="java.util.List">
+         INSERT INTO tblResumeSkill (resumeNo, skillCode)
+            VALUES
+        <foreach collection="skills" item="skill" separator=",">
+            (#{skill.resumeNo}, #{skill.skillCode})
+        </foreach>
+        </insert>
+
+
+        <!-- 병역 사항 저장 -->
+        <insert id="insertMilitaryInfo" parameterType="com.example.test.dto.MilitaryDTO">
+            INSERT INTO tblMilitary (
+            resumeNo,
+            militaryType,
+            enlistDate,
+            releaseDate
+            ) VALUES (
+            #{resumeNo},
+            #{militaryType},
+            #{enlistDate},
+            #{releaseDate}
+            )
+        </insert>
+
+        <!-- 포트폴리오 저장 -->
+        <insert id="insertPortfolioInfo" parameterType="com.example.test.dto.PotfolioDTO">
+            INSERT INTO tblPotfolio (
+            resumeNo,
+            gubn,
+            potfolioFilename
+            ) VALUES (
+            #{resumeNo},
+            #{gubn},
+            #{potfolioFilename}
+            )
+        </insert>
+
+        <!-- 자기소개서 저장 -->
+        <insert id="insertIntro" parameterType="com.example.test.dto.IntroduceDTO">
+            INSERT INTO tblIntroduce (
+            resumeNo,
+            introTitle,
+            content,
+            `order`
+            ) VALUES (
+            #{resumeNo},
+            #{introTitle},
+            #{content},
+            #{order}
+            )
+        </insert>
+
+        <!-- 이력서 리스트 조회를 위한 이력서 제목 작성일  -->
+        <select id="selectResumesByUserId" parameterType="string" resultType="com.example.test.dto.ResumeDTO">
+            SELECT
+            resumeNo,
+            title,
+            createDate,
+            viewYn
+            FROM tblResume
+            WHERE userId = #{userId}
+        </select>
+
+        <!-- 기존 대표 이력서 초기화 -->
+         <update id="clearRepresentativeResume">
+            UPDATE tblResume
+            SET viewYn = 'N'
+            WHERE userId = #{userId};
+         </update>
+
+         <!-- 특정 사용자의 대표 이력서를 조회 -->
+        <select id="selectRepresentativeResume" parameterType="string" resultType="com.example.test.dto.ResumeDTO">
+            SELECT
+            resumeNo,
+            title,
+            createDate,
+            viewYn
+            FROM
+            tblResume
+            WHERE
+            userId = #{userId}
+            AND viewYn = 'Y'
+            LIMIT 1
+        </select>
+
+
+
+         <!-- 특정 이력서를 대표이력서로 설정 -->
+        <update id="updateRepresentativeResume">
+            UPDATE tblResume
+            SET viewYn = 'Y'
+            WHERE resumeNo = #{resumeNo} AND userId = #{userId};
+        </update>
+
+
+    <select id="selectResumeByNo" parameterType="int" resultType="com.example.test.dto.ResumeDTO">
+        SELECT * FROM tblResume WHERE resumeNo = #{resumeNo}
+    </select>
+
+    <select id="selectActivitiesByResumeNo" parameterType="int" resultType="com.example.test.dto.ActivityDTO">
+        SELECT * FROM tblActivity WHERE resumeNo = #{resumeNo}
+    </select>
+
+    <select id="selectEducationsByResumeNo" parameterType="int" resultType="com.example.test.dto.EducationDTO">
+        SELECT * FROM tblEducation WHERE resumeNo = #{resumeNo}
+    </select>
+
+    <select id="selectLicensesByResumeNo" parameterType="int" resultType="com.example.test.dto.LicenseDTO">
+        SELECT * FROM tblLicense WHERE resumeNo = #{resumeNo}
+    </select>
+
+    <select id="selectSkillsByResumeNo" parameterType="int" resultType="com.example.test.dto.ResumeSkillDTO">
+        SELECT * FROM tblResumeSkill WHERE resumeNo = #{resumeNo}
+    </select>
+
+    <select id="selectMilitaryByResumeNo" parameterType="int" resultType="com.example.test.dto.MilitaryDTO">
+        SELECT * FROM tblMilitary WHERE resumeNo = #{resumeNo}
+    </select>
+
+    <select id="selectPortfoliosByResumeNo" parameterType="int" resultType="com.example.test.dto.PotfolioDTO">
+        SELECT * FROM tblPotfolio WHERE resumeNo = #{resumeNo}
+    </select>
+
+    <select id="selectIntroByResumeNo" parameterType="int" resultType="com.example.test.dto.IntroduceDTO">
+        SELECT * FROM tblIntroduce WHERE resumeNo = #{resumeNo}
+    </select>
+
+
+
+
+
+    </mapper>
+
+
+

@@ -1,78 +1,384 @@
-.column-flex{
+a{
+    text-decoration: none;
+    color: inherit;
+}
+/* 공통 시작 */
+section {
     display: flex;
     flex-direction: column;
+    padding: 0;
+    margin: 0 auto;
+    width: 1400px;
+    box-sizing: border-box;
 }
 
-.row-flex{
+/* 공통 끝 */
+/* 섹션1 */
+.section1 {
     display: flex;
-    flex-direction: row;
+    margin-top: 40px;
 }
 
-.list-padding{
-    padding: 20px 25px;
-    gap: 25px;
-}
-
-.post-item-info{
-    height: 120px;
-    border-radius: 10px;
-    padding: 15px 20px;
-    background-color: var(--side);
-    gap: 15px;
+#kind {
+    display: flex;
     align-items: center;
-    justify-content: space-between;
-}
-
-.photo-item{
-    width: 150px;
-    height: 120px;
-    border-radius: 10px;
-    object-fit: cover;
-    cursor: pointer;
-}
-
-.post-info{
-    flex: 3;
-    height: 100%;
-    justify-content: space-between;
-}
-
-.post-button{
-    background-color: var(--base);
-    color: #eee;
-    border-radius: 10px;
-    border: none;
+    justify-content: center;
+    font-size: 30px;
     font-weight: bold;
+}
+
+.separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin: 0 10px;
+    color: #999;
+}
+
+#keyword {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+}
+
+
+/* 섹션2 */
+.section2 {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+}
+
+.section2_option_container {
+    box-sizing: border-box;
+    justify-content: space-around;
+    align-items: center;
+    display: flex;
+}
+
+.section2_option {
+    box-sizing: border-box;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    outline: 1px #ddd solid;
+    padding: 14px;
+    font-weight: bold;
+    font-size: 16px;
     cursor: pointer;
 }
 
-.resume{
-    padding: 10px 20px;
+.section2_container {
+    box-sizing: border-box;
+    outline: 1px #ddd solid;
+    height: 120px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.text-button{
+#keyword_container {
+    box-sizing: border-box;
+    font-weight: bold;
+    margin-left: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+}
+
+#section2_btn {
+    cursor: pointer;
+    box-sizing: border-box;
+    border: 1px #ddd solid;
+    background-color: #b7673c;
+    border-radius: 10px;
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    padding: 30px 40px;
+    margin-right: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 기본 그림자 */
+    transition: all 0.3s ease; /* 부드러운 전환 효과 */
+    position: relative; /* 테두리 애니메이션용 */
+    overflow: hidden; /* 테두리 애니메이션이 밖으로 나가지 않도록 */
+}
+#section2_btn:hover {
+    background-color: #9e502d; /* 배경색 변경 */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 확대 */
+    transform: translateY(-2px); /* 살짝 떠오르는 효과 */
+}
+
+#section2_btn:active {
+    transform: scale(0.95); /* 클릭 시 버튼이 약간 작아지는 효과 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 클릭 시 그림자 축소 */
+}
+
+/* 섹션3 */
+.section3 {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+}
+
+#section3_description {
+    display: flex;
+
+}
+
+#section3_description>img {
+    width: 30px;
+    height: auto;
+    margin: 0 5px;
+}
+
+#section3_description>div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 17px;
+}
+
+#section3_option {
+    display: flex;
+    border: 1px #ddd solid;
+    border-radius: 10px;
+}
+
+.section3_option {
+    font-weight: bold;
+    padding: 4px 6px;
+}
+
+/* 섹션4 */
+.section4 {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    gap: 18px;
+    padding-bottom: 20px;
+    border-bottom: 1px #ddd solid;
+}
+
+.section4_popular {
+    position: relative;
+    flex: 1;
+    border: 1px #ddd solid;
+    height: 400px;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+    transition: box-shadow 0.3s ease; /* 부드러운 전환 효과 */
+}
+.section4_popular:hover {
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* 호버 시 더 강한 그림자 */
+}
+
+#section4_fake {
+    background-color: #dac6ca;
+    position: absolute;
+    top: 20px;
+    padding: 4px;
+    border-radius: 9px;
+    margin-left: 20px;
+    border: 1px #ddd solid;
+    font-weight: bold;
+}
+
+#section4_postThumbnail {
+    min-height: 80px;
+    max-height: 80px;
+    min-width: 80px;
+    max-width: 80px;
+    border-radius: 50%;
+    position: absolute;
+    top: 140px;
+    margin-left: 20px;
+    border: 1px #ddd solid;
+
+}
+
+#section4_title {
+    display: flex;
+    align-items: center;
+    margin-top: 250px;
+    margin-left: 20px;
+    margin-right: 20px;
     font-size: 20px;
     font-weight: bold;
+    height: 55px;
+    overflow: hidden;
+
+}
+
+#section4_companyName {
+    margin-left: 20px;
+    margin-right: 20px;
+    font-size: 17px;
+    color: gray;
+}
+
+/* 섹션5 */
+.section5 {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 30px;
+    margin-top: 20px;
+    margin-bottom: 100px;
+    justify-content: center;
+}
+
+.section5_post {
+    border: 1px #ddd solid;
+    height: 230px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+    transition: box-shadow 0.3s ease; /* 부드러운 전환 효과 */
+}
+.section5_post:hover{
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* 호버 시 더 강한 그림자 */
+}
+
+#section5_postThumbnail {
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    min-height: 70px;
+    min-width: 70px;
+    max-width: 70px;
+    max-height: 70px;
+    border: 1px #ddd solid;
+}
+
+#section5_title {
+    margin-left: 20px;
+    font-size: 19px;
+    font-weight: bold;
+}
+
+#section5_postAddress {
+    margin-top: 3px;
+    margin-left: 20px;
+    font-size: 14px;
+    color: #4a4a4a;
+}
+
+#section5_educationName {
+    margin-top: 3px;
+    margin-left: 20px;
+    font-size: 15px;
+    color: #1a73e8;
+    font-weight: bold;
+}
+
+.section5_footer {
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+#section5_footer_left {
+    background-color: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px #ddd solid;
+    padding: 5px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+#section5_footer_right {
+    display: flex;
+    gap: 10px;
+}
+
+#section5_endDate{
+    font-weight: bold;
+}
+#section5_star {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    background-size: 60px 60px;
+    background-repeat: no-repeat;
+    background-position: center;
     cursor: pointer;
 }
 
-.inner-button{
-    padding: 5px 20px;
+.uncolorstar {
+    background-image: url('/images/uncolorstar.png');
 }
 
-.post-item-info.row-flex {
-    white-space: nowrap;
+.colorstar {
+    background-image: url('/images/colorstar.png');
 }
 
-.user-list{
-    padding: 20px;
-    background-color: #eee;
+
+/* sec2 드롭다운 */
+.section2_block {
+    max-height: 250px;
+    overflow-y: scroll;
+    width: 200px;
+}
+
+.section2_none {
+    max-height: 0;
+    overflow: hidden;
+}
+
+/* 지역 */
+.section2_region_option,
+.section2_job_option {
+
+    transition: all 0.3s ease-out;
+}
+
+.region {
+    cursor: pointer;
+    max-width: 200px;
+    font-weight: bold;
+    padding: 15px 10px 15px 15px;
+    outline: 1px #ddd solid;
+    border-top: 1px #ddd solid;
+    background-color: rgb(251, 251, 251);
+    color: #575a5e;
+}
+
+.job {
+    cursor: pointer;
+    max-width: 200px;
+    font-weight: bold;
+    padding: 15px 10px 15px 15px;
+    outline: 1px #ddd solid;
+    border-top: 1px #ddd solid;
+    background-color: rgb(251, 251, 251);
+    color: #575a5e;
+
+}
+
+/* gpt */
+.section2_block::-webkit-scrollbar {
+    width: 10px;
+    /* 스크롤바 너비 */
+}
+
+.section2_block::-webkit-scrollbar-thumb {
+    background: #ddd;
+    /* 스크롤바 색상 */
     border-radius: 10px;
-    gap: 20px;
+    /* 스크롤바 둥글게 */
 }
 
-.alpc-info{
-    padding-left: 50px;
-    justify-content: space-between;
-    gap: 65px;
+.section2_block::-webkit-scrollbar-track {
+    background: #f5f5f5;
+    /* 스크롤 트랙 배경색 */
 }

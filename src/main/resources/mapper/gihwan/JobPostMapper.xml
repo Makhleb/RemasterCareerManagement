@@ -49,7 +49,7 @@
         ON P.workTypeCode = GWT.code
         JOIN (SELECT * FROM tblGubn WHERE groupCode = 'WORK') GT
         ON P.workCode = GT.code
-        WHERE P.companyId = #{companyId}
+        WHERE P.companyId = #{companyId} AND P.deleteYn = 'N'
         ORDER BY P.jobPostNo DESC
     </select>
 
@@ -103,8 +103,35 @@
         WHERE jobPostNo = #{jobPostNo}
     </select>
 
+    <update id="updateJobPost">
+        UPDATE tblJobPost
+        SET
+        title = #{JP.title},
+        jobHistory = #{JP.jobHistory},
+        jobSalary = #{JP.jobSalary},
+        startDate = #{JP.startDate},
+        endDate = #{JP.endDate},
+        content = #{JP.content},
+        method = #{JP.method},
+        addNotice = #{JP.addNotice},
+        managerName = #{JP.managerName},
+        managerPhone = #{JP.managerPhone},
+        managerEmail = #{JP.managerEmail},
+        postThumbnail = #{JP.postThumbnail},
+        postAddress = #{JP.postAddress},
+        postAddressDetail = #{JP.postAddressDetail},
+        postZonecode = #{JP.postZonecode},
+        postViewYn = #{JP.postViewYn},
+        workCode = #{JP.workCode},
+        jobRankCode = #{JP.jobRankCode},
+        workTypeCode = #{JP.workTypeCode},
+        educationCode = #{JP.educationCode}
+        WHERE jobPostNo = #{JP.jobPostNo}
+    </update>
+
+
     <delete id="deleteJobPost">
-        DELETE FROM tblJobPost WHERE jobPostNo=#{jobPostNo};
+        UPDATE tblJobPost SET deleteYn = 'Y' WHERE jobPostNo=#{jobPostNo};
     </delete>
     <delete id="deleteBenefit">
         DELETE FROM tblBenefit WHERE jobPostNo=#{jobPostNo};

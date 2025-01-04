@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test.dao.sangin.UsersLikeDao_sangin">
+<!--유저의 관심 공고 수-->
+    <select id="jplCount" resultType="java.lang.Integer">
+        select count(*) from tblJpl where userId = #{userId}
+    </select>
+<!--유저의 관심 기업 수-->
+    <select id="clCount" resultType="java.lang.Integer">
+        select count(*) from tblLike where userId = #{userId} and likeType = 'C'
+    </select>
+<!--유저가 관심있는 공고-->
+    <select id="jobPostLike" resultType="com.example.test.vo.JobPostDetailVo">
+        SELECT
+        jp.*,
+        gb.name AS workTypeName,
+        c.companyName,
+        (SELECT COUNT(*)
+        FROM tblAplcHstr ah
+        WHERE ah.jobPostNo = jp.jobPostNo) AS aplcHstrCount
+        FROM
+        tblJobPost jp
+        INNER JOIN
+        tblJpl l
+        ON jp.jobPostNo = l.jobPostNo
+        LEFT JOIN
+        tblGubn gb
+        ON jp.workTypeCode = gb.code
+        LEFT JOIN
+        tblCompany c
+        ON jp.companyId = c.companyId
+        WHERE
+        l.userId = #{userId}
+    </select>
+
+    <!--유저가 관심있는 기업-->
+    <select id="companyLike" resultType="com.example.test.vo.CompanyDetailVo">
+        SELECT
+        cp.*
+        FROM
+        tblCompany cp
+        INNER JOIN
+        tblLike l
+        ON cp.companyId = l.companyId
+        WHERE
+        l.userId = #{userId} and
+        likeType = 'C'
+    </select>
+    <select id="jobPostByCompanyId">
+<!-- 12.31 15:44 조금있다 추가할 예정..-->
+        select * from tblJobPost where companyId = #{companyId}
+        ORDER BY RAND()
+        LIMIT 3
+    </select>
+<!--    scrap 용입니다 -->
+    <insert id="jplAdd">
+    insert into tblJpl (userId, jobPostNo) values (#{userId}, #{jobPostNo})
+    </insert>
+    <delete id="jplRemove">
+    delete from tblJpl where userId = #{userId} and jobPostNo = #{jobPostNo}
+    </delete>
+<!--북마크용-->
+    <insert id="clAdd">
+        insert into tblLike (userId, companyId, likeType) values (#{userId}, #{companyId} , 'C')
+    </insert>
+    <delete id="clRemove">
+        delete from tblLike where userId = #{userId} and companyId = #{companyId} and likeType='C'
+    </delete>
+<!--    liketype만 넣었다하면 고장나네-->
+</mapper>

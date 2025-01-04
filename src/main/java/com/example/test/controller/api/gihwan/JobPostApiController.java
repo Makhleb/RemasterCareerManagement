@@ -44,8 +44,13 @@ public class JobPostApiController {
         return jobPostService.selectDetail(detailNo);
     }
 
+    @PutMapping
+    public boolean updateJobPost(@RequestBody JobPostWrapDto jobPostWrapDto) {
+        return jobPostService.updatePost(jobPostWrapDto);
+    }
+
     @DeleteMapping("/{jobPostNo}")
     public boolean deleteJobPost(@PathVariable int jobPostNo) throws IOException {
-        return jobPostService.deletePost(jobPostNo);
+        return jobPostService.deleteJobPost(jobPostNo);
     }
 }
