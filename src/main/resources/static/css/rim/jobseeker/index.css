@@ -1,1 +1,459 @@
- 
+/* 대시보드 섹션 스타일 수정 */
+.dashboard-section {
+    margin: 20px 0;
+}
+
+.dashboard-section .section-header {
+    margin-bottom: 20px;
+}
+
+.dashboard-section .section-header h2 {
+    color: var(--primary-color-2);
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.dashboard-section .section-header p {
+    color: var(--primary-color-4);
+    font-size: 14px;
+}
+
+/* 대시보드 컨테이너 스타일 */
+.dashboard-container {
+    display: flex;
+    gap: 20px;
+    height: 300px;
+    width: 100%;
+}
+
+/* 차트 영역 */
+.stats-chart {
+    flex: 1;
+    background: white;
+    border-radius: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.stats-chart h3 {
+    margin-bottom: 15px;
+    color: var(--primary-color-2);
+    font-weight: bold;
+}
+
+/* 차트와 통계 컨테이너 */
+.chart-container {
+    flex: 1;
+    position: relative;
+    min-height: 0;
+}
+
+/* 캔버스 컨테이너 */
+#applicationChart {
+    margin: 0 auto;
+    height: 100% !important;
+    width: 100% !important;
+}
+
+/* 통계 요약 */
+.stats-summary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    flex-shrink: 0;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0 10px;
+}
+
+.stat-label {
+    color: var(--primary-color-4);
+    font-size: 0.9em;
+}
+
+.stat-value {
+    color: var(--primary-color-2);
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+/* 최근 지원 내역 영역 */
+.recent-applications {
+    flex: 1;
+    background: white;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;  /* 내부 스크롤을 위해 변경 */
+}
+
+.recent-applications h3 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.application-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.company-info {
+    flex: 1;
+}
+
+.company-name {
+    display: block;
+    font-weight: bold;
+    color: #333;
+}
+
+.post-title {
+    display: block;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.application-info {
+    text-align: right;
+}
+
+.apply-date {
+    display: block;
+    font-size: 0.8em;
+    color: #999;
+}
+
+.status {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+}
+
+/* 상태별 스타일 */
+.status-waiting .status {
+    background-color: #FFB800;
+    color: white;
+}
+
+.status-accepted .status {
+    background-color: #448146;
+    color: white;
+}
+
+.status-rejected .status {
+    background-color: #8d2a2a;
+    color: white;
+}
+
+/* 캔버스 컨테이너 */
+#applicationChart {
+    margin: 0 auto;
+    max-height: 180px;
+}
+
+/* 최근 지원 내역 헤더 스타일 */
+.recent-header {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+    padding: 20px 20px 15px 20px;
+    border-bottom: 1px solid #eee;
+    flex-shrink: 0;  /* 헤더 크기 고정 */
+}
+
+
+.title-area {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.title-area h3 {
+    margin: 0;
+    color: var(--primary-color-2);
+    font-weight: bold;
+}
+
+.period-info {
+    font-size: 0.8em;
+    color: var(--primary-color-4);
+}
+
+.status-summary {
+    display: flex;
+    gap: 15px;
+}
+
+.status-count {
+    font-size: 0.9em;
+    color: var(--primary-color-4);
+}
+
+.status-count strong {
+    font-weight: bold;
+    margin-left: 4px;
+}
+
+.status-count.accepted strong {
+    color: #448146;
+}
+
+.status-count.waiting strong {
+    color: #b76737;
+}
+
+.status-count.rejected strong {
+    color: #8d2a2a;
+}
+
+/* 기존 스타일 수정 */
+/* 리스트 영역 수정 */
+.applications-list {
+    padding: 0 20px;
+    overflow-y: auto;  /* 스크롤은 리스트에만 적용 */
+    flex: 1;  /* 남은 공간 모두 차지 */
+}
+
+.application-item {
+    padding: 15px 0;
+} 
+
+/* 스크롤바 스타일링 */
+.applications-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.applications-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.applications-list::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}
+
+.applications-list::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+/* 헤더 그림자 효과 (스크롤 시 표시) */
+.recent-header::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -10px;
+    height: 10px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.05), transparent);
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+}
+
+/* 스크롤 시 그림자 표시 */
+.recent-applications.scrolled .recent-header::after {
+    opacity: 1;
+}
+
+/* 인기 스킬 태그 스타일 */
+.popular-skills {
+    margin: 10px 0;
+}
+
+.skill-tags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.skill-tag {
+    display: inline-flex;
+    align-items: center;
+    background-color: rgba(183, 103, 55, 0.1);
+    color: var(--primary-color-1);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.9em;
+}
+
+.skill-tag .count {
+    margin-left: 5px;
+    font-size: 0.85em;
+    color: var(--primary-color-4);
+}
+
+/* TOP 10 기업 설명 텍스트 스타일 */
+.text-muted {
+    font-size: 12px;
+    font-weight: 400;
+    color: #6d6d6d;
+    margin: -10px 0 15px 0;
+}
+
+.section-header .text-muted {
+    margin-top: 5px;
+}
+
+/* 데이터 없음 상태 스타일 */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+    background: #f9f9f9;
+    border-radius: 8px;
+    color: var(--primary-color-4);
+    width: 100%;
+    height: 200px;
+}
+
+.empty-state i {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    font-size: 14px;
+    margin: 0;
+}
+
+/* 슬라이더에서의 데이터 없음 상태 */
+.companies-slider .empty-state {
+    width: 100%;
+    height: 200px;
+    margin: 0 auto;
+}
+
+/* 이력서 등록 유도 스타일 */
+.empty-state.resume-prompt {
+    background: linear-gradient(to right, rgba(183, 103, 55, 0.05), rgba(58, 81, 84, 0.05));
+    border: 1px dashed var(--primary-color-3);
+    padding: 20px;
+    height: 200px;
+    width: 1200px;
+    box-sizing: border-box;
+}
+
+.resume-button:hover{
+    background-color: var(--primary-color-2);
+}
+.resume-prompt p {
+    color: var(--primary-color-2);
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.resume-button {
+    background-color: var(--primary-color-1);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: dashed;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    align-items: center;
+    gap: 8px;
+}
+
+/* posts-container 내부의 empty-state 위치 조정 */
+.posts-container .empty-state {
+    margin: 0;
+    border-radius: 8px;
+}
+
+/* 지원내역 없음 상태 스타일 */
+.empty-state.application-prompt {
+    display: none;
+}
+
+.application-prompt i {
+    color: var(--primary-color-1);
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.application-prompt p {
+    color: var(--primary-color-2);
+    font-size: 14px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.jobs-button {
+    background-color: var(--primary-color-1);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.jobs-button:hover {
+    background-color: var(--primary-color-2);
+}
+
+.jobs-link {
+    text-decoration: none;
+}
+
+/* 대시보드 데이터 없음 상태 */
+.empty-state.dashboard-prompt {
+    background: linear-gradient(to right, rgba(183, 103, 55, 0.05), rgba(58, 81, 84, 0.05));
+    border: 1px dashed var(--primary-color-3);
+    padding: 20px;
+    height: 300px;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    border-radius: 8px;
+}
+
+.dashboard-prompt i {
+    color: var(--primary-color-1);
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.dashboard-prompt p {
+    color: var(--primary-color-2);
+    font-size: 16px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+    text-align: center;
+}
+
+/* dashboard-container 내부의 empty-state 스타일 */
+.dashboard-container .empty-state {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    border-radius: 8px;
+}

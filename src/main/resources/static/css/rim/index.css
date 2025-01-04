@@ -57,6 +57,16 @@
     font-size: 1.2rem;
     margin-left: 5px;
 }
+#searchIcon {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #888;
+    font-size: 1.2rem;
+    margin-left: 5px;
+}
 
 
 /* 섹션 공통 스타일 */
@@ -281,10 +291,12 @@ section h2 {
 }
 
 .stat-item {
-    background: #f8f9fa;
-    padding: 15px;
+    padding: 5px;
     border-radius: 8px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
 }
 
 .stat-label {
@@ -299,9 +311,6 @@ section h2 {
     color: #333;
 }
 
-.recent-applications {
-    margin-top: 20px;
-}
 
 .applications-list {
     display: grid;
@@ -323,9 +332,21 @@ section h2 {
     font-size: 0.9em;
 }
 
-.status-waiting { background: #ffd43b; color: #000; }
-.status-accepted { background: #51cf66; color: #fff; }
-.status-rejected { background: #ff6b6b; color: #fff; }
+.status-waiting { 
+    background: #fbfbfb;
+    color: #000;
+    border: 1px solid #d1d1d1;
+}
+.status-accepted { 
+    background: #daeddf; 
+    color: #000;
+    border: 1px solid #d1d1d1;
+}
+.status-rejected { 
+    background: #e3e3e3; 
+    color: #000;
+    border: 1px solid #d1d1d1;
+}
 
 .section-container {
     background: white;

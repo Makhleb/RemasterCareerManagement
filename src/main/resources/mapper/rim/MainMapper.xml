@@ -197,18 +197,46 @@
         SELECT 
             c.companyName,
             jp.title as postTitle,
-            h.aplcHstrDate as applyDate,
-            h.passYn
-        FROM tblAplcHstr h
-        JOIN tblJobPost jp ON h.jobPostNo = jp.jobPostNo
+            ah.aplcHstrDate as applyDate,
+            ah.passYn
+        FROM tblAplcHstr ah
+        JOIN tblJobPost jp ON ah.jobPostNo = jp.jobPostNo
         JOIN tblCompany c ON jp.companyId = c.companyId
-        JOIN tblResume r ON h.resumeNo = r.resumeNo
-        WHERE r.userId = #{userId}
-        ORDER BY h.aplcHstrDate DESC
-        LIMIT 5
+        WHERE ah.resumeNo IN (
+            SELECT resumeNo 
+            FROM tblResume 
+            WHERE userId = #{userId}
+        )
+        AND ah.aplcHstrDate BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()
+        ORDER BY ah.aplcHstrDate DESC
     </select>
 
     <!-- 맞춤 추천 공고 -->
+    <!-- 
+    이 쿼리는 사용자에게 맞춤형 채용공고를 추천하는 기능을 수행합니다.
+    
+    주요 기능:
+    1. 사용자의 이력서에 등록된 기술스택과 일치하는 채용공고를 찾습니다
+    2. 각 채용공고별로 일치하는 기술스택 수를 계산합니다 (matchingSkillCount)
+    3. 사용자가 스크랩한 공고인지 여부를 확인합니다 (isScraped)
+    
+    조인 설명:
+    - tblJobPost(jp): 채용공고 기본 정보
+    - tblCompany(c): 회사 정보 
+    - tblJobPostSkill(jps): 채용공고가 요구하는 기술스택
+    - tblResumeSkill(rs): 사용자 이력서의 기술스택
+    - tblResume(r): 사용자 이력서
+    
+    정렬 기준:
+    1. 일치하는 기술스택이 많은 순서 (matchingSkillCount DESC)
+    2. 마감일이 빠른 순서 (jp.endDate ASC)
+    
+    제한사항:
+    - 마감되지 않은 공고만 표시 (endDate > NOW())
+    - 공개된 공고만 표시 (postViewYn = 'Y')
+    - 삭제되지 않은 공고만 표시 (deleteYn = 'N')
+    - 최대 8개까지만 표시 (LIMIT 8)
+    -->
     <select id="findRecommendedPosts" resultMap="jobPostResultMap">
         SELECT DISTINCT 
             jp.jobPostNo, jp.title, jp.jobSalary, jp.endDate, jp.postAddress,

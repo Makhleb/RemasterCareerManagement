@@ -37,9 +37,9 @@ public class MainService {
     public MainDTO getMainPageData() {
         MainDTO response = new MainDTO();
         String userType = securityUtil.getCurrentUserRole();
-        
+
         log.info("userType: " + userType);
-        
+
         response.setUserType(userType);
         response.setCommonSection(getCommonSection());
         response.setPopularSkills(getPopularSkills());

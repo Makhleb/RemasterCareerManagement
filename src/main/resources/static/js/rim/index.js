@@ -2,12 +2,12 @@
 window.common = {
     // DOM 요소 추가
     elements: {
-        popularPosts: document.getElementById('popularPosts'),
-        topCompanies: document.getElementById('topCompanies'),
-        trendingPosts: document.getElementById('trendingPosts'),
+    popularPosts: document.getElementById('popularPosts'),
+    topCompanies: document.getElementById('topCompanies'),
+    trendingPosts: document.getElementById('trendingPosts'),
         companiesSlider: document.getElementById('topCompanies'),
-        prevButton: document.getElementById('slideLeft'),
-        nextButton: document.getElementById('slideRight'),
+    prevButton: document.getElementById('slideLeft'),
+    nextButton: document.getElementById('slideRight'),
         companyFilterButtons: document.querySelectorAll('.top-companies .filter-buttons button')
     },
 
@@ -149,8 +149,8 @@ window.common = {
 
         // 카드 렌더링 헬퍼 함수들
         renderJobPostCard(post) {
-            if (!post) return '';
-            
+    if (!post) return '';
+    
             // 복리후생 태그 생성 (첫 번째 항목만)
             const benefit = post.benefits && post.benefits[0] 
                 ? `<span class="post-tag benefit-tag small">💝${post.benefits[0]}</span>` 
@@ -162,8 +162,8 @@ window.common = {
                 .map(skill => `<span class="post-tag skill-tag small">💻${skill}</span>`)
                 .join('') || '';
         
-            const ddayClass = post.dday <= 0 ? 'deadline-near' : 'deadline-passed';
-            const ddayText = post.dday <= 0 ? `D${post.dday}` : '마감';
+    const ddayClass = post.dday <= 0 ? 'deadline-near' : 'deadline-passed';
+    const ddayText = post.dday <= 0 ? `D${post.dday}` : '마감';
             
             // 날짜 형식 변환
             const formatDate = (dateString) => {
@@ -174,14 +174,14 @@ window.common = {
                 const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'][date.getDay()];
                 return `~${month}.${day}(${dayOfWeek})`;
             };
-        
-            return `
-                <div class="job-post-card">
+    
+    return `
+        <div class="job-post-card">
                     <div class="company-header">
-                        <img src="${post.companyImage}" 
-                             alt="${post.companyName}" 
-                             class="company-logo"
-                             onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(post.companyName)}&size=40&background=random'">
+                    <img src="${post.companyImage}" 
+                         alt="${post.companyName}" 
+                         class="company-logo"
+                         onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(post.companyName)}&size=40&background=random'">
                         <p class="company-name">${post.companyName}</p>
                         <h3 class="post-title">${post.title || '제목 없음'}</h3>
                     </div>
@@ -194,17 +194,17 @@ window.common = {
                                 <div class="tag-group">
                                     ${skillTags}
                                     ${benefit}
-                                </div>
+                </div>
                                 <span class="post-tag date-tag">${formatDate(post.endDate)} 
-                                    <button class="scrap-btn" onclick="handleScrap(${post.jobPostNo}, event)">
-                                        <i class="fas fa-bookmark"></i>
-                                    </button>
+                    <button class="scrap-btn" onclick="handleScrap(${post.jobPostNo}, event)">
+                        <i class="fas fa-bookmark"></i>
+                    </button>
                                 </span>
                             </div>
-                        </div>
-                    </div>
                 </div>
-            `;
+            </div>
+        </div>
+    `;
         },
 
         renderCompanyCard(company) {
@@ -223,22 +223,22 @@ window.common = {
     `;
         },
 
-        // 슬라이더 초기화
+// 슬라이더 초기화
         initializeSlider() {
             const companiesSlider = document.getElementById('topCompanies');
             if (!companiesSlider) return;
 
-            let currentSlide = 0;
+    let currentSlide = 0;
             const totalSlides = Math.ceil(companiesSlider.children.length / 5);
-            
-            // 슬라이드 이동 함수
+    
+    // 슬라이드 이동 함수
             const moveSlide = (direction) => {
-                currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
-                const offset = currentSlide * -100;
+        currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+        const offset = currentSlide * -100;
                 companiesSlider.style.transform = `translateX(${offset}%)`;
             };
-            
-            // 이벤트 리스너 등록
+    
+    // 이벤트 리스너 등록
             const prevButton = document.getElementById('slideLeft');
             const nextButton = document.getElementById('slideRight');
             

@@ -40,19 +40,6 @@
             </div>
         </section>
 
-        <style>
-            #searchIcon {
-                position: absolute;
-                right: 10px;
-                background: none;
-                border: none;
-                cursor: pointer;
-                color: #888;
-                font-size: 1.2rem;
-                margin-left: 5px;
-            }
-        </style>
-
         <!-- 비로그인 시 안내 배너 -->
         <a href="/login" style="text-decoration: none;">
             <div class="guest-banner" id="guestBanner">
@@ -100,9 +87,7 @@
                         <button data-sort="interest">관심 기업 수 많은 순</button>
                     </div>
             </div>
-            <p class="text-muted" style="font-size: 12px; font-weight: 400; transform: translateY(-25px); color: #6d6d6d;">
-                * 스크랩이 많은 순서로 정렬되며, 같은 스크랩 수인 경우 마감일이 빠른 순으로 보여집니다.
-            </p>
+
 
             <div class="companies-slider-container">
                 <button id="slideLeft" class="slide-button" aria-label="이전 슬라이드">
@@ -122,6 +107,9 @@
             <div class="section-header">
                 <h2>주목받는 채용공고</h2>
             </div>
+            <p class="text-muted" style="font-size: 12px; font-weight: 400; transform: translateY(-25px); color: #6d6d6d;">
+                * 스크랩이 많은 순서로 정렬되며, 같은 스크랩 수인 경우 마감일이 빠른 순으로 보여집니다.
+            </p>
             <div class="posts-container" id="trendingPosts">
                 <!-- JavaScript로 동적 렌더링 -->
             </div>
