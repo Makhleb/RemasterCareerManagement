@@ -101,11 +101,22 @@
 
     <!-- 기업 평점 분포 조회 -->
     <select id="findRatingDistribution" resultType="int">
-        SELECT COUNT(*)
-        FROM tblCompanyScore
-        WHERE companyId = #{companyId}
-        GROUP BY score
-        ORDER BY score
+        SELECT COALESCE(cnt, 0) as count
+        FROM (
+            SELECT 0 as score UNION ALL
+            SELECT 1 UNION ALL
+            SELECT 2 UNION ALL
+            SELECT 3 UNION ALL
+            SELECT 4 UNION ALL
+            SELECT 5
+        ) scores
+        LEFT JOIN (
+            SELECT score, COUNT(*) as cnt
+            FROM tblCompanyScore
+            WHERE companyId = #{companyId}
+            GROUP BY score
+        ) ratings ON scores.score = ratings.score
+        ORDER BY scores.score DESC
     </select>
 
     <!-- 최근 리뷰 조회 -->

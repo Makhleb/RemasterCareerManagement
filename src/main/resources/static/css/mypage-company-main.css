@@ -170,3 +170,224 @@ aside li ul {
 #post-list{
     gap: 15px;
 }
+
+/* 지원 현황 태그 */
+.application-tags {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.tag {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    background: #f8f9fa;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tag span {
+    font-weight: bold;
+    color: var(--primary-color-2);
+}
+
+.tag-waiting {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.tag-waiting span {
+    color: #856404;
+}
+
+.tag-pass {
+    background: #d4edda;
+    color: #155724;
+}
+
+.tag-pass span {
+    color: #155724;
+}
+
+.tag-fail {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.tag-fail span {
+    color: #721c24;
+}
+
+/* 지원 내역 컨테이너 */
+.applications-container {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+}
+
+.applications-container h3 {
+    margin-bottom: 20px;
+    color: var(--primary-color-2);
+    font-size: 18px;
+}
+
+.application-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.application-item {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.application-item:hover {
+    border-color: var(--primary-color-2);
+    background: #f8f9fa;
+}
+
+/* 리뷰 모달 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    width: 500px;
+    max-width: 90%;
+    position: relative;
+}
+
+.modal-content h3 {
+    margin-bottom: 20px;
+    color: var(--primary-color-2);
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.rating-input {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.star-rating {
+    display: flex;
+    gap: 8px;
+}
+
+.star-rating i {
+    cursor: pointer;
+    color: #ffd700;
+    font-size: 28px;
+    transition: all 0.2s;
+}
+
+.star-rating i:hover {
+    transform: scale(1.2);
+}
+
+.star-rating i.fas {  /* 채워진 별 */
+    color: #ffd700;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+}
+
+.star-rating i.far {  /* 빈 별 */
+    color: #ccc;
+}
+
+.rating-text {
+    font-size: 16px;
+    font-weight: bold;
+    color: #666;
+    min-width: 40px;
+}
+
+/* 별점 호버 효과 */
+.star-rating:hover i {
+    color: #ccc;
+}
+
+.star-rating i:hover ~ i {
+    color: #ccc;
+}
+
+.star-rating:hover i:hover,
+.star-rating:hover i:hover ~ i {
+    color: #ffd700;
+    transform: scale(1.2);
+}
+
+#reviewContent {
+    width: 100%;
+    height: 150px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    resize: none;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+#reviewContent:focus {
+    border-color: var(--primary-color-1);
+    outline: none;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.modal-buttons button {
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.modal-buttons .submit-btn {
+    background: var(--primary-color-1);
+    color: white;
+    border: none;
+}
+
+.modal-buttons .cancel-btn {
+    background: transparent;
+    border: 1px solid #ddd;
+    color: #666;
+}
+
+.modal-buttons .submit-btn:hover {
+    background: var(--primary-color-2);
+}
+
+.modal-buttons .cancel-btn:hover {
+    background: #f8f9fa;
+}

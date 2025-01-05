@@ -234,5 +234,29 @@ window.API = {
                 return false;
             }
         }
+    },
+    // 마이페이지 관련 API 추가
+    mypage: {
+        // 지원 현황 통계 조회
+        getStats: () => {
+            return axios.get('/user/mypage/api/applications/stats');
+        },
+
+        // 최근 지원 내역 조회
+        getRecentApplications: (limit = 10) => {
+            return axios.get('/user/mypage/api/applications/recent', {
+                params: { limit }
+            });
+        },
+
+        // 기업 평점 등록
+        createScore: (data) => {
+            return axios.post('/user/mypage/api/applications/companies/scores', data);
+        },
+
+        // 기업 평점 수정 추가
+        updateScore: (data) => {
+            return axios.put('/user/mypage/api/applications/companies/scores', data);
+        }
     }
 };

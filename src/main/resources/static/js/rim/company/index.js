@@ -459,17 +459,19 @@ window.company = {
         // 별점 분포 렌더링
         const distributionContainer = document.querySelector('.rating-distribution');
         distributionContainer.innerHTML = ratingDistribution.map((count, index) => {
-            const percentage = totalReviews > 0 ? (count / totalReviews * 100) : 0;
+            const score = 5 - index;
+            const percentage = totalReviews > 0 ? (count / totalReviews * (score * 20)) : 0;
+            
             return `
                 <div class="rating-bar">
-                    <span class="star-label">${5 - index}점</span>
+                    <span class="star-label">${score}점</span>
                     <div class="progress-bar">
                         <div class="progress" style="width: ${percentage}%"></div>
                     </div>
                     <span class="count">${count}</span>
                 </div>
             `;
-        }).join('');
+        }).join(''); // 0점은 표시하지 않음
 
         // 최근 리뷰 렌더링
         recentReviews.innerHTML = rating.recentReviews.length > 0 
