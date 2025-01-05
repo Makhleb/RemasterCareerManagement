@@ -123,39 +123,71 @@
     <!-- 추천 인재 조회 -->
     <select id="findRecommendedCandidates" resultType="com.example.test.dto.rim.main.MainDTO$CandidateDTO">
         WITH LatestJobPost AS (
-            SELECT jobPostNo
-            FROM tblJobPost
-            WHERE companyId = #{companyId}
-            AND deleteYn = 'N'
-            AND postViewYn = 'Y'
-            ORDER BY startDate DESC
+            SELECT 
+                jp.jobPostNo,
+                jp.workCode,
+                jp.title as jobTitle,
+                jp.jobHistory as requiredCareer,
+                jp.startDate,
+                jp.endDate,
+                DATEDIFF(jp.endDate, CURDATE()) as daysLeft,
+                (SELECT COUNT(*) FROM tblJpl 
+                 WHERE jobPostNo = jp.jobPostNo) as scrapCount,
+                GROUP_CONCAT(DISTINCT g.name ORDER BY g.name LIMIT 3) as requiredSkills
+            FROM tblJobPost jp
+            LEFT JOIN tblJobPostSkill jps ON jp.jobPostNo = jps.jobPostNo
+            LEFT JOIN tblGubn g ON jps.skillCode = g.code AND g.groupCode = 'SKILL'
+            WHERE jp.companyId = #{companyId}
+            AND jp.deleteYn = 'N'
+            AND jp.postViewYn = 'Y'
+            GROUP BY jp.jobPostNo, jp.workCode, jp.title, jp.jobHistory, 
+                     jp.startDate, jp.endDate
+            ORDER BY jp.startDate DESC
             LIMIT 1
         )
-        SELECT DISTINCT
-            CONCAT(LEFT(u.userName, 1), '**') as name,
+        SELECT 
+            u.userName as name,
             e.educationCode as education,
             CASE 
                 WHEN r.workCode IS NULL THEN '신입'
                 ELSE '경력'
             END as career,
-            GROUP_CONCAT(DISTINCT g.name) as skills,
-            COUNT(DISTINCT rs.skillCode) * 100.0 / 
-            (SELECT COUNT(*) FROM tblJobPostSkill WHERE jobPostNo = ljp.jobPostNo) as matchRate
+            GROUP_CONCAT(DISTINCT g.name ORDER BY g.name) as skills,
+            ljp.jobTitle as jobTitle,
+            ljp.requiredCareer as requiredCareer,
+            ljp.requiredSkills as requiredSkills,
+            ljp.startDate as startDate,
+            ljp.daysLeft as daysLeft,
+            ljp.scrapCount as scrapCount,
+            (COUNT(DISTINCT CASE 
+                WHEN rs.skillCode IN (
+                    SELECT skillCode 
+                    FROM tblJobPostSkill 
+                    WHERE jobPostNo = ljp.jobPostNo
+                ) THEN rs.skillCode 
+            END) * 100.0 / 
+                NULLIF((SELECT COUNT(*) 
+                 FROM tblJobPostSkill 
+                 WHERE jobPostNo = ljp.jobPostNo), 0)
+            ) as matchRate
         FROM LatestJobPost ljp
         CROSS JOIN tblResume r
         JOIN tblUser u ON r.userId = u.userId
-        JOIN tblEducation e ON r.resumeNo = e.resumeNo
+        LEFT JOIN tblEducation e ON r.resumeNo = e.resumeNo
         JOIN tblResumeSkill rs ON r.resumeNo = rs.resumeNo
-        JOIN tblGubn g ON rs.skillCode = g.code
-        WHERE r.viewYn = 'Y'
-        AND rs.skillCode IN (
-            SELECT skillCode 
-            FROM tblJobPostSkill 
-            WHERE jobPostNo = ljp.jobPostNo
+        JOIN tblGubn g ON rs.skillCode = g.code AND g.groupCode = 'SKILL'
+        WHERE EXISTS (
+            SELECT 1 
+            FROM tblJobPostSkill jps
+            WHERE jps.jobPostNo = ljp.jobPostNo
+            AND jps.skillCode = rs.skillCode
         )
-        GROUP BY r.resumeNo, u.userName, e.educationCode, r.workCode
+        GROUP BY r.resumeNo, u.userName, e.educationCode, r.workCode, 
+                 ljp.jobTitle, ljp.requiredCareer, ljp.requiredSkills,
+                 ljp.startDate, ljp.daysLeft, ljp.scrapCount
+        HAVING matchRate BETWEEN 20 AND 100
         ORDER BY matchRate DESC
-        LIMIT 5
+        LIMIT 4
     </select>
 
     <!-- 진행중인 공고 목록 조회 -->

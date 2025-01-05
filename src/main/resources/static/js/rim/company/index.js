@@ -34,6 +34,17 @@ window.company = {
         formatDate(dateString) {
             const date = new Date(dateString);
             return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+        },
+
+        getEducationText(code) {
+            const educationMap = {
+                'H': '고졸',
+                'C': '전문대졸',
+                'U': '대졸',
+                'G': '대학원졸',
+                'D': '박사'
+            };
+            return educationMap[code] || '학력무관';
         }
     },
 
@@ -48,6 +59,8 @@ window.company = {
                 const data = response.data.userSection.company;
                 this.renderCompanyProfile(data);
                 this.renderDashboard(data);
+                this.renderRecommendedCandidates(data);
+                this.renderRatingStats(data.rating);
             })
             .catch(error => {
                 console.error('Error fetching dashboard data:', error);
@@ -101,15 +114,15 @@ window.company = {
                 </div>
                 <div class="stats-summary">
                     <div class="stat-item">
-                        <span class="stat-label">진행중 공고</span>
+                        <span class="stat-label">진행중 <br>공고</span>
                         <span class="stat-value">${data.stats.activePostings}</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-label">30일 총 지원</span>
+                        <span class="stat-label">30일<br>총 지원</span>
                         <span class="stat-value">${data.stats.totalApplications30Days}</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-label">30일 합격</span>
+                        <span class="stat-label">30일 <br>합격</span>
                         <span class="stat-value pass">${data.stats.passCount30Days}</span>
                     </div>
                 </div>
@@ -193,9 +206,9 @@ window.company = {
                         stats.waitingCount30Days
                     ],
                     backgroundColor: [
-                        'rgba(75, 192, 192, 0.8)',  // 합격
-                        'rgba(255, 99, 132, 0.8)',  // 불합격
-                        'rgba(255, 206, 86, 0.8)'   // 검토중
+                        '#3A5154',  // 합격 - primary-color-2
+                        '#B76737',  // 불합격 - primary-color-1
+                        '#B9B0B2'   // 검토중 - primary-color-3
                     ],
                     borderWidth: 0
                 }]
@@ -262,9 +275,12 @@ window.company = {
                         display: true,
                         position: 'bottom',
                         labels: {
-                            boxWidth: 12,
-                            padding: 15,
-                            color: '#3A5154'  // primary-color-2
+                            boxWidth: 8,
+                            padding: 10,
+                            color: '#3A5154',  // primary-color-2
+                            font: {
+                                size: 9
+                            }
                         }
                     },
                     tooltip: {
@@ -277,7 +293,13 @@ window.company = {
                         bodyColor: '#3A5154',   // primary-color-2
                         backgroundColor: 'rgba(255, 255, 255, 0.9)',
                         borderColor: '#B9B0B2', // primary-color-3
-                        borderWidth: 1
+                        borderWidth: 1,
+                        titleFont: {
+                            size: 14
+                        },
+                        bodyFont: {
+                            size: 13
+                        }
                     }
                 },
                 scales: {
@@ -287,7 +309,10 @@ window.company = {
                             display: false
                         },
                         ticks: {
-                            color: '#929AA2'  // primary-color-4
+                            color: '#929AA2',  // primary-color-4
+                            font: {
+                                size: 12
+                            }
                         }
                     },
                     y: {
@@ -298,7 +323,10 @@ window.company = {
                             callback: function(value) {
                                 return value + '명';
                             },
-                            color: '#929AA2'  // primary-color-4
+                            color: '#929AA2',  // primary-color-4
+                            font: {
+                                size: 9
+                            }
                         },
                         grid: {
                             color: 'rgba(185, 176, 178, 0.1)',  // primary-color-3
@@ -327,6 +355,137 @@ window.company = {
         }
         
         name.textContent = data.profile.companyName || '기업명 미등록';
+    },
+
+    renderRecommendedCandidates(data) {
+        const container = document.getElementById('recommendedCandidates');
+        if (!container || !data.recommendedCandidates) return;
+
+        const jobPost = data.recommendedCandidates[0];
+        
+        container.innerHTML = `
+            <div class="job-post-info">
+                <h3>${jobPost?.jobTitle || '등록된 채용공고가 없습니다'}</h3>
+                <a href="/company/post/${jobPost?.jobPostNo}" class="more-link">
+                    <span>상세보기</span>
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+                
+                <div class="job-post-meta">
+                    <span><i class="far fa-calendar"></i> 작성일: ${this.utils.formatDate(jobPost?.startDate)}</span>
+                    <span><i class="far fa-clock"></i> 마감까지 ${jobPost?.daysLeft || 0}일</span>
+                    <span><i class="far fa-bookmark"></i> 스크랩 ${jobPost?.scrapCount || 0}회</span>
+                </div>
+                
+                <div class="job-post-stats">
+                    <div class="stat-badge">
+                        <i class="fas fa-briefcase"></i>
+                        경력 ${jobPost?.requiredCareer || 0}년
+                    </div>
+                    <div class="stat-badge">
+                        <i class="fas fa-users"></i>
+                        지원자 ${jobPost?.totalApplicants || 0}명
+                    </div>
+                </div>
+                
+                <div class="skill-tags">
+                    ${jobPost?.requiredSkills?.split(',').map(skill => `
+                        <span class="skill-tag">${skill.trim()}</span>
+                    `).join('') || '필요 기술 없음'}
+                </div>
+            </div>
+            
+            <div class="candidates-list">
+                ${data.recommendedCandidates.map(candidate => `
+                    <div class="candidate-item">
+                        <div class="candidate-photo" style="background-image: url('${candidate.photo || ''}');">
+                            ${!candidate.photo ? '<i class="fas fa-user"></i>' : ''}
+                        </div>
+                        <div class="candidate-details">
+                            <div class="candidate-header">
+                                <span class="candidate-name">${candidate.name}</span>
+                                <span class="candidate-match">${Math.round(candidate.matchRate)}% 매칭</span>
+                            </div>
+                            <div class="candidate-info">
+                                <div class="info-item">
+                                    <i class="fas fa-graduation-cap"></i>
+                                    <span>${this.utils.getEducationText(candidate.education)}</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-briefcase"></i>
+                                    <span>${candidate.career}</span>
+                                </div>
+                            </div>
+                            <div class="candidate-skills">
+                                ${candidate.skills.split(',').map(skill => `
+                                    <span class="skill-tag">${skill.trim()}</span>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <a href="/company/candidate/${candidate.resumeNo}" class="candidate-more">
+                            <span>상세보기</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    },
+
+    // 별점 정보 렌더링
+    renderRatingStats(rating) {
+        const ratingNumber = document.querySelector('.rating-number');
+        const starRating = document.querySelector('.star-rating');
+        const reviewCount = document.getElementById('reviewCount');
+        const recentReviews = document.getElementById('recentReviews');
+        const ratingDistribution = rating.ratingDistribution;
+        const totalReviews = ratingDistribution.reduce((a, b) => a + b, 0);
+
+        // 평균 평점과 총 리뷰 수 업데이트
+        ratingNumber.textContent = rating.averageRating.toFixed(1);
+        reviewCount.textContent = totalReviews;
+
+        // 별점 아이콘 렌더링 (0점일 때도 처리)
+        const averageRating = rating.averageRating || 0;
+        const fullStars = Math.floor(averageRating);
+        const hasHalfStar = averageRating % 1 >= 0.5;
+        const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+        starRating.innerHTML = 
+            (fullStars > 0 ? '<i class="fas fa-star"></i>'.repeat(fullStars) : '') +
+            (hasHalfStar ? '<i class="fas fa-star-half-alt"></i>' : '') +
+            '<i class="far fa-star"></i>'.repeat(emptyStars);
+
+        // 별점 분포 렌더링
+        const distributionContainer = document.querySelector('.rating-distribution');
+        distributionContainer.innerHTML = ratingDistribution.map((count, index) => {
+            const percentage = totalReviews > 0 ? (count / totalReviews * 100) : 0;
+            return `
+                <div class="rating-bar">
+                    <span class="star-label">${5 - index}점</span>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: ${percentage}%"></div>
+                    </div>
+                    <span class="count">${count}</span>
+                </div>
+            `;
+        }).join('');
+
+        // 최근 리뷰 렌더링
+        recentReviews.innerHTML = rating.recentReviews.length > 0 
+            ? rating.recentReviews.map(review => `
+                <div class="review-item">
+                    <div class="review-rating">
+                        ${'<i class="fas fa-star"></i>'.repeat(review.score)}
+                        ${review.score < 5 ? '<i class="far fa-star"></i>'.repeat(5 - review.score) : ''}
+                    </div>
+                    <div class="review-info">
+                        <span>${review.userId}</span>
+                        <span class="review-date">${review.scoreDate}</span>
+                    </div>
+                </div>
+            `).join('')
+            : '<div class="no-reviews">아직 리뷰가 없습니다.</div>';
     }
 };
 

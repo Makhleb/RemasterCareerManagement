@@ -91,11 +91,17 @@ public class MainDTO {
 
     @Data
     public static class CandidateDTO {
-        private String name;        // 익명처리된 이름
-        private String education;   // 학력
-        private String career;      // 경력여부
-        private List<String> skills; // 보유 기술
-        private double matchRate;   // 매칭률
+        private String name;          // 이름
+        private String education;     // 학력 코드
+        private String career;        // 경력 여부
+        private String skills;        // 보유 기술
+        private double matchRate;     // 매칭률
+        private String jobTitle;      // 채용공고 제목
+        private int requiredCareer;   // 요구 경력
+        private String requiredSkills; // 요구 기술(최대 3개)
+        private String startDate;     // 작성일
+        private int daysLeft;         // 마감까지 남은 일수
+        private int scrapCount;       // 스크랩 수
     }
 
     @Data
