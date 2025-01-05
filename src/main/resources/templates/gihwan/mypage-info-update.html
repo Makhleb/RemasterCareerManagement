@@ -42,7 +42,7 @@
         <div class="form-group">
             <label for="companyPw">비밀번호</label>
             <input type="password" id="companyPw" readonly style="width: 70%; margin-right: 20px">
-            <button type="button" class="rim-btn check-button" onclick="checkDuplicate()">변경하기</button>
+            <button type="button" class="rim-btn check-button" onclick="openPasswordModal()">변경하기</button>
         </div>
 
 
@@ -127,7 +127,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 id="modalTitle">비밀번호 변경</h3>
-                <span class="close">&times;</span>
+                <span class="close" onclick="$('#password-modal').hide()">&times;</span>
             </div>
             <div class="modal-body" style="margin-bottom: 20px">
                 <label style="height: auto">
@@ -157,6 +157,20 @@
                 console.error('사용자 정보 조회 실패:', error);
             });
 
+        }
+
+        function openPasswordModal(){
+            $('#password-modal').show();
+        }
+
+        function updateLogoUI(){
+            $('#logoPreview').addClass('has-image');
+            $('#logoPreview').show();
+            $('#logoPreview').attr('src', $('#companyLogo').val());
+            $('#logoFileName').file.name;
+            $('#logoFileName').show();
+            $('#logoGuideIcon').hide()
+            $('.logo-upload-container').addClass('has-file');
         }
 
         function loadInfo(userId) {
