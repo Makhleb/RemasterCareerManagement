@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout_dir/layout/user_mypage_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지</title>
+    <link rel="stylesheet" href="/css/mypage-company-main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row-flex">
+        <div class="main-title">
+            <span id="user-name">???</span>
+            <span>님 반갑습니다.</span>
+        </div>
+        <button class="item-btn edit-btn">정보 수정</button>
+    </div>
+    <hr>
+    
+    <div class="content-section">
+
+        <!-- 오른쪽 섹션: 기업 평점과 합격 공고 -->
+        <div class="right-section">
+            <!-- 기업 평점 섹션 -->
+            <div class="company-ratings-container">
+                <h3>기업 평점</h3>
+                <div class="company-ratings-list" id="companyRatingsList">
+                    <!-- JavaScript로 동적 렌더링 -->
+                </div>
+            </div>
+        </div>
+        <!-- 지원 현황 태그 -->
+        <div class="application-tags">
+            <div class="tag">
+                총 지원 <span id="totalApplications">0</span>
+            </div>
+            <div class="tag tag-waiting">
+                검토중 <span id="inProgressCount">0</span>
+            </div>
+            <div class="tag tag-pass">
+                합격 <span id="passCount">0</span>
+            </div>
+            <div class="tag tag-fail">
+                불합격 <span id="failCount">0</span>
+            </div>
+            <div class="tag tag-need-review">
+                평점미등록 <span id="needReviewCount">0</span>
+            </div>
+        </div>
+
+        <!-- 지원 내역과 기업 평점을 나란히 배치 -->
+        <div class="content-container">
+            <!-- 왼쪽 섹션: 지원 내역 -->
+            <div class="applications-container">
+                <h3>지원 내역</h3>
+                <div class="application-list" id="applicationList">
+                    <!-- JavaScript로 동적 렌더링 -->
+                </div>
+            </div>
+
+
+        </div>
+
+        <!-- 평점 등록/수정 모달 -->
+        <div id="reviewModal" class="modal">
+            <div class="modal-content">
+                <h3>기업 평점 등록</h3>
+                <div class="review-form">
+                    <div class="rating-input">
+                        <span>평점:</span>
+                        <div class="star-rating">
+                            <i class="far fa-star" data-rating="1"></i>
+                            <i class="far fa-star" data-rating="2"></i>
+                            <i class="far fa-star" data-rating="3"></i>
+                            <i class="far fa-star" data-rating="4"></i>
+                            <i class="far fa-star" data-rating="5"></i>
+                        </div>
+                        <span class="rating-text">0점</span>
+                    </div>
+                    <div class="modal-buttons">
+                        <button type="button" class="submit-btn" id="submitReview">등록</button>
+                        <button type="button" class="cancel-btn" id="closeModal">취소</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script layout:fragment="script" src="/js/rim/mypage/mypage.js"></script>
+</body>
+</html>
