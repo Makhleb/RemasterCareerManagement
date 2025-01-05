@@ -51,6 +51,7 @@
     <select id="jobPostByCompanyId">
 <!-- 12.31 15:44 조금있다 추가할 예정..-->
         select * from tblJobPost where companyId = #{companyId}
+        and postViewYn = 'Y'
         ORDER BY RAND()
         LIMIT 3
     </select>

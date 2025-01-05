@@ -67,6 +67,8 @@
     const modal = document.getElementById("resume-modal");
     const closeModal = document.querySelector(".close");
     const resumeList = document.getElementById("resume-list");
+    const applyBtn = document.getElementById("apply-btn");
+    let jobPostNo = null;
 
     axios.get(`/api/users/company/detail/${companyId}`)
         .then(response => {
@@ -117,7 +119,7 @@
             data.jobPosts.forEach(jobPost => {
 
                 postList.innerHTML += `
-                <div class="job-post">
+                <div class="job-post" data-job-post-no="${jobPost.jobPostNo}">
                     <div id="post-box1">
                         <div id="box1-con">
                             <div id="post-name"><a href="/view/users/job-post/detail/${jobPost.jobPostNo}">${jobPost.title}</a></div>
@@ -135,21 +137,19 @@
                         <span id="applicant-num">${jobPost.aplcHstrCount} 명</span>
                     </div>
                     <div id="post-box3">
-                        <span id="regist-btn">입사지원</span>
+                        <span class="regist-btn">입사지원</span>
                         <span id="enddate">${jobPost.endDate ? `~${new Date(jobPost.endDate).toLocaleDateString()}` : '마감일 없음'}</span>
                     </div>
                 </div>`;
                 // '지원하기' 버튼 클릭 이벤트 추가
-                document.querySelectorAll("#regist-btn").forEach(regist => {
-                    regist.addEventListener("click", () => {
+                document.querySelectorAll(".regist-btn").forEach(regist => {
+                    regist.addEventListener("click", event => {
+                        const jobPostElement = event.target.closest(".job-post"); // 가장 가까운 .job-post 요소
+                        jobPostNo = jobPostElement.dataset.jobPostNo;
                         loadResumes(); // 이력서 목록 로드
                         modal.style.display = "block";
                     });
                 });
-
-
-
-
 
             });
 
@@ -252,7 +252,6 @@
             const confirmApply = window.confirm(
                 `[ ${selectedResume.textContent} ] 로 지원하시겠습니까?`
             );
-
             if (confirmApply) {
                 // Axios 요청으로 지원 데이터 전송
                 axios.post("/api/users/job-post/resume/regist", {

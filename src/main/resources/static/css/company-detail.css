@@ -297,6 +297,9 @@ section {
 #post-list {
     display: flex;
     flex-direction: column;
+    max-height: 800px;
+    overflow: scroll;
+    scrollbar-width: none;
 }
 
 /* lv2 job-post */
@@ -396,7 +399,7 @@ section {
     gap: 5px;
 }
 
-#regist-btn {
+.regist-btn {
     display: flex;
     align-items: center;
     justify-content: center;
