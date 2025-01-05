@@ -10,12 +10,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Created on 2024-12-30 by 구경림
  */
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
+    
+    private static final Logger log = LoggerFactory.getLogger(CustomUserDetailsService.class);
     
     private final UserDao userDao;
     private final CompanyDao companyDao;
@@ -39,13 +43,20 @@ public class CustomUserDetailsService implements UserDetailsService {
         Optional<CompanyDTO> companyOpt = companyDao.findById(username);
         if (companyOpt.isPresent()) {
             CompanyDTO company = companyOpt.get();
-            return new CustomUserDetails(
-                company.getCompanyId(),
-                company.getCompanyPw(),
-                "ROLE_COMPANY",
-                true,
-                company.getCompanyName()
-            );
+            log.info("Company found - id: {}, name: {}", company.getCompanyId(), company.getCompanyName());
+            
+            CustomUserDetails userDetails = CustomUserDetails.builder()
+                .username(company.getCompanyId())
+                .password(company.getCompanyPw())
+                .role("ROLE_COMPANY")
+                .name(company.getCompanyName())
+                .isActive(true)
+                .build();
+            
+            log.info("CustomUserDetails created - username: {}, role: {}, name: {}", 
+                userDetails.getUsername(), userDetails.getRole(), userDetails.getName());
+                
+            return userDetails;
         }
 
         throw new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username);

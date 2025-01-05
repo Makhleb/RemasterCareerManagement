@@ -29,6 +29,14 @@ public class CustomUserDetails implements UserDetails {
         this.name = name;
     }
 
+    @Builder
+    public CustomUserDetails(String username, String password, String role, boolean isActive, String name, Collection<? extends GrantedAuthority> authorities) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.isActive = isActive;
+        this.name = name;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -44,14 +44,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     Claims claims = jwtUtil.getAllClaimsFromToken(token);
                     String username = claims.getSubject();
                     String role = (String) claims.get("role");
+                    String name = (String) claims.get("name");
                     
-                    log.debug("JWT token validated for user: {}, role: {}", username, role);
+                    log.info("Token claims - username: {}, role: {}, name: {}", username, role, name);
 
                     // CustomUserDetails 생성
                     CustomUserDetails userDetails = CustomUserDetails.builder()
                         .username(username)
                         .role(role)
-                        .name((String) claims.get("name"))
+                        .name(name)
+                        .isActive(true)
                         .build();
 
                     // Authentication 객체 생성 및 SecurityContext에 설정

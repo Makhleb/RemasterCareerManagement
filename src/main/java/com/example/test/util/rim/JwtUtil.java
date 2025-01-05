@@ -87,6 +87,7 @@ public class JwtUtil {
     public String generateToken(CompanyDTO companyDTO) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", "ROLE_COMPANY");
+        claims.put("name", companyDTO.getCompanyName());
 
         return Jwts.builder()
                 .setClaims(claims)
