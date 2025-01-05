@@ -8,10 +8,14 @@
         FROM tblCompany
         WHERE companyId = #{companyId}
     </select>
+    <update id="updatePassword">
+        UPDATE tblCompany
+        SET companyPw=#{password}
+        WHERE companyId=#{companyId}
+    </update>
     <update id="updateInfo">
         UPDATE tblCompany
-        <set>
-            companyPw = #{C.companyPw},
+        SET
             companyName = #{C.companyName},
             companyNumber = #{C.companyNumber},
             companyAddress = #{C.companyAddress},
@@ -25,7 +29,6 @@
             companyProfit = #{C.companyProfit},
             companyModifyDate = NOW(),
             companyPresident = #{C.companyPresident}
-        </set>
         WHERE companyId = #{C.companyId}
     </update>
 </mapper>

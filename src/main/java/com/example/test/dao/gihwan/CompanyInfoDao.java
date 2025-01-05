@@ -11,4 +11,5 @@ import org.apache.ibatis.annotations.Param;
 public interface CompanyInfoDao {
     CompanyDTO findById(@Param("companyId")String companyId);
     int updateInfo(@Param("C")CompanyDTO companyDTO);
+    int updatePassword(@Param("companyId")String companyId, @Param("password") String password);
 }
