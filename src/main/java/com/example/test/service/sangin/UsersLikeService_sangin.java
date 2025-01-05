@@ -1,6 +1,7 @@
 package com.example.test.service.sangin;
 
 import com.example.test.dao.sangin.UsersLikeDao_sangin;
+import com.example.test.service.common.FileService;
 import com.example.test.vo.CompanyDetailVo;
 import com.example.test.vo.JobPostDetailVo;
 import com.example.test.vo.LikeCountVo;
@@ -18,13 +19,18 @@ public class UsersLikeService_sangin {
     @Autowired
     UsersLikeDao_sangin usersLikeDao;
 
+    @Autowired
+    private FileService fileService;
+
     public List<CompanyDetailVo> companyLikeWithPosts(String userId) {
         // 얘는 유저아이디에 해당하는 기업 정보
         List<CompanyDetailVo> companies = usersLikeDao.companyLike(userId);
         // 얘는 전체 공고입니다~ // 컴퍼니 아이디로 조회.. 나 좀 지렸다..
         for (CompanyDetailVo company : companies) {
             List<JobPostDetailVo> jobPosts = usersLikeDao.jobPostByCompanyId(company.getCompanyId());
+            String companyId = company.getCompanyId();
             company.setJobPosts(jobPosts);
+            company.setCompanyImage(fileService.loadImage("COMPANY_THUMBNAIL", companyId));
         }
         return companies;
     }

@@ -45,4 +45,5 @@ public class JobPostDetailVo {
     private int isScraped; // 공고 scrap 용
     private int likeCount; // 스크랩 수
     private int aplcHstrCount;
+    private String companyImage; // 기업 이미지 추가
 }
