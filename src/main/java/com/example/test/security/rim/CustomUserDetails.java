@@ -1,5 +1,7 @@
 package com.example.test.security.rim;
+import lombok.Builder;
 import lombok.Getter;
+import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchConnectionDetails;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +13,7 @@ import java.util.Collections;
  * Created on 2024-12-30 by 구경림
  */
 @Getter
+@Builder
 public class CustomUserDetails implements UserDetails {
     private String username; // userId 또는 companyId
     private String password;
@@ -25,6 +28,7 @@ public class CustomUserDetails implements UserDetails {
         this.isActive = isActive;
         this.name = name;
     }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

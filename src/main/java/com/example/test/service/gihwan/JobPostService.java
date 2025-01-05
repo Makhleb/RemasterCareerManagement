@@ -2,6 +2,8 @@ package com.example.test.service.gihwan;
 
 import com.example.test.dao.gihwan.JobPostDao;
 import com.example.test.dto.JobPostDTO;
+import com.example.test.dto.response.PostCompactResponseDto;
+import com.example.test.dto.response.PostMatchingResponseDto;
 import com.example.test.dto.wrapper.JobPostAplcWrapDto;
 import com.example.test.dto.wrapper.JobPostWrapDto;
 import com.example.test.service.common.FileService;
@@ -39,10 +41,10 @@ public class JobPostService {
         return insertedNo;
     }
 
-    public List<JobPostAplcWrapDto> selectAllJobPost(String companyId) {
-        List<JobPostAplcWrapDto> daoResult = jobPostDao.selectAll(companyId);
+    public List<JobPostAplcWrapDto> selectAllJobPost(String companyId, Integer limit) {
+        List<JobPostAplcWrapDto> daoResult = jobPostDao.selectAll(companyId, limit);
         for (JobPostAplcWrapDto listItem : daoResult) {
-            listItem.setAlpcList(jobPostDao.selectJobPostAplc(listItem.getJobPostNo()));
+            listItem.setAlpcList(jobPostDao.selectJobPostAplc(listItem.getJobPostNo(), limit));
             String fileValue = fileService.loadImage("POST_THUMBNAIL", String.valueOf(listItem.getJobPostNo()));
             listItem.setPostThumbnail(fileValue);
         }
@@ -61,9 +63,6 @@ public class JobPostService {
     }
 
     public boolean updatePost(JobPostWrapDto jobPostWrapDto){
-        System.out.println("............."+ jobPostWrapDto.getJobPost());
-        System.out.println("............."+ jobPostWrapDto.getJobPostSkills());
-        System.out.println("............."+ jobPostWrapDto.getBenefits());
         int jobPostNo = jobPostWrapDto.getJobPost().getJobPostNo();
         int result = jobPostDao.updateJobPost(jobPostWrapDto.getJobPost());
         jobPostDao.deleteBenefit(jobPostNo);
@@ -76,5 +75,13 @@ public class JobPostService {
 
     public boolean deleteJobPost(int jobPostNo) {
         return jobPostDao.deleteJobPost(jobPostNo) != 0;
+    }
+
+    public List<PostCompactResponseDto> getCompactList(String companyId, Integer limit) {
+        return jobPostDao.selectCompactPost(companyId, limit);
+    }
+
+    public List<PostMatchingResponseDto> getMatchingList(int postNo, Integer limit) {
+        return jobPostDao.selectPostMatching(postNo, limit);
     }
 }

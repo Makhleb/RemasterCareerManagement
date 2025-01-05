@@ -51,8 +51,10 @@
         ON P.workCode = GT.code
         WHERE P.companyId = #{companyId} AND P.deleteYn = 'N'
         ORDER BY P.jobPostNo DESC
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
     </select>
-
     <select id="selectJobPostAplc">
         SELECT
         A.jobPostNo,
@@ -64,7 +66,51 @@
         FROM tblAplcHstr A
         JOIN tblResume B ON A.resumeNo = B.resumeNo
         JOIN tblUser C  ON B.userId = C.userId AND C.userIsActive = 'Y'
-        WHERE A.jobPostNo = #{jobPostNo};
+        WHERE A.jobPostNo = #{jobPostNo}
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+    </select>
+    <select id="selectCompactPost">
+        SELECT J.jobPostNo,J.title, COUNT(*) AS skillCnt
+        FROM tblJobPost J
+        JOIN tblJobPostSkill JS
+        ON J.jobPostNo = JS.jobPostNo
+        AND companyId = #{companyId}
+        AND deleteYn = 'N'
+        GROUP BY jobPostNo
+        ORDER BY jobPostNo DESC
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+    </select>
+
+<!--
+todo 테스트 시작시 유의사항
+ON R.resumeNo = RS.resumeNo 에서
+ON R.resumeNo = RS.resumeNo AND R.viewYn = 'Y' 로 바꿔주세요
+
+무한스크롤 LIMIT #{page},5
+-->
+    <select id="selectPostMatching">
+        SELECT R.resumeNo, U.userName, R.title, U.userGender, U.userBirth, R.wishSalary, R.createDate, RS.skillCodes, RS.skillCnt
+        FROM tblResume R
+        JOIN (SELECT RS.resumeNo,
+        SUBSTRING_INDEX(GROUP_CONCAT(G.`name` ORDER BY G.`name` ASC), ',', 3) AS skillCodes,
+        COUNT(*) AS skillCnt
+        FROM tblJobPostSkill JS
+        JOIN tblResumeSkill RS
+        ON JS.skillCode = RS.skillCode AND JS.jobPostNo = #{postNo}
+        JOIN tblGubn G
+        ON JS.skillCode = G.`code` AND G.groupCode = 'SKILL'
+        GROUP BY RS.resumeNo) RS
+        ON R.resumeNo = RS.resumeNo
+        JOIN tblUser U
+        ON R.userId = U.userId
+        ORDER BY RS.skillCnt DESC
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
     </select>
 
     <select id="selectJobPostDetail">

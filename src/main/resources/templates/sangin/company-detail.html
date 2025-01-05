@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <title>기업상세정보</title>
     <link rel="stylesheet" href="/css/company-detail.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body layout:fragment="content" th:attr="data-company-id=${companyId}">
 <section>
@@ -17,6 +18,13 @@
             <div id="fakeTag">
                 <img th:src="@{/images/기업상세정보뽀대용.png}" alt="뽀대이미지" id="fake-img">
                 <span id="fake-text">Career</span>
+            </div>
+
+            <div id="post-list-box">
+                <div id="post-list-text">공고 목록</div>
+                <div id="post-list">
+                    <!-- 채용공고가 동적으로 생성된다 -->
+                </div>
             </div>
             <div id="data">
                 <div id="data-text">전체 리뷰 통계</div>
@@ -35,14 +43,18 @@
                     </div>
                 </div>
             </div>
-            <div id="post-list-box">
-                <div id="post-list-text">공고 목록</div>
-                <div id="post-list">
-                    <!-- 채용공고가 동적으로 생성된다 -->
-                </div>
-            </div>
         </div>
         <div id="aside-bar">
+        </div>
+        <div id="resume-modal" class="modal">
+            <div class="modal-content">
+                <div style="display: flex; gap: 20px; align-items: center; justify-content: center;">
+                    <h2>이력서 선택</h2>
+                    <div class="close">&times;</div>
+                </div>
+                <ul id="resume-list"></ul>
+                <button id="apply-btn">지원하기</button>
+            </div>
         </div>
     </div>
 </section>
@@ -52,6 +64,9 @@
     const companyId = document.body.dataset.companyId;
     const reviewListBox = document.querySelector("#review-list-box");
     const postList = document.querySelector("#post-list");
+    const modal = document.getElementById("resume-modal");
+    const closeModal = document.querySelector(".close");
+    const resumeList = document.getElementById("resume-list");
 
     axios.get(`/api/users/company/detail/${companyId}`)
         .then(response => {
@@ -109,10 +124,10 @@
 <!--                            <div id="star" class="colorstar"></div>-->
                         </div>
                         <div id="request">
-                            <span>${jobPost.postAddress}</span>
-                            <span>${jobPost.jobHistory}년 이상</span>
-                            <span>${jobPost.workTypeName}</span>
-                            <span>${jobPost.jobSalary}만</span>
+                            <span><i class="fa-solid fa-location-dot"></i>&nbsp;&nbsp;${jobPost.postAddress}</span>
+                            <span><i class="fa-solid fa-user-tie"></i>&nbsp;&nbsp;${jobPost.jobHistory}년 이상</span>
+                            <span><i class="fa-solid fa-clock"></i>&nbsp;&nbsp;${jobPost.workTypeName}</span>
+                            <span><i class="fa-solid fa-money-bill-wave"></i>&nbsp;&nbsp;${jobPost.jobSalary}만</span>
                         </div>
                     </div>
                     <div id="post-box2">
@@ -122,9 +137,20 @@
                     <div id="post-box3">
                         <span id="regist-btn">입사지원</span>
                         <span id="enddate">${jobPost.endDate ? `~${new Date(jobPost.endDate).toLocaleDateString()}` : '마감일 없음'}</span>
-
                     </div>
                 </div>`;
+                // '지원하기' 버튼 클릭 이벤트 추가
+                document.querySelectorAll("#regist-btn").forEach(regist => {
+                    regist.addEventListener("click", () => {
+                        loadResumes(); // 이력서 목록 로드
+                        modal.style.display = "block";
+                    });
+                });
+
+
+
+
+
             });
 
             // 리뷰 동적 생성
@@ -138,7 +164,9 @@
                     <div class="comment">댓글..</div>
                 </div>`;
             });
+
         })
+
         .catch(error => console.error("Error fetching job post details:", error));
 
     // 북마크 클릭 이벤트 추가
@@ -183,6 +211,74 @@
                 throw error;
             });
     }
+
+    // 이력서 목록 로드
+    function loadResumes() {
+        resumeList.innerHTML = ""; // 기존 목록 초기화
+
+        // Axios 요청으로 이력서 목록 가져오기
+        axios.get("/api/users/job-post/resume/list")
+            .then(response => {
+                const resumes = response.data;
+
+                resumes.forEach(resume => {
+                    const li = document.createElement("li");
+                    li.textContent = resume.title; // title 사용
+                    li.dataset.resumeNo = resume.resumeNo; // resumeNo를 dataset에 저장
+                    li.addEventListener("click", () => {
+                        document.querySelectorAll("#resume-list li").forEach(item => {
+                            item.style.backgroundColor = "";
+                            item.dataset.selected = "false";
+                        });
+                        li.style.backgroundColor = "#d1f7d1"; // 선택된 이력서 강조
+                        li.dataset.selected = "true";
+                    });
+                    resumeList.appendChild(li); // 목록에 추가
+                });
+            })
+            .catch(error => console.error("Error fetching resume list:", error));
+    }
+    // 모달 닫기
+    closeModal.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    // 이력서 선택 후 지원하기
+    applyBtn.addEventListener("click", () => {
+        const selectedResume = document.querySelector("#resume-list li[data-selected='true']");
+        if (selectedResume) {
+            // 선택된 이력서 정보 확인 및 확인창 표시
+            const resumeNo = selectedResume.dataset.resumeNo;
+            const confirmApply = window.confirm(
+                `[ ${selectedResume.textContent} ] 로 지원하시겠습니까?`
+            );
+
+            if (confirmApply) {
+                // Axios 요청으로 지원 데이터 전송
+                axios.post("/api/users/job-post/resume/regist", {
+                    jobPostNo: jobPostNo,
+                    resumeNo: resumeNo
+                })
+                    .then(() => {
+                        alert("지원이 완료되었습니다!");
+                        modal.style.display = "none";
+                    })
+                    .catch(error => {
+                        console.error("Error during application:", error);
+                        alert("지원 중 문제가 발생했습니다. 다시 시도해주세요.");
+                    });
+            }
+        } else {
+            alert("이력서를 선택해주세요!");
+        }
+    });
+
+    // 모달 외부 클릭 시 닫기
+    window.addEventListener("click", event => {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    });
 
 
 </script>

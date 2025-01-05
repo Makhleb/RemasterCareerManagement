@@ -313,16 +313,13 @@
             }
         });
 
-        // 약관 보기 버튼 클릭 이벤트
+        // JavaScript에서 이벤트 리스너 추가
         document.querySelectorAll('.terms-view').forEach(button => {
             button.addEventListener('click', function() {
                 const termType = this.getAttribute('data-term-type');
                 showTerms(parseInt(termType));
             });
         });
-
-        // 모달의 동의 버튼에 이벤트 리스너 추가
-        document.querySelector('.modal-footer .rim-btn').addEventListener('click', agreeToTerms);
 
         // 체크박스 직접 클릭 방지
         document.querySelectorAll('.required-terms').forEach(checkbox => {

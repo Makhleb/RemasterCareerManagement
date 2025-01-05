@@ -1,8 +1,8 @@
-package com.example.test.dto;
+package com.example.test.dto.response;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * Created on 2025-01-02 by 최기환
@@ -14,5 +14,5 @@ public class AplcHstrResponseDto {
     private String userName;
     private String title;
     private char passYn;
-    private Date aplcHstrDate;
+    private LocalDateTime aplcHstrDate;
 }

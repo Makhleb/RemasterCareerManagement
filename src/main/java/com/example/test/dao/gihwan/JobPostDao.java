@@ -1,9 +1,11 @@
 package com.example.test.dao.gihwan;
 
-import com.example.test.dto.AplcHstrResponseDto;
+import com.example.test.dto.response.AplcHstrResponseDto;
 import com.example.test.dto.BenefitDTO;
 import com.example.test.dto.JobPostDTO;
 import com.example.test.dto.JobPostSkillDTO;
+import com.example.test.dto.response.PostCompactResponseDto;
+import com.example.test.dto.response.PostMatchingResponseDto;
 import com.example.test.dto.wrapper.JobPostAplcWrapDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -19,8 +21,10 @@ public interface JobPostDao {
     int insertJobPostSkill(@Param("postNo") int postNo,@Param("list") List<JobPostSkillDTO> jobPostSkillDTOList);
     int insertBenefit(@Param("postNo") int postNo, @Param("list") List<BenefitDTO> benefitDTOList);
 
-    List<JobPostAplcWrapDto> selectAll(String companyId);
-    List<AplcHstrResponseDto> selectJobPostAplc(@Param("jobPostNo") int jobPostNo);
+    List<JobPostAplcWrapDto> selectAll(@Param("companyId")String companyId, @Param("limit") Integer limit);
+    List<AplcHstrResponseDto> selectJobPostAplc(@Param("jobPostNo") int jobPostNo, @Param("limit") Integer limit);
+    List<PostCompactResponseDto> selectCompactPost(@Param("companyId") String companyId, @Param("limit") Integer limit);
+    List<PostMatchingResponseDto> selectPostMatching(@Param("postNo") int postNo, @Param("limit") Integer limit);
 
     JobPostDTO selectJobPostDetail(@Param("jobPostNo") int jobPostNo);
     List<BenefitDTO> selectBenefit(@Param("jobPostNo") int jobPostNo);

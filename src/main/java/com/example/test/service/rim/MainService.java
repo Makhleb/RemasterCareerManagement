@@ -4,34 +4,32 @@ import com.example.test.dao.rim.MainDao;
 import com.example.test.dto.CompanyDTO;
 import com.example.test.dto.rim.main.*;
 import com.example.test.security.rim.SecurityUtil;
+import com.example.test.service.common.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
 public class MainService {
     
+    private final FileService fileService;
     private final MainDao mainDao;
     private final SecurityUtil securityUtil;
-    
-    // 인기 채용공고 조회
-    public List<JobPostDTO> getPopularPosts() {
-        return mainDao.findPopularPosts();
-    }
-    
-    // TOP 10 기업 조회
-    public List<CompanyDTO> getTopCompanies() {
-        return mainDao.findTopCompanies();
-    }
-    
-    // 스크랩 많은 채용공고 조회만 유지
-    public List<JobPostDTO> getMostScrapedPosts() {
-        return mainDao.findMostScrapedPosts();
-    }
+
+    // 기본 썸네일 이미지 배열 추가
+    private static final String[] DEFAULT_THUMBNAILS = {
+        "/images/default-job-post-thumbnails/job-post-thumbnail1.png",
+        "/images/default-job-post-thumbnails/job-post-thumbnail2.png",
+        "/images/default-job-post-thumbnails/job-post-thumbnail3.png",
+        "/images/default-job-post-thumbnails/job-post-thumbnail4.png",
+        "/images/default-job-post-thumbnails/job-post-thumbnail5.png"
+    };
     
     // 기존 메인 페이지 전체 데이터 조회 메서드
     public MainResponseDTO getMainPageData() {
@@ -39,13 +37,11 @@ public class MainService {
         
         // 공통 섹션 설정
         response.setCommon(getCommonSection());
-        
-        // 인기 기술스택 설정
         response.setPopularSkills(getPopularSkills());
         
-        // 사용자 타입별 섹션 설정 (이미 AOP에서 검증됨)
+        // 사용자 타입별 섹션 설정
         UserTypeDTO userSection = new UserTypeDTO();
-        String userType = securityUtil.getUserType();  // 검증된 타입
+        String userType = securityUtil.getUserType();
         
         switch (userType) {
             case "guest":
@@ -53,7 +49,16 @@ public class MainService {
                 break;
                 
             case "user":
-                userSection.setJobSeeker(getJobSeekerSection(securityUtil.getCurrentUserId()));
+                // 구직자의 경우 guest 섹션도 함께 제공
+                GuestSectionDTO guestData = getGuestSection();
+                JobSeekerSectionDTO seekerData = getJobSeekerSection(securityUtil.getCurrentUserId());
+                
+                // guest 데이터를 JobSeekerSection에 통합
+                seekerData.setPopularPosts(guestData.getPopularPosts());
+                seekerData.setScrapedPosts(guestData.getScrapedPosts());
+                // topCompanies는 이미 있으므로 제외
+                
+                userSection.setJobSeeker(seekerData);
                 break;
                 
             case "company":
@@ -82,9 +87,19 @@ public class MainService {
     
     private GuestSectionDTO getGuestSection() {
         GuestSectionDTO guestSection = new GuestSectionDTO();
-        guestSection.setPopularPosts(mainDao.findPopularPosts());
+        
+        // 인기 공고 조회 시 썸네일 처리
+        List<JobPostDTO> popularPosts = mainDao.findPopularPosts();
+        processJobPostThumbnails(popularPosts);
+        guestSection.setPopularPosts(popularPosts);
+        
         guestSection.setTopCompanies(mainDao.findTopCompanies());
-        guestSection.setScrapedPosts(mainDao.findMostScrapedPosts());
+        
+        // 스크랩 많은 공고 조회 시 썸네일 처리
+        List<JobPostDTO> scrapedPosts = mainDao.findMostScrapedPosts();
+        processJobPostThumbnails(scrapedPosts);
+        guestSection.setScrapedPosts(scrapedPosts);
+        
         return guestSection;
     }
     
@@ -93,16 +108,46 @@ public class MainService {
         
         // 대시보드 설정
         DashboardDTO dashboard = new DashboardDTO();
-        dashboard.setStats(mainDao.findJobSeekerDashboard(userId));
+        dashboard.setStats(mainDao.findJobSeekerDashboard(userId));  // DTO로 직접 매핑
         dashboard.setRecentApplications(mainDao.findRecentApplications(userId));
-        
         seekerSection.setDashboard(dashboard);
-        seekerSection.setRecommendedPosts(mainDao.findRecommendedPosts(userId));
+        
+        // 추천 공고 썸네일 처리
+        List<JobPostDTO> recommendedPosts = mainDao.findRecommendedPosts(userId);
+        processJobPostThumbnails(recommendedPosts);
+        seekerSection.setRecommendedPosts(recommendedPosts);
+        
         seekerSection.setTopCompanies(mainDao.findTopCompanies());
-        seekerSection.setScrapedPosts(mainDao.findMostScrapedPosts());
-        seekerSection.setDeadlinePosts(mainDao.findDeadlinePosts(userId));
+        
+        // 스크랩 많은 공고 썸네일 처리
+        List<JobPostDTO> scrapedPosts = mainDao.findMostScrapedPosts();
+        processJobPostThumbnails(scrapedPosts);
+        seekerSection.setScrapedPosts(scrapedPosts);
+        
+        // 마감 임박 공고 썸네일 처리
+        List<JobPostDTO> deadlinePosts = mainDao.findDeadlinePosts(userId);
+        processJobPostThumbnails(deadlinePosts);
+        seekerSection.setDeadlinePosts(deadlinePosts);
         
         return seekerSection;
+    }
+    
+    // 썸네일 처리 공통 메서드
+    private void processJobPostThumbnails(List<JobPostDTO> posts) {
+        if (posts == null) return;
+        
+        posts.forEach(post -> {
+            String thumbnail = fileService.loadImage(
+                "POST_THUMBNAIL", 
+                String.valueOf(post.getJobPostNo())
+            );
+            
+            if (thumbnail != null) {
+                post.setPostThumbnail(thumbnail);
+            } else {
+                post.setPostThumbnail(getRandomDefaultThumbnail());
+            }
+        });
     }
     
     private CompanySectionDTO getCompanySection(String companyId) {
@@ -132,18 +177,11 @@ public class MainService {
         return mainDao.findPopularSkills();
     }
 
-    public DashboardDTO getJobSeekerDashboard(String userId) {
-        DashboardDTO dashboard = new DashboardDTO();
-        dashboard.setStats(mainDao.findJobSeekerDashboard(userId));
-        dashboard.setRecentApplications(mainDao.findRecentApplications(userId));
-        return dashboard;
+    // 랜덤 썸네일 선택 메서드
+    private String getRandomDefaultThumbnail() {
+        int randomIndex = (int) (Math.random() * DEFAULT_THUMBNAILS.length);
+        return DEFAULT_THUMBNAILS[randomIndex];
     }
 
-    public List<JobPostDTO> getRecommendedPosts(String userId) {
-        return mainDao.findRecommendedPosts(userId);
-    }
 
-    public List<JobPostDTO> getDeadlinePosts(String userId) {
-        return mainDao.findDeadlinePosts(userId);
-    }
 } 

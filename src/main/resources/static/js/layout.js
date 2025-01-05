@@ -52,7 +52,22 @@ headerDropdownMenus.forEach((menu) => {
             subDropdown.classList.add("none");
         }
     });
+
+});
+headerDropdown.addEventListener("click", (event) => {
+    const target = event.target;
+
+    if (target.classList.contains("header-sub-dropdown-menu")) {
+        const keyword = target.textContent.trim();
+        if (keyword) {
+            window.location.href = `/view/users/job-post/list?keyword=${encodeURIComponent(keyword)}`;
+        }
+    } else if (target.classList.contains("header-dropdown-menu")) {
+        const keyword = target.dataset.value;
+        if (keyword) {
+            window.location.href = `/view/users/job-post/list?keyword=${encodeURIComponent(keyword)}`;
+        }
+    }
 });
 // dropdown 끝
-
 
