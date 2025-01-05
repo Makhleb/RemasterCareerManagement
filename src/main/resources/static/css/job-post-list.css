@@ -180,13 +180,33 @@ section {
     flex-direction: column;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
     transition: box-shadow 0.3s ease; /* 부드러운 전환 효과 */
+    box-sizing: border-box;
 }
+
+.section4_popular::before {
+    content: '';
+    position: absolute; /* 부모를 기준으로 배치 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2); /* 투명도 조절 (배경 연하게 만들기) */
+    z-index: 1; /* 내용 위에 배경을 놓음 */
+    border-radius: 15px;
+    box-sizing: border-box;
+}
+
+.section4_popular > * {
+    position: relative;
+    z-index: 2; /* 자식 요소를 배경 위로 올림 */
+}
+
 .section4_popular:hover {
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* 호버 시 더 강한 그림자 */
 }
 
 #section4_fake {
-    background-color: #dac6ca;
+    background-color: white;
     position: absolute;
     top: 20px;
     padding: 4px;
@@ -196,7 +216,7 @@ section {
     font-weight: bold;
 }
 
-#section4_postThumbnail {
+#section4_companyImage {
     min-height: 80px;
     max-height: 80px;
     min-width: 80px;
@@ -205,8 +225,15 @@ section {
     position: absolute;
     top: 140px;
     margin-left: 20px;
+}
+#section4_companyImage > img{
+    min-height: 80px;
+    max-height: 80px;
+    min-width: 80px;
+    max-width: 80px;
+    border-radius: 50%;
     border: 1px #ddd solid;
-
+    box-sizing: border-box;
 }
 
 #section4_title {
@@ -215,19 +242,32 @@ section {
     margin-top: 250px;
     margin-left: 20px;
     margin-right: 20px;
-    font-size: 20px;
+    font-size: 24px;
     font-weight: bold;
-    height: 55px;
+    white-space: wrap;
     overflow: hidden;
-
 }
 
 #section4_companyName {
     margin-left: 20px;
     margin-right: 20px;
-    font-size: 17px;
-    color: gray;
+    font-size: 18px;
+    font-weight: bold;
+    max-height: 55px;
 }
+#section4_footer_left{
+    margin-left: 20px;
+    position: absolute;
+    bottom: 15px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px #ddd solid;
+    padding: 2px 5px;
+    border-radius: 10px;
+}
+
 
 /* 섹션5 */
 .section5 {
@@ -250,7 +290,7 @@ section {
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* 호버 시 더 강한 그림자 */
 }
 
-#section5_postThumbnail {
+#section5_companyImage {
     margin-top: 20px;
     margin-left: 20px;
     margin-bottom: 10px;
@@ -259,6 +299,12 @@ section {
     max-width: 70px;
     max-height: 70px;
     border: 1px #ddd solid;
+}
+#section5_companyImage > img{
+    min-height: 70px;
+    min-width: 70px;
+    max-width: 70px;
+    max-height: 70px;
 }
 
 #section5_title {
