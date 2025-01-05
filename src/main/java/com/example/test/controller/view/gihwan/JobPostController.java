@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/company/mypage")
 public class JobPostController {
+    @GetMapping
+    public String mypageMain(){
+        return "/gihwan/mypage-main";
+    }
+
     @GetMapping("/job-post")
     public String jobPost(@RequestParam(required = false) Integer post, Model model) {
         model.addAttribute("jobPostNo", post);
@@ -23,8 +28,8 @@ public class JobPostController {
         return "/gihwan/mypage-job-post-list";
     }
 
-    @GetMapping
-    public String mypageMain(){
-        return "/gihwan/mypage-main";
+    @GetMapping("/post-matching")
+    public String mypagePostMatching(){
+        return "/gihwan/mypage-post-matching";
     }
 }
