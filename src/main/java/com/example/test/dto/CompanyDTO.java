@@ -26,4 +26,5 @@ public class CompanyDTO {
     private Double avgRating;
     private Integer reviewCount;
     private Integer likeCount;
+    private Integer activeJobCount;
 }

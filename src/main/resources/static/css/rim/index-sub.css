@@ -90,16 +90,15 @@
 }
 
 .company-header {
-    padding: 15px;
+    padding-top: 22px;
     background: white;
-    height: 104px;
+    height: 79px;
     flex-shrink: 0;
     border-top: none;
 }
 .company-logo {
     height: 30px;
     width: auto;
-    margin-bottom: 10px;
 }
 
 .post-info {
@@ -155,7 +154,7 @@
 .post-title {
     font-size: 1rem;
     color: #333;
-    margin: 10px 0;
+    margin: 0;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
