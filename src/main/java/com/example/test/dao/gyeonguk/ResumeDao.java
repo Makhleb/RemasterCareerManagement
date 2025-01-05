@@ -13,6 +13,16 @@ import java.util.List;
 @Mapper
 public interface ResumeDao {
 
+
+    /**
+     * 특정 사용자 ID로 사용자 정보를 조회합니다.
+     *
+     * @param userId 사용자 ID
+     * @return 유저 정보
+     */
+    UserDTO selectUserInfoById(String userId);
+
+
     /**
      * 이력서 제목 및 인적사항 저장
      *

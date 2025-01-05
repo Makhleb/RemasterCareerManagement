@@ -102,6 +102,7 @@
                         <p><strong>작성일자:</strong> ${detail.resume && detail.resume.createDate ? new Date(detail.resume.createDate).toLocaleDateString() : '등록되지 않았습니다.'}</p>
 
                         <h3>인적사항</h3>
+                               증명사진 : <img src=${detail.resume.headshot? detail.resume.headshot: '/images/noImage.jpg'} alt="로고">
                             <p>
                                 아이디: ${detail.resume && detail.resume.userId ? escapeHtml(detail.resume.userId) : '등록되지 않았습니다.'}<br>
                                 주소: ${detail.resume && detail.resume.address ? escapeHtml(detail.resume.address) : '등록되지 않았습니다.'}<br>
