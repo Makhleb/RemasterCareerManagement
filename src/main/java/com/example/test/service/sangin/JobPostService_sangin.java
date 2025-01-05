@@ -2,6 +2,7 @@ package com.example.test.service.sangin;
 
 import com.example.test.dao.sangin.JobPostDao_sangin;
 import com.example.test.dto.*;
+import com.example.test.service.common.FileService;
 import com.example.test.vo.JobPostDetailVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,16 +17,50 @@ public class JobPostService_sangin {
     @Autowired
     JobPostDao_sangin jobPostDao;
 
+    @Autowired
+    private FileService fileService;
+
     public List<JobPostDetailVo> getJobPostAll(String userId, String keyword) {
-        return jobPostDao.getJobPostAll(userId, keyword);
+        List<JobPostDetailVo> jobPostDetailVoList = jobPostDao.getJobPostAll(userId, keyword);
+        int count = 0;
+        for (JobPostDetailVo jobPostDetailVo : jobPostDetailVoList) {
+
+            int jobPostNo = jobPostDetailVo.getJobPostNo();
+            //파일 서비스를 위해서 String 타입으로 변환
+            String jobPostNoStr = String.valueOf(jobPostNo);
+            String companyId = jobPostDetailVo.getCompanyId();
+            System.out.println("count = " + count++ + " / " + companyId);
+            jobPostDetailVo.setPostThumbnail(fileService.loadImage("POST_THUMBNAIL", jobPostNoStr));
+            jobPostDetailVo.setCompanyImage(fileService.loadImage("COMPANY_THUMBNAIL", companyId));
+        }
+        return jobPostDetailVoList;
     }
 
     public List<JobPostDetailVo> getJobPostMatching(String userId) {
-        return jobPostDao.getJobPostMatching(userId);
+        List<JobPostDetailVo> jobPostDetailVoList = jobPostDao.getJobPostMatching(userId);
+        int count = 0;
+        for (JobPostDetailVo jobPostDetailVo : jobPostDetailVoList) {
+
+            int jobPostNo = jobPostDetailVo.getJobPostNo();
+            String jobPostNoStr = String.valueOf(jobPostNo);
+            String companyId = jobPostDetailVo.getCompanyId();
+            System.out.println("count = " + count++ + " / " + companyId);
+
+            jobPostDetailVo.setPostThumbnail(fileService.loadImage("POST_THUMBNAIL", jobPostNoStr));
+            jobPostDetailVo.setCompanyImage(fileService.loadImage("COMPANY_THUMBNAIL", companyId));
+        }
+        return jobPostDetailVoList;
     }
 
     public JobPostDetailVo getJobPost(String userId, int jobPostNo) {
         JobPostDetailVo jobPost = jobPostDao.getJobPost(userId, jobPostNo);
+
+        String jobPostNoStr = String.valueOf(jobPostNo);
+        String companyId = jobPost.getCompanyId();
+
+        jobPost.setPostThumbnail(fileService.loadImage("POST_THUMBNAIL", jobPostNoStr));
+        jobPost.setCompanyImage(fileService.loadImage("COMPANY_THUMBNAIL", companyId));
+
         List<JobPostSkillDTO> skillList = jobPostDao.getJobPostSkill(jobPostNo);
         List<BenefitDTO> benefitList = jobPostDao.getJobPostBenefit(jobPostNo);
         jobPost.setSkillList(skillList);
@@ -49,5 +84,4 @@ public class JobPostService_sangin {
         return jobPostDao.registAplcHstr(aplcHstrDTO);
     }
 
-    ;
 }

@@ -2,6 +2,7 @@ package com.example.test.service.gyeonguk;
 
 import com.example.test.dto.*;
 import com.example.test.dao.gyeonguk.ResumeDao;
+import com.example.test.service.common.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,17 @@ import java.util.List;
 public class ResumeService {
 
     private final ResumeDao resumeDao;
+    private final FileService fileService;
+
+    /**
+     * 특정 사용자 ID로 사용자 정보를 조회합니다.
+     *
+     * @param userId 사용자 ID
+     * @return 유저 정보
+     */
+    public UserDTO getUserInfo(String userId) {
+        return resumeDao.selectUserInfoById(userId);
+    }
 
     /**
      * 이력서 제목 및 인적사항 저장
@@ -101,6 +113,7 @@ public class ResumeService {
             return null; // 또는 예외 처리
         }
         detail.setResume(resume);
+        detail.getResume().setHeadshot(fileService.loadImage("RESUME_HEADSHOT", String.valueOf(resumeNo)));
         System.out.println(resume.getResumeNo()+"............");
         detail.setActivities(resumeDao.selectActivitiesByResumeNo(resumeNo));
         System.out.println(detail.getActivities()+"............");

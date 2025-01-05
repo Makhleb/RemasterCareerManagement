@@ -114,13 +114,19 @@ section {
 }
 
 #com_logo {
-    max-height: 175px;
-    min-height: 175px;
+    box-sizing: border-box;
+    height: 175px;
     border: 1px #ddd solid;
     border-radius: 15px 15px 0 0;
-    /*background-size: contain;*/
-    /*background-repeat: no-repeat;*/
-    /*background-position: center;*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#com_logo > img {
+    border-radius: 15px 15px 0 0;
+    box-sizing: border-box;
+    max-height: 100%;
+    max-width: 100%;
 }
 
 #heart {

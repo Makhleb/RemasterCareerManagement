@@ -2,8 +2,11 @@ package com.example.test.controller.api.gyeonguk;
 
 import com.example.test.dao.gyeonguk.ResumeDao;
 import com.example.test.dto.*;
+import com.example.test.security.rim.SecurityUtil;
+import com.example.test.service.gihwan.JobPostService;
 import com.example.test.service.gyeonguk.ResumeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +23,7 @@ public class ResumeRegistApiController {
 
     private final ResumeService resumeService;
     private final ResumeDao resumeDao;
+    private final SecurityUtil securityUtil;
 
     /**
      * 이력서 제목 및 인적사항 저장
@@ -29,10 +33,18 @@ public class ResumeRegistApiController {
      */
     @PostMapping("/personal")
     public int savePersonalInfo(@RequestBody ResumeDTO resumeDTO) {
-        resumeDTO.setUserId("test1");
-        int resumeNo=resumeService.savePersonalInfo(resumeDTO);
+        String userId = securityUtil.getCurrentUserId();
+        resumeDTO.setUserId(userId);
+        int resumeNo =resumeService.savePersonalInfo(resumeDTO);
         return resumeNo;
     }
+
+    @GetMapping("/user-info")
+    public ResponseEntity<UserDTO> getUserInfo(@RequestParam String userId) {
+        UserDTO userInfo = resumeService.getUserInfo(userId); // 사용자 정보 조회
+        return ResponseEntity.ok(userInfo);
+    }
+
 
     /**
      * 활동 정보 저장
@@ -166,6 +178,7 @@ public class ResumeRegistApiController {
      */
     @GetMapping("/detail/{resumeNo}")
     public ResponseEntity<ResumeDetailDTO> getResumeDetail(@PathVariable int resumeNo) {
+        String userId = securityUtil.getCurrentUserId();
         ResumeDetailDTO detail = resumeService.getResumeDetail(resumeNo);
         if (detail != null) {
             return ResponseEntity.ok(detail);

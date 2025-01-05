@@ -2,6 +2,7 @@ package com.example.test.service.sangin;
 
 import com.example.test.dao.sangin.CompanyDetailDao_sangin;
 import com.example.test.dto.CompanyScoreDTO;
+import com.example.test.service.common.FileService;
 import com.example.test.vo.CompanyDetailVo;
 import com.example.test.vo.JobPostDetailVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import java.util.List;
 public class CompanyDetailService_sangin {
     @Autowired
     CompanyDetailDao_sangin companyDetailDao;
+    @Autowired
+    private FileService fileService;
 
     public CompanyDetailVo getCompanyDetailById(String companyId, String userId) {
         System.out.println("company detail service1..." + companyId);
@@ -30,7 +33,8 @@ public class CompanyDetailService_sangin {
 //        배열 넣어주기
         companyDetail.setJobPosts(jobPosts);
         companyDetail.setScores(scores);
-
+//        이미지 넣어주기
+        companyDetail.setCompanyImage(fileService.loadImage("COMPANY_THUMBNAIL",companyId));
         return companyDetail;
     }
 
