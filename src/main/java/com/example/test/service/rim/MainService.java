@@ -176,11 +176,30 @@ public class MainService {
     private MainDTO.CompanySectionDTO getCompanySection(String companyId) {
         MainDTO.CompanySectionDTO companySection = new MainDTO.CompanySectionDTO();
         
+        // 기업 프로필 조회
         companySection.setProfile(mainDao.findCompanyProfile(companyId));
-        companySection.setStats(mainDao.findRecruitmentStats(companyId));
+        
+        // 채용 현황 통계 조회 및 통합
+        MainDTO.RecruitmentStatsDTO stats = mainDao.findRecruitmentStats(companyId);
+        // 일별 지원자 수 통계 추가
+        stats.setDailyApplications(mainDao.findDailyApplicationStats(companyId));
+        // 최근 공고별 지원자 통계 추가
+        stats.setRecentPostStats(mainDao.findRecentPostStats(companyId));
+        companySection.setStats(stats);
+        
+        // 진행중인 공고 목록 조회
         companySection.setActivePosts(mainDao.findActivePosts(companyId));
+        
+        // 추천 인재 목록 조회c
         companySection.setRecommendedCandidates(mainDao.findRecommendedCandidates(companyId));
-        companySection.setRating(mainDao.findCompanyRating(companyId));
+
+        // 평점 정보 설정
+        MainDTO.CompanyRatingDTO rating = mainDao.findCompanyRating(companyId);
+        if (rating != null) {
+            rating.setRatingDistribution(mainDao.findRatingDistribution(companyId));
+            rating.setRecentReviews(mainDao.findRecentReviews(companyId));
+        }
+        companySection.setRating(rating);
         
         return companySection;
     }
