@@ -27,4 +27,5 @@ public class CompanyDTO {
     private Integer reviewCount;
     private Integer likeCount;
     private Integer activeJobCount;
+    private String companyPresident;
 }

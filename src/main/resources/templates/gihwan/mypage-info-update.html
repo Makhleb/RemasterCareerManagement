@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout_dir/layout/company_mypage_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>기업 정보 수정</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/rim/c_signup.css">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="main-title">기업 정보 수정</div>
+    <hr>
+    <div id="signupForm" style="margin: 30px 100px; width: 600px; display: flex; flex-direction: column;">
+        <!-- 회사 로고 업로드 -->
+        <div class="form-group">
+            <label for="companyLogo">회사 로고</label>
+            <div class="logo-upload-container" onclick="document.getElementById('companyLogo').click()">
+                <div class="logo-preview-wrapper">
+                    <img id="logoPreview" alt="로고 미리보기" aria-hidden="true" style="display: none;">
+                    <i id="logoGuideIcon" class="fa-solid fa-file-arrow-up"></i>
+                    <span id="logoFileName" class="file-name"></span>
+                </div>
+                <input type="file"
+                       id="companyLogo"
+                       accept="image/*"
+                       onchange="updateLogoUI(event)"
+                       style="display: none">
+            </div>
+            <div class="error-message" id="companyLogoError"></div>
+        </div>
+
+        <!-- 기본 정보 -->
+        <div class="form-group">
+            <label for="companyId">아이디</label>
+            <div class="id-group">
+                <input type="text" id="companyId" readonly>
+            </div>
+        </div>
+
+        <!-- 비밀번호 -->
+        <div class="form-group">
+            <label for="companyPw">비밀번호</label>
+            <input type="password" id="companyPw" readonly style="width: 70%; margin-right: 20px">
+            <button type="button" class="rim-btn check-button" onclick="openPasswordModal()">변경하기</button>
+        </div>
+
+
+        <!-- 회사명 -->
+        <div class="form-group">
+            <label for="companyName">회사명</label>
+            <input type="text" id="companyName">
+            <div class="error-message" id="companyNameError"></div>
+        </div>
+
+        <!-- 사업자등록번호 -->
+        <div class="form-group">
+            <label for="companyNumber">사업자등록번호</label>
+            <input type="text" id="companyNumber" placeholder="000-00-00000">
+            <div class="error-message" id="companyNumberError"></div>
+        </div>
+
+        <!-- 대표자명 입력 필드 -->
+        <div class="form-group">
+            <label for="companyRepresentative">대표자명</label>
+            <input type="text"
+                   id="companyRepresentative"
+                   placeholder="대표자명을 입력해주세요">
+            <div class="error-message" id="companyRepresentativeError"></div>
+        </div>
+
+        <!-- 주소 -->
+        <div class="form-group">
+            <label for="companyAddress">회사 주소</label>
+            <div class="address-group">
+                <input type="text" id="companyZonecode" placeholder="우편번호" readonly>
+                <button type="button" class="rim-btn check-button" onclick="searchAddress()">주소 검색</button>
+            </div>
+            <input type="text" id="companyAddress" placeholder="기본주소" readonly>
+            <input type="text" id="companyAddressDetail" placeholder="상세주소">
+            <div class="error-message" id="companyAddressError"></div>
+        </div>
+
+        <!-- 연락처 -->
+        <div class="form-group">
+            <label for="companyContact">대표 연락처</label>
+            <input type="tel" id="companyContact" placeholder="000-0000-0000">
+            <div class="error-message" id="companyContactError"></div>
+        </div>
+
+        <!-- 이메일 -->
+        <div class="form-group">
+            <label for="emailId">이메일</label>
+            <div class="email-group">
+                <input type="text" id="emailId" placeholder="이메일">
+                <span>@</span>
+                <input type="text" id="emailDomain" placeholder="도메인">
+            </div>
+            <div class="error-message" id="companyEmailError"></div>
+        </div>
+
+        <!-- 선택 입력 필드들 -->
+        <div class="form-group">
+            <label for="companyWebsite">홈페이지</label>
+            <input type="url" id="companyWebsite" placeholder="https://">
+        </div>
+
+        <div class="form-group">
+            <label for="companyBirth">창립일</label>
+            <input type="date" id="companyBirth">
+        </div>
+
+        <div class="form-group">
+            <label for="companyEmployee">직원 수</label>
+            <input type="number" id="companyEmployee" placeholder="숫자만 입력">
+        </div>
+
+        <div class="form-group">
+            <label for="companyProfit">연간 매출액(만원)</label>
+            <input type="number" id="companyProfit" placeholder="숫자만 입력">
+        </div>
+
+        <div class="form-group">
+            <label for="companyPresident">대표자명</label>
+            <input id="companyPresident">
+        </div>
+
+        <button class="submit-button">수정하기</button>
+    </div>
+
+    <div id="password-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">비밀번호 변경</h3>
+                <span class="close" onclick="$('#password-modal').hide()">&times;</span>
+            </div>
+            <div class="modal-body" style="margin-bottom: 20px">
+                <label style="height: auto">
+                    <div style="margin-bottom: 3px">이전 비밀번호</div>
+                    <input type="password" id="before-password">
+                </label>
+                <label style="height: auto">
+                    <div style="margin-bottom: 3px">새 비밀번호</div>
+                    <input type="password" id="after-password">
+                </label>
+                <label style="height: auto">
+                    <div style="margin-bottom: 3px">새 비밀번호 확인</div>
+                    <input type="password" id="confirm-password">
+                </label>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="rim-btn check-button" onclick="passwordUpdate()">정보 수정</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        window.onload = function () {
+            auth.getCurrentUser().then(response => {
+                user = response;  // 원하는 값 출력
+                loadInfo(user.id);
+            }).catch(error => {
+                console.error('사용자 정보 조회 실패:', error);
+            });
+
+        }
+
+        function openPasswordModal() {
+            $('#password-modal').show();
+        }
+
+        function updateLogoUI(event) {
+            let file = event.target.files[0];
+
+            if (file && file.type.startsWith('image/')) {
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#logoPreview')
+                        .addClass('has-image')
+                        .attr('src', e.target.result)
+                        .show();
+                    $('#logoFileName').text(file.name);
+                    $('#logoFileName').show();
+                    $('#logoGuideIcon').hide();
+                    $('.logo-upload-container').addClass('has-file');
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function loadInfo(userId) {
+            axios.get('/api/companies/info?companyId=' + userId)
+                .then(response => {
+                    let info = response.data;
+                    console.log(info);
+
+                    for (let key in info) {
+                        let $input = $('input[id="' + key + '"]');
+                        if ($input.length) {
+                            $input.val(info[key]);
+                        }
+                    }
+
+                    let emailParts = info.companyEmail.split('@');
+                    $('#emailId').val(emailParts[0]);
+                    $('#emailDomain').val(emailParts[1]);
+
+                    if (info.companyImage !== null) {
+                        $('#logoPreview').addClass('has-image');
+                        $('#logoPreview').show();
+                        $('#logoPreview').attr('src', info.companyImage);
+                        $('#logoGuideIcon').hide()
+                        $('.logo-upload-container').addClass('has-file');
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        }
+
+        $('.submit-button').on('click', function () {
+            const formData = {
+                companyId: $('#companyId').val(),
+                companyName: $('#companyName').val(),
+                companyNumber: $('#companyNumber').val().replace(/-/g, ''),
+                companyAddress: $('#companyAddress').val(),
+                companyZonecode: $('#companyZonecode').val(),
+                companyAddressDetail: $('#companyAddressDetail').val(),
+                companyContact: $('#companyContact').val(),
+                companyEmail: `${$('#emailId').val()}@${$('#emailDomain').val()}`,
+                companyWebsite: $('#companyWebsite').val(),
+                companyBirth: $('#companyBirth').val() || null,
+                companyEmployee: $('#companyEmployee').val(),
+                companyProfit: $('#companyProfit').val(),
+                companyPresident: $('#companyPresident').val(),
+            };
+
+            axios.put('/api/companies/info', formData)
+                .then(response => {
+                    console.log(response);
+                    alert("정보 수정 완료");
+
+                    if ($('#companyLogo')[0].files[0]) {
+                        imageUpload(getFormData($('#companyId').val()));
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        })
+
+        function imageUpload(formData) {
+            axios.put('/api/common/file', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+                .then(function (response) {
+                    console.log(response + "성공");
+                    alert("파일 추가 성공");
+                })
+                .catch(function (error) {
+                    console.log(error + "오류발생");
+                })
+        }
+
+        function getFormData(companyId) {
+            const formData = new FormData();
+            const file = $('#companyLogo')[0].files[0];
+
+            let fileDto = {
+                fileGubn: 'COMPANY_THUMBNAIL',
+                fileRefId: companyId,
+                fileName: file.name,
+                fileExt: file.type,
+                instId: user.id,
+                updtId: user.id
+            }
+
+            formData.append('file', file);
+            formData.append(
+                'fileDto',
+                new Blob(
+                    [JSON.stringify(fileDto)],
+                    {type: 'application/json'}
+                )
+            )
+            console.log("폼 데이터" + formData);
+            for (let pair of formData.entries()) {
+                console.log(pair[0] + ':', pair[1]);
+            }
+            return formData;
+        }
+
+        function passwordUpdate() {
+            let encodePw = $('#companyPw').val();
+            let beforePw = $('#before-password').val();
+            let afterPw = $('#after-password').val();
+            let confirmPw = $('#confirm-password').val();
+
+            if (afterPw !== confirmPw) {
+                alert("새 비밀번호가 일치하지 않습니다.")
+                return;
+            } else if (afterPw === beforePw) {
+                alert("이전비밀번호와 동일합니다.")
+                return;
+            }
+
+            let updateData = {
+                companyId: $('#companyId').val(),
+                encodePw: encodePw,
+                beforePw: beforePw,
+                afterPw: afterPw,
+            }
+
+            axios.put('/api/companies/info/password', updateData)
+                .then(response => {
+                    if (response.data === -1) {
+                        alert("이전 비밀번호가 일치하지 않습니다.")
+                    } else {
+                        alert("비밀번호가 변경되었습니다.");
+                        $('#before-password').val('');
+                        $('#after-password').val('');
+                        $('#confirm-password').val('');
+                        $('#password-modal').hide();
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        }
+    </script>
+</div>
+</body>
+
+</html>

@@ -103,20 +103,43 @@ section h2 {
     background-color: #1976D2;
 }
 
-/* 기본 버튼 스타일 */
-button {
-    background-color: #4CAF50;
+/* 공통 버튼 컨테이너 스타일 */
+.button-container,
+.complete-button-container {
+    display: flex;
+    justify-content: flex-end; /* 버튼을 오른쪽으로 정렬 */
+    margin-top: 10px; /* 상단 여백 */
+    gap: 10px; /* 버튼 간 간격 */
+    max-width: 800px; /* 섹션과 동일한 너비 */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 공통 버튼 스타일 */
+.button-container button,
+.complete-button-container button {
+    background-color: #B7673C; /* 원하는 색상으로 변경 가능 */
     color: white;
     border: none;
     padding: 8px 15px;
     border-radius: 5px;
-    cursor: pointer;
     font-size: 0.9rem;
+    cursor: pointer;
     transition: background-color 0.3s;
 }
 
-button:hover {
-    background-color: #45a049;
+.button-container button:hover,
+.complete-button-container button:hover {
+    background-color: #A65430; /* 호버 시 색상 약간 변경 */
+}
+
+/* 작성완료 버튼 별도 스타일 (선택 사항) */
+#completeResumeRegist {
+    background-color: #A65430; /* 파란색 */
+}
+
+#completeResumeRegist:hover {
+    background-color: #A65430; /* 더 진한 파란색 */
 }
 
 /* Inputs and Labels */
@@ -195,38 +218,4 @@ select:focus {
 .selected-skill:hover {
     background-color: #d84315;
     color: white;
-}
-
-/* 버튼 컨테이너 스타일 */
-.button-container {
-    display: flex;
-    justify-content: flex-end; /* 버튼을 오른쪽으로 정렬 */
-    margin-top: 10px; /* 상단 여백 */
-    gap: 10px; /* 버튼 간 간격 */
-}
-
-/* 작성완료 버튼 컨테이너 스타일 */
-.complete-button-container {
-    display: flex;
-    justify-content: flex-end; /* 버튼을 오른쪽으로 정렬 */
-    margin-top: 10px; /* 상단 여백 */
-    gap: 10px; /* 버튼 간 간격 */
-}
-
-/* 버튼 컨테이너 내 버튼 스타일 */
-.button-container button,
-.complete-button-container button {
-    background-color: #B7673C; /* 원하는 색상으로 변경 가능 */
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.button-container button:hover,
-.complete-button-container button:hover {
-    background-color: #B7673C;
 }

@@ -422,11 +422,11 @@ window.company = {
                                 `).join('')}
                             </div>
                         </div>
-                        <a href="/company/candidate/${candidate.resumeNo}" class="candidate-more">
+                        <a href="/resume/detail/{resumeNo}" class="candidate-more">
                             <span>상세보기</span>
                             <i class="fas fa-chevron-right"></i>
                         </a>
-                    </div>
+                    </div>  
                 `).join('')}
             </div>
         `;

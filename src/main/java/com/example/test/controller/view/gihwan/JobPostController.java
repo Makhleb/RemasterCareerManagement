@@ -32,4 +32,9 @@ public class JobPostController {
     public String mypagePostMatching(){
         return "/gihwan/mypage-post-matching";
     }
+
+    @GetMapping("/info-update")
+    public String infoUpdate(){
+        return "/gihwan/mypage-info-update";
+    }
 }
