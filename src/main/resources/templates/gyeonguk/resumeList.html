@@ -114,7 +114,7 @@
             return;
         }
 
-        axios.put('/api/users/resume/representative', {resumeNo: selectedResumeId, userId: "test1"})
+        axios.put('/api/users/resume/representative', {resumeNo: selectedResumeId, userId: user.id})
             .then(response => {
                 console.log('서버 응답:', response.data); // 서버 응답 디버깅
                 if (response === '대표 이력서가 설정되었습니다.') {

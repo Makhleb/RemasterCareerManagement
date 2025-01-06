@@ -149,7 +149,7 @@ public class ResumeRegistApiController {
      * @return 대표 이력서
      */
     @GetMapping("/representative/{userId}")
-    @RequireToken(roles = {"ROLE_USER"}, checkOwner = true)
+    @RequireToken(roles = {"ROLE_USER"})
     public ResumeDTO getRepresentativeResume(@PathVariable String userId) {
         return resumeDao.selectRepresentativeResume(userId);
     }
@@ -165,7 +165,7 @@ public class ResumeRegistApiController {
      * @return 성공 메시지
      */
     @PutMapping("/representative")
-    @RequireToken(roles = {"ROLE_USER"}, checkOwner = true)
+    @RequireToken(roles = {"ROLE_USER"})
     public String setRepresentativeResume(@RequestBody ResumeDTO resumeDTO) {
         resumeDao.clearRepresentativeResume(resumeDTO.getUserId());
         resumeDao.updateRepresentativeResume(resumeDTO.getResumeNo(), resumeDTO.getUserId());
