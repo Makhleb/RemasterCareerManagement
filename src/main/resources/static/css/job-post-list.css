@@ -246,6 +246,7 @@ section {
     font-weight: bold;
     white-space: wrap;
     overflow: hidden;
+    color: white;
 }
 
 #section4_companyName {
@@ -254,6 +255,7 @@ section {
     font-size: 18px;
     font-weight: bold;
     max-height: 55px;
+    color: white;
 }
 #section4_footer_left{
     margin-left: 20px;
