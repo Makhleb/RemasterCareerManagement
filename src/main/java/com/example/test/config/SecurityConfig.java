@@ -58,6 +58,7 @@ public class SecurityConfig {
                 "/login",
                 "/signup",
                 "/company/signup",
+                "/api/main/data",
                 "/find-password",
                 "/view/users/job-post/list",
                 "/api/job-posts",
