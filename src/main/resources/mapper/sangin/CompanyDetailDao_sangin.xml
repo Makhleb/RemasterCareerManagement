@@ -19,6 +19,7 @@
         LEFT JOIN tblGubn gb ON jp.workTypeCode = gb.code
         LEFT JOIN tblAplcHstr ah ON jp.jobPostNo = ah.jobPostNo
         WHERE jp.companyId = #{companyId}
+        GROUP BY jp.jobPostNo, gb.name
     </select>
 
     <select id="companyScoreByCompanyId" resultType="com.example.test.dto.CompanyScoreDTO">
