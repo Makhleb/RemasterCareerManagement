@@ -4,6 +4,7 @@ import com.example.test.security.rim.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -66,9 +67,10 @@ public class SecurityConfig {
                 "/images/**",
                 "/error",
                 "/api/auth/**"
+
             ).permitAll()
             // 2. 이력서 관련 권한 설정
-            .requestMatchers("/resume/register", "/resume/list").hasRole("USER")
+            .requestMatchers("/resume/register", "/resume/list","/api/users/resume/representative/**").hasRole("USER")
             .requestMatchers("/resume/detail/**").hasAnyRole("USER", "COMPANY", "ADMIN")
             // 3. 나머지 설정들
             .requestMatchers("/api/users/**").hasAnyRole("USER", "COMPANY")
