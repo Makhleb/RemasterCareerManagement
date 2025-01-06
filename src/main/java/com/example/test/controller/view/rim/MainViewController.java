@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import com.example.test.security.rim.RequireToken;
 
 @RequestMapping("/")
 @Controller
@@ -26,11 +27,13 @@ public class MainViewController {
     }
 
     @GetMapping("/jobseeker")
+    @RequireToken(roles = {"ROLE_USER"})
     public String jobSeekerMain() {
         return "rim/jobseeker/index";
     }
 
     @GetMapping("/company")
+    @RequireToken(roles = {"ROLE_COMPANY"})
     public String companyMain() {
         return "rim/company/index";
     }

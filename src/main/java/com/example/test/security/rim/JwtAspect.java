@@ -1,9 +1,11 @@
 package com.example.test.security.rim;
 
 import com.example.test.exception.AuthException;
+import com.example.test.service.gyeonguk.ResumeService;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,6 +32,7 @@ public class JwtAspect {
     
     private final JwtUtil jwtUtil;
     private final SecurityUtil securityUtil;
+    private final ResumeService resumeService;
 
     @Before("@annotation(requireToken)")
     public void checkToken(JoinPoint joinPoint, RequireToken requireToken) {
@@ -54,6 +57,25 @@ public class JwtAspect {
             if (!securityUtil.isResourceOwner(resourceId)) {
                 throw AuthException.forbidden();
             }
+        }        
+        // 3. checkResume=true인 경우 이력서 접근 권한 체크
+        if (requireToken.checkResume()) {
+            int resumeNo = extractResumeNo(joinPoint);
+            String userId = securityUtil.getCurrentUserId();
+            
+            if (securityUtil.hasRole("ROLE_USER")) {
+                // 일반 사용자: 자신의 이력서만 조회 가능
+                if (!resumeService.isOwner(resumeNo, userId)) {
+                    throw AuthException.forbidden("자신의 이력서만 조회할 수 있습니다");
+                }
+            } 
+            else if (securityUtil.hasRole("ROLE_COMPANY")) {
+                // 기업 회원: 지원받은 이력서만 조회 가능
+                if (!resumeService.isAppliedToCompany(resumeNo, userId)) {
+                    throw AuthException.forbidden("지원받은 이력서만 조회할 수 있습니다");
+                }
+            }
+            // ROLE_ADMIN은 모든 이력서 조회 가능
         }
     }
 
@@ -96,5 +118,24 @@ public class JwtAspect {
     private String extractResourceId(JoinPoint joinPoint) {
         // 메서드 파라미터에서 리소스 ID 추출 로직
         return null;
+    }
+
+    private int extractResumeNo(JoinPoint joinPoint) {
+        try {
+            // PathVariable에서 resumeNo 추출
+            MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+            String[] parameterNames = signature.getParameterNames();
+            Object[] args = joinPoint.getArgs();
+            
+            for (int i = 0; i < parameterNames.length; i++) {
+                if (parameterNames[i].equals("resumeNo")) {
+                    return (int) args[i];
+                }
+            }
+            throw new IllegalArgumentException("resumeNo 파라미터를 찾을 수 없습니다");
+        } catch (Exception e) {
+            log.error("이력서 번호 추출 중 오류 발생", e);
+            throw AuthException.forbidden("이력서 접근 권한이 없습니다");
+        }
     }
 } 

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test.dao.rim.ResumeMatchingDao">
+    
+    <!-- 사용자의 이력서 목록 조회 (기술스택이 있는 이력서만) -->
+    <select id="findCompactResumes" resultType="map">
+        SELECT 
+            r.resumeNo,
+            r.title,
+            COUNT(rs.skillCode) as skillCnt
+        FROM tblResume r
+        INNER JOIN tblResumeSkill rs ON r.resumeNo = rs.resumeNo
+        WHERE r.userId = #{userId}
+        GROUP BY r.resumeNo, r.title
+        HAVING COUNT(rs.skillCode) > 0
+        ORDER BY r.createDate DESC
+    </select>
+
+    <!-- 특정 이력서와 매칭되는 채용공고 목록 조회 -->
+    <select id="findMatchingJobPosts" resultType="map">
+        SELECT 
+            jp.jobPostNo,
+            c.companyName,
+            jp.title,
+            jp.jobSalary as salary,
+            jp.postAddress as location,
+            DATE_FORMAT(jp.startDate, '%Y-%m-%d') as startDate,
+            JS.skillCodes,
+            JS.skillCnt
+        FROM tblJobPost jp
+        JOIN tblCompany c ON jp.companyId = c.companyId
+        JOIN (
+            SELECT 
+                jps.jobPostNo,
+                GROUP_CONCAT(DISTINCT g.name ORDER BY g.name SEPARATOR ',') AS skillCodes,
+                COUNT(DISTINCT jps.skillCode) AS skillCnt
+            FROM tblJobPostSkill jps
+            JOIN tblGubn g ON jps.skillCode = g.code AND g.groupCode = 'SKILL'
+            WHERE EXISTS (
+                SELECT 1 
+                FROM tblResumeSkill rs 
+                WHERE rs.skillCode = jps.skillCode 
+                AND rs.resumeNo = #{resumeNo}
+            )
+            GROUP BY jps.jobPostNo
+        ) JS ON jp.jobPostNo = JS.jobPostNo
+        WHERE jp.deleteYn = 'N'
+        AND jp.postViewYn = 'Y'
+        AND jp.endDate > NOW()
+        ORDER BY JS.skillCnt DESC, jp.startDate DESC
+    </select>
+
+</mapper> 

@@ -132,5 +132,18 @@ public class ResumeService {
         return detail;
     }
 
+    /**
+     * 해당 이력서의 소유자인지 확인
+     */
+    public boolean isOwner(int resumeNo, String userId) {
+        ResumeDTO resume = resumeDao.selectResumeByNo(resumeNo);
+        return resume != null && resume.getUserId().equals(userId);
+    }
 
+    /**
+     * 해당 이력서가 회사에 지원된 이력서인지 확인
+     */
+    public boolean isAppliedToCompany(int resumeNo, String companyId) {
+        return resumeDao.isAppliedToCompany(resumeNo, companyId);
+    }
 }

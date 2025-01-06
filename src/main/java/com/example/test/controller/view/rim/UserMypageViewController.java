@@ -18,9 +18,6 @@ public class UserMypageViewController {
      */
     @GetMapping
     public String mypage() {
-        if (!securityUtil.isGeneralUser()) {
-            return "redirect:/login";
-        }
         return "rim/user/mypage";
     }
     /**
@@ -28,10 +25,7 @@ public class UserMypageViewController {
      */
     @GetMapping("/skill-matching")
     public String skillMatching() {
-        if (!securityUtil.isGeneralUser()) {
-            return "redirect:/login";
-        }
-        return "rim/user/skill-matching";
+        return "rim/user/mypage-skill-matching";
     }
 
     /**
@@ -42,6 +36,14 @@ public class UserMypageViewController {
         if (!securityUtil.isGeneralUser()) {
             return "redirect:/login";
         }
-        return "rim/user/applications";
+        return "rim/user/mypage";
+    }
+
+    @GetMapping("/info")
+    public String info() {
+        if (!securityUtil.isGeneralUser()) {
+            return "redirect:/login";
+        }
+        return "rim/user/info";
     }
 } 

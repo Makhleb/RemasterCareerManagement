@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequireToken {
     String[] roles() default {};
-    boolean refresh() default false;
     boolean checkOwner() default false;
+    boolean checkResume() default false;
 } 

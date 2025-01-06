@@ -1,0 +1,81 @@
+.row-flex {
+    display: flex;
+    align-items: center;
+}
+
+.column-flex {
+    display: flex;
+    flex-direction: column;
+}
+
+.between-center {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.select-side {
+    margin-right: 10px;
+}
+
+#matching-title {
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.match-item {
+    padding: 20px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.flex-two-div {
+    flex: 2;
+    gap: 10px;
+}
+
+.margin-x-small {
+    margin: 0 10px;
+}
+
+.loading-bar {
+    width: 200px;
+    height: 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    background-color: #4CAF50;
+    transition: width 0.3s ease-in-out;
+}
+
+.percent {
+    font-size: 24px;
+    font-weight: bold;
+    color: #4CAF50;
+}
+
+.grid-four-column {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+    flex: 1;
+}
+
+.skill-item {
+    background-color: #e9ecef;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    text-align: center;
+}
+
+select {
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    min-width: 200px;
+} 

@@ -37,18 +37,10 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        // 개발 환경에서는 CSRF 비활성화 (나중에 운영 환경에서 활성화)
-        if (isDevelopmentMode()) {
-            http.csrf(csrf -> csrf.disable());
-        } else {
-            http.csrf(csrf -> csrf
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-            );
-        }
-        
-        http.formLogin(auth -> auth.disable());
+        // CSRF 비활성화 (개발 환경)
+        http.csrf(csrf -> csrf.disable());
 
-        // 세션 설정 - JWT를 사용하므로 STATELESS 유지
+        // 세션 설정
         http.sessionManagement(session -> 
             session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
@@ -58,50 +50,50 @@ public class SecurityConfig {
             .configurationSource(corsConfigurationSource())
         );
 
-        // 인증/인가 설정 - 현재 개발 모드 일 때는 모든 요청을 허용
-        if (isDevelopmentMode()) {
-            http.authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll()
-            );
-        } else {
-            http.authorizeHttpRequests(auth -> auth
-                // 공개 리소스
-                .requestMatchers(
-                    "/",
-                    "/login",
-                    "/signup",
-                    "/api/auth/login",
-                    "/api/auth/signup",
-                    "/api/auth/logout",
-                    "/api/auth/me",
-                    "/js/**",
-                    "/css/**",
-                    "/images/**",
-                    "/fonts/**",
-                    "/favicon"
-                ).permitAll()
-                // API 엔드포인트 보호
-                .requestMatchers("/api/users/**").hasAnyRole("USER", "ADMIN")
-                .requestMatchers("/api/companies/**").hasAnyRole("COMPANY", "ADMIN")
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                // 그 외 모든 요청은 인증 필요
-                .anyRequest().authenticated()
-            );
-        }
+        http.authorizeHttpRequests(auth -> auth
+            // 1. 공개 리소스
+            .requestMatchers(
+                "/",
+                "/login",
+                "/signup",
+                "/company/signup",
+                "/find-password",
+                "/view/users/job-post/list",
+                "/api/job-posts",
+                "/api/job-posts/{id}",
+                "/css/**",
+                "/js/**",
+                "/images/**",
+                "/error",
+                "/api/auth/**"
+            ).permitAll()
+            // 2. 이력서 관련 권한 설정
+            .requestMatchers("/resume/register", "/resume/list").hasRole("USER")
+            .requestMatchers("/resume/detail/**").hasAnyRole("USER", "COMPANY", "ADMIN")
+            // 3. 나머지 설정들
+            .requestMatchers("/api/users/**").hasAnyRole("USER", "COMPANY")
+            .requestMatchers("/api/companies/**").hasRole("COMPANY")
+            .requestMatchers("/api/admin/**").hasRole("ADMIN")
+            // 마이페이지 권한 설정
+            .requestMatchers("/user/mypage/**").hasRole("USER")
+            // 4. 나머지는 인증 필요
+            .anyRequest().authenticated()
+        );
 
+        // JWT 필터 추가
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
+        
         return http.build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowCredentials(true); // 쿠키 전송 허용
+        configuration.setAllowCredentials(true);
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setMaxAge(3600L); // preflight 캐시 시간
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

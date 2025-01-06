@@ -32,6 +32,26 @@
         )
     </insert>
 
+    <select id="existsByEmailExceptUser" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM tblUser
+        WHERE userEmail = #{email}
+        AND userId != #{userId}
+        AND userIsActive = 'Y'
+    </select>
+
+    <update id="updateUser">
+        UPDATE tblUser
+        SET
+            userName = #{userName},
+            userEmail = #{userEmail},
+            userPhone = #{userPhone},
+            userBirth = #{userBirth},
+            userGender = #{userGender},
+            userModifyDate = #{userModifyDate}
+        WHERE userId = #{userId}
+    </update>
+
     <!-- findById는 이미 @Select 어노테이션으로 구현됨 -->
     <!-- existsById는 이미 @Select 어노테이션으로 구현됨 -->
     <!-- existsByEmail은 이미 @Select 어노테이션으로 구현됨 -->

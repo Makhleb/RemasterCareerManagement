@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout_dir/layout/user_mypage_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>회원정보 수정</title>
+    <link rel="stylesheet" href="/css/mypage-info.css">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="main-title">회원정보 수정</div>
+    <hr>
+    <div class="info-container">
+        <form id="info-form" onsubmit="return updateInfo(event)">
+            <div class="form-group">
+                <label for="userId">아이디</label>
+                <input type="text" id="userId" readonly>
+            </div>
+            <div class="form-group">
+                <label for="userName">이름</label>
+                <input type="text" id="userName" name="userName" required>
+                <div class="error-message" id="userNameError"></div>
+            </div>
+            <div class="form-group">
+                <label for="userEmail">이메일</label>
+                <input type="email" id="userEmail" name="userEmail" required>
+                <div class="error-message" id="userEmailError"></div>
+            </div>
+            <div class="form-group">
+                <label for="userPhone">휴대폰 번호</label>
+                <input type="tel" id="userPhone" name="userPhone" required 
+                       pattern="[0-9]{3}[0-9]{4}[0-9]{4}" placeholder="'-' 없이 입력">
+                <div class="error-message" id="userPhoneError"></div>
+            </div>
+            <div class="form-group">
+                <label for="userBirth">생년월일</label>
+                <input type="text" id="userBirth" name="userBirth" required 
+                       pattern="[0-9]{8}" placeholder="YYYYMMDD">
+                <div class="error-message" id="userBirthError"></div>
+            </div>
+            <div class="form-group">
+                <label>성별</label>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" name="userGender" value="M"> 남성
+                    </label>
+                    <label>
+                        <input type="radio" name="userGender" value="F"> 여성
+                    </label>
+                </div>
+                <div class="error-message" id="userGenderError"></div>
+            </div>
+            <div class="button-group">
+                <button type="submit" class="submit-btn">수정하기</button>
+                <button type="button" class="password-btn" onclick="openPasswordModal()">
+                    비밀번호 변경
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 비밀번호 변경 모달 -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closePasswordModal()">&times;</span>
+            <h3>비밀번호 변경</h3>
+            <form id="passwordForm" onsubmit="return updatePassword(event)">
+                <div class="form-group">
+                    <label for="newPassword">새 비밀번호</label>
+                    <input type="password" id="newPassword" name="newPassword" required>
+                    <div class="error-message" id="newPasswordError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">비밀번호 확인</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    <div class="error-message" id="confirmPasswordError"></div>
+                </div>
+                <button type="submit" class="submit-button">변경하기</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let userId = null;
+
+        // 휴대폰 번호 하이픈 자동 추가
+        const autoHyphen = (target) => {
+            target.value = target.value
+                .replace(/[^0-9]/g, '')
+                .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3")
+                .replace(/(\-{1,2})$/g, "");
+        }
+
+        // 유효성 검사 함수들
+        function validateName(name) {
+            return name.length >= 2;
+        }
+
+        function validateEmail(email) {
+            const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            return emailRegex.test(email);
+        }
+
+        function validatePhone(phone) {
+            const phoneRegex = /^01[0-9]-[0-9]{3,4}-[0-9]{4}$/;
+            return phoneRegex.test(phone);
+        }
+
+        function validateBirth(birth) {
+            const birthRegex = /^[0-9]{8}$/;
+            return birthRegex.test(birth);
+        }
+
+        function validatePassword(password) {
+            // 영문, 숫자, 특수문자 조합 8자 이상
+            const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+            return passwordRegex.test(password);
+        }
+
+        window.onload = function() {
+            axios.get('/api/users/me')
+                .then(function(response) {
+                    const user = response.data;
+                    userId = user.userId;
+                    
+                    // 폼에 데이터 바인딩
+                    document.getElementById('userId').value = user.userId;
+                    document.getElementById('userName').value = user.userName;
+                    document.getElementById('userEmail').value = user.userEmail;
+                    // 휴대폰 번호에 하이픈 추가
+                    const phone = user.userPhone;
+                    document.getElementById('userPhone').value = phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+                    document.getElementById('userBirth').value = user.userBirth;
+                    
+                    // 성별 라디오 버튼 설정
+                    const genderRadios = document.getElementsByName('userGender');
+                    for(let radio of genderRadios) {
+                        if(radio.value === user.userGender) {
+                            radio.checked = true;
+                            break;
+                        }
+                    }
+                })
+                .catch(function(error) {
+                    console.error('사용자 정보 조회 실패:', error);
+                    alert('사용자 정보를 불러오는데 실패했습니다.');
+                });
+        }
+
+        function updateInfo(event) {
+            event.preventDefault();
+            
+            // 에러 메시지 초기화
+            document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+            
+            const userName = document.getElementById('userName').value;
+            const userEmail = document.getElementById('userEmail').value;
+            // 하이픈 제거 후 저장
+            const userPhone = document.getElementById('userPhone').value.replace(/-/g, '');
+            const userBirth = document.getElementById('userBirth').value;
+            const userGender = document.querySelector('input[name="userGender"]:checked')?.value;
+
+            // 유효성 검사
+            let hasError = false;
+
+            if (!validateName(userName)) {
+                document.getElementById('userNameError').textContent = '이름은 2자 이상이어야 합니다.';
+                hasError = true;
+            }
+
+            if (!validateEmail(userEmail)) {
+                document.getElementById('userEmailError').textContent = '올바른 이메일 형식이 아닙니다.';
+                hasError = true;
+            }
+
+            if (!validatePhone(document.getElementById('userPhone').value)) {
+                document.getElementById('userPhoneError').textContent = '올바른 전화번호 형식이 아닙니다. (11자리 숫자)';
+                hasError = true;
+            }
+
+            if (!validateBirth(userBirth)) {
+                document.getElementById('userBirthError').textContent = '올바른 생년월일 형식이 아닙니다. (YYYYMMDD)';
+                hasError = true;
+            }
+
+            if (!userGender) {
+                document.getElementById('userGenderError').textContent = '성별을 선택해주세요.';
+                hasError = true;
+            }
+
+            if (hasError) {
+                return false;
+            }
+
+            const formData = {
+                userName,
+                userEmail,
+                userPhone,
+                userBirth,
+                userGender
+            };
+
+            axios.put('/api/users/me', formData)
+                .then(function(response) {
+                    alert('회원정보가 수정되었습니다.');
+                    location.reload();
+                })
+                .catch(function(error) {
+                    console.error('회원정보 수정 실패:', error);
+                    const errorMessage = error.response?.data || '회원정보 수정에 실패했습니다.';
+                    if (errorMessage.includes('이메일')) {
+                        document.getElementById('userEmailError').textContent = errorMessage;
+                    } else {
+                        alert(errorMessage);
+                    }
+                });
+            
+            return false;
+        }
+
+        // 비밀번호 모달 관련 함수
+        const modal = document.getElementById('passwordModal');
+
+        function openPasswordModal() {
+            modal.style.display = "block";
+        }
+
+        function closePasswordModal() {
+            modal.style.display = "none";
+            document.getElementById('passwordForm').reset();
+            document.getElementById('newPasswordError').textContent = '';
+            document.getElementById('confirmPasswordError').textContent = '';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closePasswordModal();
+            }
+        }
+
+        function updatePassword(event) {
+            event.preventDefault();
+            
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // 비밀번호 유효성 검사
+            if (!validatePassword(newPassword)) {
+                document.getElementById('newPasswordError').textContent = 
+                    '비밀번호는 영문, 숫자, 특수문자 조합 8자 이상이어야 합니다.';
+                return false;
+            }
+
+            if (newPassword !== confirmPassword) {
+                document.getElementById('confirmPasswordError').textContent = '비밀번호가 일치하지 않습니다.';
+                return false;
+            }
+
+            axios.post('/api/users/reset-password', {
+                userId: userId,
+                newPassword: newPassword
+            })
+            .then(function(response) {
+                alert('비밀번호가 변경되었습니다.');
+                closePasswordModal();
+            })
+            .catch(function(error) {
+                console.error('비밀번호 변경 실패:', error);
+                alert(error.response?.data || '비밀번호 변경에 실패했습니다.');
+            });
+
+            return false;
+        }
+    </script>
+</div>
+</body>
+</html> 

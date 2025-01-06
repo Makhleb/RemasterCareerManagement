@@ -2,6 +2,7 @@ package com.example.test.controller.api.gyeonguk;
 
 import com.example.test.dao.gyeonguk.ResumeDao;
 import com.example.test.dto.*;
+import com.example.test.security.rim.RequireToken;
 import com.example.test.security.rim.SecurityUtil;
 import com.example.test.service.gihwan.JobPostService;
 import com.example.test.service.gyeonguk.ResumeService;
@@ -148,6 +149,7 @@ public class ResumeRegistApiController {
      * @return 대표 이력서
      */
     @GetMapping("/representative/{userId}")
+    @RequireToken(roles = {"ROLE_USER"}, checkOwner = true)
     public ResumeDTO getRepresentativeResume(@PathVariable String userId) {
         return resumeDao.selectRepresentativeResume(userId);
     }
@@ -163,8 +165,8 @@ public class ResumeRegistApiController {
      * @return 성공 메시지
      */
     @PutMapping("/representative")
+    @RequireToken(roles = {"ROLE_USER"}, checkOwner = true)
     public String setRepresentativeResume(@RequestBody ResumeDTO resumeDTO) {
-        System.out.println(resumeDTO+"................");
         resumeDao.clearRepresentativeResume(resumeDTO.getUserId());
         resumeDao.updateRepresentativeResume(resumeDTO.getResumeNo(), resumeDTO.getUserId());
         return "대표 이력서가 설정되었습니다.";
@@ -177,6 +179,7 @@ public class ResumeRegistApiController {
      * @return 이력서 상세 정보
      */
     @GetMapping("/detail/{resumeNo}")
+    @RequireToken(roles = {"ROLE_USER", "ROLE_COMPANY", "ROLE_ADMIN"}, checkResume = true)
     public ResponseEntity<ResumeDetailDTO> getResumeDetail(@PathVariable int resumeNo) {
         String userId = securityUtil.getCurrentUserId();
         ResumeDetailDTO detail = resumeService.getResumeDetail(resumeNo);

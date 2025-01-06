@@ -122,6 +122,12 @@ public interface ResumeDao {
     PotfolioDTO selectPotfoliosByResumeNo(int resumeNo);
     IntroduceDTO selectIntroByResumeNo(int resumeNo);
 
-
+    /**
+     * 해당 이력서가 특정 회사에 지원되었는지 확인
+     * @param resumeNo 이력서 번호
+     * @param companyId 회사 ID
+     * @return 지원 여부
+     */
+    boolean isAppliedToCompany(@Param("resumeNo") int resumeNo, @Param("companyId") String companyId);
 
 }

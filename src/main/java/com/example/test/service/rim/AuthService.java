@@ -6,6 +6,7 @@ import com.example.test.dto.*;
 import com.example.test.dto.rim.CompanyCreateDTO;
 import com.example.test.dto.rim.LoginDTO;
 import com.example.test.dto.rim.UserCreateDTO;
+import com.example.test.dto.rim.UserUpdateDTO;
 import com.example.test.exception.AuthException;
 import com.example.test.util.rim.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.test.exception.BusinessException;
 import com.example.test.dao.rim.AuthDao;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -203,5 +205,32 @@ public class AuthService {
     public String findUserByIdEmailAndPhone(String userId, String email, String phone) {
         return authDao.findUserByIdEmailAndPhone(userId, email, phone)
             .orElseThrow(() -> AuthException.authenticationFailed("일치하는 사용자 정보를 찾을 수 없습니다"));
+    }
+
+    /**
+     * 회원 정보 수정
+     */
+    @Transactional
+    public void updateUser(String userId, UserUpdateDTO dto) {
+        // 사용자 존재 여부 확인
+        UserDTO existingUser = userDao.findById(userId)
+            .orElseThrow(() -> BusinessException.notFound("사용자를 찾을 수 없습니다"));
+
+        // 이메일 중복 체크 (현재 사용자의 이메일은 제외)
+        if (userDao.existsByEmailExceptUser(userId, dto.getUserEmail())) {
+            throw BusinessException.badRequest("이미 사용중인 이메일입니다");
+        }
+
+        // 사용자 정보 업데이트
+        UserDTO user = new UserDTO();
+        user.setUserId(userId);
+        user.setUserName(dto.getUserName());
+        user.setUserEmail(dto.getUserEmail());
+        user.setUserPhone(dto.getUserPhone());
+        user.setUserBirth(dto.getUserBirth());
+        user.setUserGender(dto.getUserGender());
+        user.setUserModifyDate(LocalDateTime.now());
+
+        userDao.updateUser(user);
     }
 } 

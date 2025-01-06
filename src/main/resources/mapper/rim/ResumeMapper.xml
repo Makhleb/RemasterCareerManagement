@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test.dao.gyeonguk.ResumeDao">
+    <select id="isAppliedToCompany" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM tblAplcHstr A
+        INNER JOIN tblJobPost J ON A.jobPostNo = J.jobPostNo
+        WHERE A.resumeNo = #{resumeNo}
+        AND J.companyId = #{companyId}
+        AND A.passYn != 'N'  <!-- 불합격이 아닌 경우(대기 'W' 또는 합격 'Y') -->
+    </select>
+</mapper>

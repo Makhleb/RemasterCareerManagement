@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout_dir/layout/user_mypage_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>기술스택 매칭</title>
+    <link rel="stylesheet" href="/css/mypage-post-matching.css">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="main-title">기술스택 매칭</div>
+    <hr>
+    <div>
+        <div id="matching-title" class="row-flex">
+            <div class="row-flex">
+                <label>
+                    <span class="select-side">이력서 선택</span>
+                    <select name="resume" id="resume-select" onchange="resumeMatching()">
+                        <option value="">이력서를 선택해주세요</option>
+                    </select>
+                </label>
+            </div>
+            <label>
+                <span class="select-side">정렬 순서:</span>
+                <select name="order" id="order-by-select" onchange="matchingSort(this)">
+                    <option value="PERCENT" selected>일치순</option>
+                    <option value="DATE">최신순</option>
+                </select>
+            </label>
+        </div>
+        <div id="matching-content" class="column-flex">
+            <!-- 매칭 결과가 여기에 동적으로 추가됨 -->
+        </div>
+    </div>
+    <script>
+        let matchList = null;
+
+        window.onload = function () {
+            axios.get('/api/users/resume/compact-resume')
+                .then(function (response) {
+                    if (response.data.length > 0) {
+                        response.data.forEach(function (item) {
+                            let option = $('<option>', {
+                                value: item.resumeNo,
+                                text: item.title
+                            }).attr('data-count', item.skillCnt);
+                            $('#resume-select').append(option);
+                        });
+                        
+                        $('#resume-select').val(response.data[0].resumeNo);
+                        
+                        resumeMatching();
+                    } else {
+                        alert("기술스택이 등록된 이력서가 없습니다. 이력서에 기술스택을 등록해주세요.");
+                        $('#resume-select').prop('disabled', true);
+                        $('#order-by-select').prop('disabled', true);
+                    }
+                })
+                .catch(function (error) {
+                    console.error('이력서 목록 조회 실패:', error);
+                    alert('이력서 목록을 불러오는데 실패했습니다.');
+                });
+        }
+
+        function resumeMatching() {
+            let resumeNo = $('#resume-select').val();
+            if (!resumeNo) return;
+
+            axios.get(`/api/users/resume/skill-matching/${resumeNo}`)
+                .then(function (response) {
+                    matchList = response.data;
+                    matchingListAppend(matchList);
+                });
+        }
+
+        function matchingSort(select) {
+            if (!matchList) return;
+
+            if (select.value === 'PERCENT') {
+                matchList.sort((a, b) => b.skillCnt - a.skillCnt);
+            } else {
+                matchList.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+            }
+            matchingListAppend(matchList);
+        }
+
+        function matchingListAppend(matchList) {
+            $('#matching-content').empty();
+            if (matchList.length === 0) {
+                $('#matching-content').append('<div class="no-result">매칭되는 채용공고가 없습니다.</div>');
+                return;
+            }
+
+            matchList.forEach(function (item, index) {
+                let persent = Math.floor((item.skillCnt / $('#resume-select').find('option:selected').attr('data-count')) * 100);
+
+                $('#matching-content').append(`
+                    <div class="match-item row-flex between-center">
+                        <div class="column-flex flex-two-div">
+                            <div>
+                                <span class="company-name">${item.companyName}</span>
+                                <span class="divider">|</span>
+                                <span class="post-title">${item.title}</span>
+                            </div>
+                            <div>
+                                <span class="label">제시연봉:&nbsp;</span>
+                                <span class="value">${item.salary ? item.salary + '만원' : '회사 내규에 따름'}</span>
+                                <span class="divider">|</span>
+                                <span class="label">근무지역:&nbsp;</span>
+                                <span class="value">${item.location || '미정'}</span>
+                            </div>
+                        </div>
+                        <div class="column-flex flex-two-div">
+                            <div class="row-flex between-center" style="width: 100%;align-items: center;">
+                                <div>
+                                    <span class="percent">${persent}</span>
+                                    <span>%</span>
+                                </div>
+                                <div class="loading-bar">
+                                    <div class="progress" style="width: ${persent}%"></div>
+                                </div>
+                            </div>
+                            <div class="row-flex between-center" style="gap: 5px; align-items: center; width: 100%">
+                                <div class="skill-label">주요 기술</div>
+                                <div class="grid-four-column" data-value="${index}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="date-column">${item.startDate}</div>
+                    </div>
+                `);
+
+                if (item.skillCodes) {
+                    item.skillCodes.split(',').forEach(function (skill) {
+                        $('.grid-four-column[data-value="' + index + '"]').append(`
+                            <div class="skill-item">${skill}</div>
+                        `);
+                    });
+                }
+            });
+        }
+    </script>
+</div>
+</body>
+</html>
